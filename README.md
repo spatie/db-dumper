@@ -1,4 +1,4 @@
-# Dump a database
+# Dump the contents of a database
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -7,7 +7,10 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/db-dumper.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/db-dumper)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This repo contains an easy to use class to dump a database using PHP. Currently only MySQL is supported.
+This repo contains an easy to use class to dump a database using PHP. Currently only MySQL is supported. Behind
+the scences `mysqldump` is used.
+
+Here a simple example of how to create a dump.
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
