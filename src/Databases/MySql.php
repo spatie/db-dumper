@@ -92,7 +92,7 @@ class MySql extends DbDumper
 
         $tempFileHandle = tmpfile();
 
-        fwrite($tempFileHandle, $this->getContentsOfCredentialFile());
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
 
         $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
