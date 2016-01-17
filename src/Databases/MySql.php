@@ -90,17 +90,9 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompletedCredentials();
 
-        $contents = [
-            '[client]',
-            "user = '{$this->userName}'",
-            "password = '{$this->password}'",
-            "host = '{$this->host}'",
-            "port = '{$this->port}'",
-        ];
-
         $tempFileHandle = tmpfile();
 
-        fwrite($tempFileHandle, implode(PHP_EOL, $contents));
+        fwrite($tempFileHandle, $this->getContentsOfCredentialFile());
 
         $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
@@ -118,7 +110,7 @@ class MySql extends DbDumper
      */
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile) : string
     {
-        $commandLines = [
+        $command = [
             "{$this->dumpBinaryPath}mysqldump",
             "--defaults-extra-file={$temporaryCredentialsFile}",
             '--skip-comments',
@@ -126,12 +118,12 @@ class MySql extends DbDumper
         ];
 
         if ($this->socket != '') {
-            $commandLines[] = "--socket={$this->socket}";
+            $command[] = "--socket={$this->socket}";
         }
 
-        $commandLines[] = "{$this->dbName} > {$dumpFile}";
+        $command[] = "{$this->dbName} > {$dumpFile}";
 
-        return implode(' ', $commandLines);
+        return implode(' ', $command);
     }
 
     protected function guardAgainstIncompletedCredentials()
@@ -141,5 +133,18 @@ class MySql extends DbDumper
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
+    }
+
+    protected function getContentsOfCredentialsFile() : string
+    {
+        $contents = [
+            '[client]',
+            "user = '{$this->userName}'",
+            "password = '{$this->password}'",
+            "host = '{$this->host}'",
+            "port = '{$this->port}'",
+        ];
+
+        return implode(PHP_EOL, $contents);
     }
 }
