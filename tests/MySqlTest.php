@@ -76,12 +76,11 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_dump_a_database()
     {
-
-        if (! $this->runningOnTravis()) {
+        if (!$this->runningOnTravis()) {
             return;
         }
 
-        $testFileName = __DIR__ . '/files/dump.sql';
+        $testFileName = __DIR__.'/files/dump.sql';
 
         MySql::create()
             ->setDbName('test')
@@ -97,6 +96,5 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     protected function runningOnTravis()
     {
         return getenv('TRAVIS');
-
     }
 }

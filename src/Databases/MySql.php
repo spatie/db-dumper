@@ -142,9 +142,4 @@ class MySql extends DbDumper
             }
         }
     }
-
-    protected function createTemporaryCredentialsFile() : string
-    {
-        ;
-    }
 }

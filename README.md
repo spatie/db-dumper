@@ -1,4 +1,4 @@
-# db-dumper
+# Dump a database
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -7,10 +7,20 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/db-dumper.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/db-dumper)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
+This repo contains an easy to use class to dump a database using PHP. Currently only MySQL is supported.
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
 
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
+
+## Requirements
+`mysqldump` should be installed.
 
 ## Installation
 
@@ -21,12 +31,26 @@ $ composer require spatie/db-dumper
 
 ## Usage
 
-``` php
-$database = new MySQLDatabase()
-  ->setUserName()
-  ->dump()
-$skeleton = new Spatie\Skeleton();
-echo $skeleton->echoPhrase('Hello, Spatie!');
+This is the simplest way to create dump of the db:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+If the `mysqldump` binary is installed in a non default location you can let the package know by using the
+`setDumpBinaryPath()`-function:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDumpBinaryPath('/custom/location')
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
 ```
 
 ## Changelog
