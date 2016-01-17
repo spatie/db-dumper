@@ -89,6 +89,8 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->dumpToFile($testFileName);
 
         echo file_get_contents($testFileName);
+
+        //add test with contents of dumped db file.
     }
 
     protected function runningOnTravis()
