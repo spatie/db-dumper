@@ -2,6 +2,7 @@
 
 namespace Spatie\DbDumper;
 
+use Spatie\DbDumper\Exceptions\DumpFailed;
 use Symfony\Component\Process\Process;
 
 abstract class DbDumper

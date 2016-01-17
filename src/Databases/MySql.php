@@ -90,15 +90,25 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompletedCredentials();
 
-        $temporaryCredentialsFile = $this->createTemporaryCredentialsFile();
+        $contents = [
+            '[client]',
+            "user = '{$this->userName}'",
+            "password = '{$this->password}'",
+            "host = '{$this->host}'",
+            "port = '{$this->port}'",
+        ];
+
+        $tempFileHandle = tmpfile();
+
+        fwrite($tempFileHandle, implode(PHP_EOL, $contents));
+
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
         $this->process
             ->setCommandLine($command)
             ->run();
-
-        unlink($temporaryCredentialsFile);
 
         $this->checkIfDumpWasSuccessFull($dumpFile);
     }
@@ -135,18 +145,6 @@ class MySql extends DbDumper
 
     protected function createTemporaryCredentialsFile() : string
     {
-        $contents = [
-            '[client]',
-            "user = '{$this->userName}'",
-            "password = '{$this->password}'",
-            "host = '{$this->host}'",
-            "port = '{$this->port}'",
-        ];
-
-        $tempFileHandle = tmpfile();
-
-        fwrite($tempFileHandle, implode(PHP_EOL, $contents));
-
-        return stream_get_meta_data($tempFileHandle)['uri'];
+        ;
     }
 }

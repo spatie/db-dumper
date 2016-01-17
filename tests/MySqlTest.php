@@ -81,7 +81,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        $testFileName = __DIR__ . '/dump.sql';
+        $testFileName = __DIR__ . '/files/dump.sql';
 
         MySql::create()
             ->setDbName('test')
