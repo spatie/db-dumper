@@ -76,9 +76,6 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_dump_a_database()
     {
-        /*
-         * stil need to get this to work on Travis
-
         if (!$this->runningOnTravis()) {
             return;
         }
@@ -92,8 +89,6 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->dumpToFile($testFileName);
 
         echo file_get_contents($testFileName);
-        //add test with contents of dumped db file.
-         */
     }
 
     protected function runningOnTravis()

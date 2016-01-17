@@ -11,7 +11,7 @@ class MySql extends DbDumper
     protected $userName;
     protected $password;
     protected $host = 'localhost';
-    protected $port;
+    protected $port = 3306;
     protected $socket;
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
