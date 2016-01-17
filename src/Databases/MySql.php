@@ -133,7 +133,7 @@ class MySql extends DbDumper
         }
     }
 
-    public function createTemporaryCredentialsFile() : string
+    protected function createTemporaryCredentialsFile() : string
     {
         $contents = [
             '[client]',

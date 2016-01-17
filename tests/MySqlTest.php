@@ -74,8 +74,26 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function travis()
+    public function it_can_dump_a_database()
     {
-        echo getenv('TRAVIS') ? 'yes on travis' : 'no';
+
+        if (! $this->runningOnTravis()) {
+            return;
+        }
+
+        $testFileName = __DIR__ . '/dump.sql';
+
+        MySql::create()
+            ->setDbName('test')
+            ->setUserName('travis')
+            ->dumpToFile($testFileName);
+
+        echo file_get_contents($testFileName);
+    }
+
+    protected function runningOnTravis()
+    {
+        return getenv('TRAVIS');
+
     }
 }
