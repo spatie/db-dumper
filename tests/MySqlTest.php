@@ -85,7 +85,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
 
         MySql::create()
             ->setDbName('test')
-            ->setUserName('travis')
+            ->setUserName('root')
             ->setPassword('')
             ->dumpToFile($testFileName);
 
