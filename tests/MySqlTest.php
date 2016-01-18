@@ -26,73 +26,66 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     public function it_can_generate_a_dump_command()
     {
         $dumpCommand = MySql::create()
-            ->setDbName('test')
-            ->setUserName('test')
-            ->setPassword('test')
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert test > dump.sql', $dumpCommand);
+        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert dbname > dump.sql', $dumpCommand);
     }
 
     /** @test */
     public function it_can_generate_a_dump_command_with_custom_binary_path()
     {
         $dumpCommand = MySql::create()
-            ->setDbName('test')
-            ->setUserName('test')
-            ->setPassword('test')
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('/custom/directory/mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert test > dump.sql', $dumpCommand);
+        $this->assertSame('/custom/directory/mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert dbname > dump.sql', $dumpCommand);
     }
 
     /** @test */
     public function it_can_generate_a_dump_command_without_using_extending_inserts()
     {
         $dumpCommand = MySql::create()
-            ->setDbName('test')
-            ->setUserName('test')
-            ->setPassword('test')
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
             ->doNotUseExtendedInserts()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --skip-extended-insert test > dump.sql', $dumpCommand);
+        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --skip-extended-insert dbname > dump.sql', $dumpCommand);
     }
 
     /** @test */
     public function it_can_generate_a_dump_command_with_a_custom_socket()
     {
         $dumpCommand = MySql::create()
-            ->setDbName('test')
-            ->setUserName('test')
-            ->setPassword('test')
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
             ->setSocket(1234)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert --socket=1234 test > dump.sql', $dumpCommand);
+        $this->assertSame('mysqldump --defaults-extra-file=credentials.txt --skip-comments --extended-insert --socket=1234 dbname > dump.sql', $dumpCommand);
     }
 
     /** @test */
-    public function it_can_dump_a_database()
+    public function it_can_generate_the_contents_of_a_credentials_file()
     {
-        if (!$this->runningOnTravis()) {
-            return;
-        }
+        $credentialsFileContent = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setHost('hostname')
+            ->setSocket(1234)
+            ->getContentsOfCredentialsFile();
 
-        $testFileName = __DIR__.'/files/dump.sql';
-
-        MySql::create()
-            ->setDbName('test')
-            ->setUserName('root')
-            ->setPassword('')
-            ->dumpToFile($testFileName);
-
-        echo file_get_contents($testFileName);
-    }
-
-    protected function runningOnTravis()
-    {
-        return getenv('TRAVIS');
+        $this->assertSame(
+            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."host = 'hostname'".PHP_EOL."port = '3306'",
+            $credentialsFileContent);
     }
 }

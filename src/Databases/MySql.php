@@ -126,16 +126,7 @@ class MySql extends DbDumper
         return implode(' ', $command);
     }
 
-    protected function guardAgainstIncompletedCredentials()
-    {
-        foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if ($this->$requiredProperty == '') {
-                throw CannotStartDump::emptyParameter($requiredProperty);
-            }
-        }
-    }
-
-    protected function getContentsOfCredentialsFile() : string
+    public function getContentsOfCredentialsFile() : string
     {
         $contents = [
             '[client]',
@@ -146,5 +137,14 @@ class MySql extends DbDumper
         ];
 
         return implode(PHP_EOL, $contents);
+    }
+
+    protected function guardAgainstIncompletedCredentials()
+    {
+        foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
+            if ($this->$requiredProperty == '') {
+                throw CannotStartDump::emptyParameter($requiredProperty);
+            }
+        }
     }
 }
