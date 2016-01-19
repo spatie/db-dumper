@@ -12,7 +12,7 @@ abstract class DbDumper
         return new static();
     }
 
-    protected function checkIfDumpWasSuccessFull(Process $process, string $outputFile) : bool
+    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile) : bool
     {
         if (!$process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($this->process);

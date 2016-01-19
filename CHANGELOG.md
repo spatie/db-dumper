@@ -2,4 +2,11 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
-## 1.0.0 - YYYY-MM-DD
+## 1.0.1 - 2016-01-19
+
+- Fixed typo in `checkIfDumpWasSuccessFul`-method name
+- Fixed bug running Process
+
+## 1.0.0 - 2016-01-19
+
+- Initial release

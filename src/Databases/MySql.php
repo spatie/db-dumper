@@ -99,9 +99,11 @@ class MySql extends DbDumper
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
-        $process = (new Process($command))->run();
+        $process = new Process($command);
 
-        $this->checkIfDumpWasSuccessFull($process, $dumpFile);
+        $process->run();
+
+        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
     /**
