@@ -7,24 +7,14 @@ use Symfony\Component\Process\Process;
 
 abstract class DbDumper
 {
-    /**
-     * @var \Symfony\Component\Process\Process
-     */
-    protected $process;
-
-    public function __construct(Process $process)
-    {
-        $this->process = $process;
-    }
-
     public static function create()
     {
-        return new static(new Process(''));
+        return new static();
     }
 
-    protected function checkIfDumpWasSuccessFull(string $outputFile) : bool
+    protected function checkIfDumpWasSuccessFull(Process $process, string $outputFile) : bool
     {
-        if (!$this->process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($this->process);
         }
 

@@ -4,6 +4,7 @@ namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
@@ -60,7 +61,7 @@ class MySql extends DbDumper
 
     public function setDumpBinaryPath(string $dumpBinaryPath) : MySql
     {
-        if ($dumpBinaryPath != '' && substr($dumpBinaryPath, -1) != '/') {
+        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
             $dumpBinaryPath .= '/';
         }
 
@@ -76,7 +77,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function doNotUseExtendedInserts() : MySql
+    public function dontUseExtendedInserts() : MySql
     {
         $this->useExtendedInserts = false;
 
@@ -88,7 +89,7 @@ class MySql extends DbDumper
      */
     public function dumpToFile(string $dumpFile)
     {
-        $this->guardAgainstIncompletedCredentials();
+        $this->guardAgainstIncompleteCredentials();
 
         $tempFileHandle = tmpfile();
 
@@ -98,11 +99,9 @@ class MySql extends DbDumper
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
-        $this->process
-            ->setCommandLine($command)
-            ->run();
+        $process = (new Process($command))->run();
 
-        $this->checkIfDumpWasSuccessFull($dumpFile);
+        $this->checkIfDumpWasSuccessFull($process, $dumpFile);
     }
 
     /**
@@ -139,10 +138,10 @@ class MySql extends DbDumper
         return implode(PHP_EOL, $contents);
     }
 
-    protected function guardAgainstIncompletedCredentials()
+    protected function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if ($this->$requiredProperty == '') {
+            if (strlen($this->$requiredProperty) === 0) {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
