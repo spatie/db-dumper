@@ -84,7 +84,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    /**
+    /*
      * Dump the contents of the database to the given file.
      */
     public function dumpToFile(string $dumpFile)

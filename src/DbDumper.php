@@ -12,6 +12,11 @@ abstract class DbDumper
         return new static();
     }
 
+    /*
+    * Dump the contents of the database to the given file.
+    */
+    abstract public function dumpToFile(string $dumpFile);
+
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile) : bool
     {
         if (!$process->isSuccessful()) {
