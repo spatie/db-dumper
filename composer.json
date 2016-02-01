@@ -3,6 +3,9 @@
     "description": "Dump databases",
     "keywords": [
         "spatie",
+        "dump",
+        "database",
+        "mysqldump",
         "db-dumper"
     ],
     "homepage": "https://github.com/spatie/db-dumper",
