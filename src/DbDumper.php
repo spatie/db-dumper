@@ -17,6 +17,8 @@ abstract class DbDumper
     */
     abstract public function dumpToFile(string $dumpFile);
 
+    abstract public function getDbName() : string;
+
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile) : bool
     {
         if (!$process->isSuccessful()) {

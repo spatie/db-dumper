@@ -17,6 +17,11 @@ class MySql extends DbDumper
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
 
+    public function getDbName() : string
+    {
+        return $this->dbName;
+    }
+
     public function setDbName(string $dbName) : MySql
     {
         $this->dbName = $dbName;

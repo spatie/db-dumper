@@ -101,4 +101,14 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."host = 'hostname'".PHP_EOL."port = '3306'",
             $credentialsFileContent);
     }
+
+    /** @test */
+    public function it_can_get_the_name_of_the_db()
+    {
+        $dbName = 'testName';
+
+        $dbDumper = MySql::create()->setDbName($dbName);
+
+        $this->assertEquals($dbName, $dbDumper->getDbName());
+    }
 }

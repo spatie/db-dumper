@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.0.3 - 2016-02-01
+
+- Added missing abstract `getDbName`-method
+
 ## 1.0.2 - 2016-02-01
 
 - Added missing abstract `dumpToFile`-method
