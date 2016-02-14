@@ -22,7 +22,7 @@ abstract class DbDumper
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile) : bool
     {
         if (!$process->isSuccessful()) {
-            throw DumpFailed::processDidNotEndSuccessfully($this->process);
+            throw DumpFailed::processDidNotEndSuccessfully($process);
         }
 
         if (!file_exists($outputFile)) {
