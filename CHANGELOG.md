@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.1.0 - 2016-02-21
+
+- Lower PHP and symfony requirements
+
 ## 1.0.4 - 2016-02-14
 
 - Fixed a bug when the backup has failed.
