@@ -17,54 +17,92 @@ class MySql extends DbDumper
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
 
-    public function getDbName() : string
+    /**
+     * @return string
+     */
+    public function getDbName()
     {
         return $this->dbName;
     }
 
-    public function setDbName(string $dbName) : MySql
+    /**
+     * @param string $dbName
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setDbName($dbName)
     {
         $this->dbName = $dbName;
 
         return $this;
     }
 
-    public function setUserName(string $userName) : MySql
+    /**
+     * @param string $userName
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setUserName($userName)
     {
         $this->userName = $userName;
 
         return $this;
     }
 
-    public function setPassword(string $password) : MySql
+    /**
+     * @param string $password
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setPassword($password)
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function setHost(string $host) : MySql
+    /**
+     * @param string $host
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setHost($host)
     {
         $this->host = $host;
 
         return $this;
     }
 
-    public function setPort(int $port) : MySql
+    /**
+     * @param int $port
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setPort($port)
     {
         $this->port = $port;
 
         return $this;
     }
 
-    public function setSocket(int $socket) : MySql
+    /**
+     * @param int $socket
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setSocket($socket)
     {
         $this->socket = $socket;
 
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath) : MySql
+    /**
+     * @param string $dumpBinaryPath
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setDumpBinaryPath($dumpBinaryPath)
     {
         if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
             $dumpBinaryPath .= '/';
@@ -75,24 +113,35 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function useExtendedInserts() : MySql
+    /**
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function useExtendedInserts()
     {
         $this->useExtendedInserts = true;
 
         return $this;
     }
 
-    public function dontUseExtendedInserts() : MySql
+    /**
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function dontUseExtendedInserts()
     {
         $this->useExtendedInserts = false;
 
         return $this;
     }
 
-    /*
+    /**
      * Dump the contents of the database to the given file.
+     *
+     * @param string $dumpFile
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
+     * @throws \Spatie\DbDumper\Exceptions\DumpFailed
      */
-    public function dumpToFile(string $dumpFile)
+    public function dumpToFile($dumpFile)
     {
         $this->guardAgainstIncompleteCredentials();
 
@@ -113,8 +162,13 @@ class MySql extends DbDumper
 
     /**
      * Get the command that should be performed to dump the database.
+     *
+     * @param string $dumpFile
+     * @param string $temporaryCredentialsFile
+     *
+     * @return string
      */
-    public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile) : string
+    public function getDumpCommand($dumpFile, $temporaryCredentialsFile)
     {
         $command = [
             "{$this->dumpBinaryPath}mysqldump",

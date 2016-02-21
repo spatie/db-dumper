@@ -12,14 +12,27 @@ abstract class DbDumper
         return new static();
     }
 
-    /*
-    * Dump the contents of the database to the given file.
-    */
-    abstract public function dumpToFile(string $dumpFile);
+    /**
+     * Dump the contents of the database to the given file.
+     *
+     * @param string $dumpFile
+     */
+    abstract public function dumpToFile($dumpFile);
 
-    abstract public function getDbName() : string;
+    /**
+     * @return string
+     */
+    abstract public function getDbName();
 
-    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile) : bool
+    /**
+     * @param \Symfony\Component\Process\Process $process
+     * @param string                             $outputFile
+     *
+     * @return bool
+     *
+     * @throws \Spatie\DbDumper\Exceptions\DumpFailed
+     */
+    protected function checkIfDumpWasSuccessFul(Process $process, $outputFile)
     {
         if (!$process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
