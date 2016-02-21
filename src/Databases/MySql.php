@@ -186,7 +186,10 @@ class MySql extends DbDumper
         return implode(' ', $command);
     }
 
-    public function getContentsOfCredentialsFile() : string
+    /**
+     * @return string
+     */
+    public function getContentsOfCredentialsFile()
     {
         $contents = [
             '[client]',
