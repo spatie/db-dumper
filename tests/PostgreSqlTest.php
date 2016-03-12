@@ -48,13 +48,13 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_a_custom_socket_directory()
+    public function it_can_generate_a_dump_command_with_a_custom_socket()
     {
         $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setSocketDirectory('/var/socket.1234')
+            ->setSocket('/var/socket.1234')
             ->getDumpCommand('dump.sql');
 
         $this->assertEquals('pg_dump -d dbname -U username -W password -h /var/socket.1234 -p 5432 --file=dump.sql', $dumpCommand);
