@@ -11,7 +11,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_provides_a_factory_method()
     {
-        $this->assertInstanceOf(PostgreSql::class, PostgreSql::create());
+        static::assertInstanceOf(PostgreSql::class, PostgreSql::create());
     }
 
     /** @test */
@@ -31,7 +31,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setPassword('password')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -d dbname -U username -W password -h localhost -p 5432 --file=dump.sql', $dumpCommand);
+        static::assertSame('pg_dump -d dbname -U username -W password -h localhost -p 5432 --file=dump.sql', $dumpCommand);
     }
 
     /** @test */
@@ -44,20 +44,20 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('/custom/directory/pg_dump -d dbname -U username -W password -h localhost -p 5432 --file=dump.sql', $dumpCommand);
+        static::assertSame('/custom/directory/pg_dump -d dbname -U username -W password -h localhost -p 5432 --file=dump.sql', $dumpCommand);
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_a_custom_socket()
+    public function it_can_generate_a_dump_command_with_a_custom_socket_directory()
     {
         $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setSocket('/var/socket.1234')
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+            ->setSocketDirectory('/var/socket.1234')
+            ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -d dbname -U username -W password -h /var/socket.1234 -p 5432 --file=dump.sql', $dumpCommand);
+        static::assertSame('pg_dump -d dbname -U username -W password -h /var/socket.1234 -p 5432 --file=dump.sql', $dumpCommand);
     }
 
     /** @test */
@@ -67,6 +67,6 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
 
         $dbDumper = PostgreSql::create()->setDbName($dbName);
 
-        $this->assertEquals($dbName, $dbDumper->getDbName());
+        static::assertEquals($dbName, $dbDumper->getDbName());
     }
 }

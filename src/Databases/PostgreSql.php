@@ -8,13 +8,15 @@ use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
 {
-    protected $dbName;
-    protected $userName;
-    protected $password;
-    protected $host = 'localhost';
-    protected $port = 5432;
-    protected $socket;
-    protected $dumpBinaryPath = '';
+    protected $socketDirectory = '';
+
+    /**
+     * PostgreSql constructor.
+     */
+    public function __construct()
+    {
+        $this->port = 5432;
+    }
 
     /**
      * @return string
@@ -85,29 +87,13 @@ class PostgreSql extends DbDumper
     }
 
     /**
-     * @param int $socket
+     * @param string $socketDirectory
      *
      * @return \Spatie\DbDumper\Databases\PostgreSql
      */
-    public function setSocket($socket)
+    public function setSocketDirectory($socketDirectory)
     {
-        $this->socket = $socket;
-
-        return $this;
-    }
-
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setDumpBinaryPath($dumpBinaryPath)
-    {
-        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
-            $dumpBinaryPath .= '/';
-        }
-
-        $this->dumpBinaryPath = $dumpBinaryPath;
+        $this->socketDirectory = $socketDirectory;
 
         return $this;
     }
@@ -149,10 +135,10 @@ class PostgreSql extends DbDumper
             "-W {$this->password}",
         ];
 
-        if ($this->socket === '') {
+        if ($this->socketDirectory === '') {
             $command[] = "-h {$this->host}";
         } else {
-            $command[] = "-h {$this->socket}";
+            $command[] = "-h {$this->socketDirectory}";
         }
 
         $command[] = "-p {$this->port}";
