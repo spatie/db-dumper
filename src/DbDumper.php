@@ -36,8 +36,6 @@ abstract class DbDumper
 
     /**
      * @param string $dbName
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
      */
     public function setDbName($dbName)
     {
@@ -49,7 +47,7 @@ abstract class DbDumper
     /**
      * @param string $userName
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function setUserName($userName)
     {
@@ -61,7 +59,7 @@ abstract class DbDumper
     /**
      * @param string $password
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function setPassword($password)
     {
@@ -73,7 +71,7 @@ abstract class DbDumper
     /**
      * @param string $host
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function setHost($host)
     {
@@ -85,7 +83,7 @@ abstract class DbDumper
     /**
      * @param int $port
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function setPort($port)
     {
@@ -97,7 +95,7 @@ abstract class DbDumper
     /**
      * @param string $dumpBinaryPath
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setDumpBinaryPath($dumpBinaryPath)
     {
