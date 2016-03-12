@@ -35,6 +35,19 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_a_custom_port()
+    {
+        $dumpCommand = PostgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setPort(1234)
+            ->getDumpCommand('dump.sql');
+
+        $this->assertSame('pg_dump -d dbname -U username -W password -h localhost -p 1234 --file=dump.sql', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_custom_binary_path()
     {
         $dumpCommand = PostgreSql::create()
