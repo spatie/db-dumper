@@ -7,10 +7,12 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/db-dumper.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/db-dumper)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This repo contains an easy to use class to dump a database using PHP. Currently only MySQL is supported. Behind
-the scences `mysqldump` is used.
+This repo contains an easy to use class to dump a database using PHP. Currently only MySQL and PostgreSQL are supported. Behind
+the scences `mysqldump` and `pg_dump` are used.
 
 Here a simple example of how to create a dump.
+
+MySQL:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -20,10 +22,22 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
+PostgreSQL:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
 ## Requirements
-`mysqldump` should be installed.
+`mysqldump` should be installed, if the database id MySQL.
+`pg_dump` should be installed, if the database is PostgreSQL.
 
 ## Installation
 
@@ -36,6 +50,8 @@ $ composer require spatie/db-dumper
 
 This is the simplest way to create dump of the db:
 
+MySQL:
+
 ```php
 Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
@@ -44,11 +60,34 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-If the `mysqldump` binary is installed in a non default location you can let the package know by using the
+PostgreSQL:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+If the `mysqldump` or `pg_dump` binary is installed in a non default location you can let the package know by using the
 `setDumpBinaryPath()`-function:
+
+MySQL:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
+    ->setDumpBinaryPath('/custom/location')
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+PostgreSQL:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
     ->setDumpBinaryPath('/custom/location')
     ->setDbName($databaseName)
     ->setUserName($userName)
@@ -77,6 +116,7 @@ If you discover any security related issues, please email freek@spatie.be instea
 ## Credits
 
 - [Freek Van der Herten](https://github.com/freekmurze)
+- [Adriano Machado](https://github.com/ammachado)
 - [All Contributors](../../contributors)
 
 ## About Spatie

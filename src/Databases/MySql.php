@@ -8,81 +8,15 @@ use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
-    protected $dbName;
-    protected $userName;
-    protected $password;
-    protected $host = 'localhost';
-    protected $port = 3306;
-    protected $socket;
-    protected $dumpBinaryPath = '';
+    protected $socket = 0;
     protected $useExtendedInserts = true;
 
     /**
-     * @return string
+     * MySql constructor.
      */
-    public function getDbName()
+    public function __construct()
     {
-        return $this->dbName;
-    }
-
-    /**
-     * @param string $dbName
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setDbName($dbName)
-    {
-        $this->dbName = $dbName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $userName
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @param string $host
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setHost($host)
-    {
-        $this->host = $host;
-
-        return $this;
-    }
-
-    /**
-     * @param int $port
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-
-        return $this;
+        $this->port = 3306;
     }
 
     /**
@@ -93,22 +27,6 @@ class MySql extends DbDumper
     public function setSocket($socket)
     {
         $this->socket = $socket;
-
-        return $this;
-    }
-
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setDumpBinaryPath($dumpBinaryPath)
-    {
-        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
-            $dumpBinaryPath .= '/';
-        }
-
-        $this->dumpBinaryPath = $dumpBinaryPath;
 
         return $this;
     }
@@ -177,7 +95,7 @@ class MySql extends DbDumper
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
 
-        if ($this->socket != '') {
+        if ($this->socket > 0) {
             $command[] = "--socket={$this->socket}";
         }
 
@@ -205,7 +123,7 @@ class MySql extends DbDumper
     protected function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if (strlen($this->$requiredProperty) === 0) {
+            if ($this->$requiredProperty == '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
