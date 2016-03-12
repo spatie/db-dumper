@@ -36,6 +36,7 @@ abstract class DbDumper
 
     /**
      * @param string $dbName
+     * @return $this
      */
     public function setDbName($dbName)
     {
