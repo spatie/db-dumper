@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.2.0 - 2016-03-13
+
+- Add support for PostgreSQL
+
 ## 1.1.0 - 2016-02-21
 
 - Lower PHP and symfony requirements
