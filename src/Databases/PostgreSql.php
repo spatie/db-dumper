@@ -143,10 +143,10 @@ class PostgreSql extends DbDumper
     public function getDumpCommand($dumpFile)
     {
         $command = [
+            "PGPASSWORD='{$this->password}'",
             "{$this->dumpBinaryPath}pg_dump",
             "-d {$this->dbName}",
             "-U {$this->userName}",
-            "-W {$this->password}",
         ];
 
         $command[] = '-h '.($this->socket === '' ? $this->host : $this->socket);
