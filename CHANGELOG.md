@@ -2,7 +2,7 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
-## 1.2.1 - 2016-03-13
+## 1.2.1 - 2016-03-14
 
 - Fixed PostgreSQL dump
 
