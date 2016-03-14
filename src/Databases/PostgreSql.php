@@ -126,7 +126,13 @@ class PostgreSql extends DbDumper
 
         $command = $this->getDumpCommand($dumpFile);
 
-        $process = new Process($command);
+        $tempFileHandle = tmpfile();
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+
+        $env = $this->getEnvForDumpCommand($temporaryCredentialsFile);
+
+        $process = new Process($command, null, $env);
 
         $process->run();
 
@@ -145,8 +151,7 @@ class PostgreSql extends DbDumper
         $command = [
             "{$this->dumpBinaryPath}pg_dump",
             "-d {$this->dbName}",
-            "-U {$this->userName}",
-            "-W {$this->password}",
+            "-U {$this->userName}"
         ];
 
         $command[] = '-h '.($this->socket === '' ? $this->host : $this->socket);
@@ -156,6 +161,22 @@ class PostgreSql extends DbDumper
         return implode(' ', $command);
     }
 
+    /**
+     * @return string
+     */
+    public function getContentsOfCredentialsFile()
+    {
+        $contents = [
+            $this->host,
+            $this->port,
+            $this->dbName,
+            $this->userName,
+            $this->password,
+        ];
+
+        return implode(":", $contents);
+    }
+
     protected function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
@@ -163,5 +184,16 @@ class PostgreSql extends DbDumper
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
+    }
+
+    /**
+     * @param $temporaryCredentialsFile
+     * @return array
+     */
+    private function getEnvForDumpCommand($temporaryCredentialsFile)
+    {
+        return [
+            'PGPASSFILE' => $temporaryCredentialsFile
+        ];
     }
 }
