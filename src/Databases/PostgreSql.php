@@ -15,6 +15,7 @@ class PostgreSql extends DbDumper
     protected $port = 5432;
     protected $socket = '';
     protected $dumpBinaryPath = '';
+    protected $timeout = null;
 
     /**
      * @return string
@@ -97,6 +98,18 @@ class PostgreSql extends DbDumper
     }
 
     /**
+     * @param int $timeout
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
      * @param string $dumpBinaryPath
      *
      * @return \Spatie\DbDumper\Databases\MySql
@@ -131,6 +144,10 @@ class PostgreSql extends DbDumper
         $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $process = new Process($command, null, $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile));
+
+        if (!is_null($this->timeout)) {
+            $process->setTimeout($this->timeout);
+        }
 
         $process->run();
 
