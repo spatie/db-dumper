@@ -31,7 +31,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setPassword('password')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file=dump.sql', $dumpCommand);
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -44,7 +44,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setPort(1234)
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 1234 --file=dump.sql', $dumpCommand);
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 1234 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -57,7 +57,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('/custom/directory/pg_dump -d dbname -U username -h localhost -p 5432 --file=dump.sql', $dumpCommand);
+        $this->assertSame('/custom/directory/pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -70,7 +70,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setSocket('/var/socket.1234')
             ->getDumpCommand('dump.sql');
 
-        $this->assertEquals('pg_dump -d dbname -U username -h /var/socket.1234 -p 5432 --file=dump.sql', $dumpCommand);
+        $this->assertEquals('pg_dump -d dbname -U username -h /var/socket.1234 -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */

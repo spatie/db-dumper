@@ -171,7 +171,7 @@ class PostgreSql extends DbDumper
 
         $command[] = '-h '.($this->socket === '' ? $this->host : $this->socket);
         $command[] = "-p {$this->port}";
-        $command[] = "--file={$dumpFile}";
+        $command[] = "--file=\"{$dumpFile}\"";
 
         return implode(' ', $command);
     }

@@ -187,7 +187,7 @@ class MySql extends DbDumper
     {
         $command = [
             "{$this->dumpBinaryPath}mysqldump",
-            "--defaults-extra-file={$temporaryCredentialsFile}",
+            "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
             '--skip-comments',
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
@@ -196,7 +196,7 @@ class MySql extends DbDumper
             $command[] = "--socket={$this->socket}";
         }
 
-        $command[] = "{$this->dbName} > {$dumpFile}";
+        $command[] = "{$this->dbName} > \"{$dumpFile}\"";
 
         return implode(' ', $command);
     }
