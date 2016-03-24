@@ -10,6 +10,10 @@ All Notable changes to `db-dumper` will be documented in this file
 
 - Added an option to set a timeout
 
+## 1.2.2 - 2016-03-24
+
+- Added more details about a dump failure in the error message
+
 ## 1.2.1 - 2016-03-14
 
 - Fixed PostgreSQL dump
