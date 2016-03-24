@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.2.4 - 2016-03-24
+
+- Added more details about a dump failure in the error message
+
 ## 1.2.3 - 2016-03-18
 
 - Fixed an issue where paths containing spaces would cause problems
@@ -9,10 +13,6 @@ All Notable changes to `db-dumper` will be documented in this file
 ## 1.2.2 - 2016-03-16
 
 - Added an option to set a timeout
-
-## 1.2.2 - 2016-03-24
-
-- Added more details about a dump failure in the error message
 
 ## 1.2.1 - 2016-03-14
 
