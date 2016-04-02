@@ -15,6 +15,7 @@ class PostgreSql extends DbDumper
     protected $port = 5432;
     protected $socket = '';
     protected $dumpBinaryPath = '';
+    protected $useInserts = false;
     protected $timeout = null;
 
     /**
@@ -112,7 +113,7 @@ class PostgreSql extends DbDumper
     /**
      * @param string $dumpBinaryPath
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return \Spatie\DbDumper\Databases\PostgreSql
      */
     public function setDumpBinaryPath($dumpBinaryPath)
     {
@@ -121,6 +122,26 @@ class PostgreSql extends DbDumper
         }
 
         $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    /**
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function useInserts()
+    {
+        $this->useInserts = true;
+
+        return $this;
+    }
+
+    /**
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function dontUseInserts()
+    {
+        $this->useInserts = false;
 
         return $this;
     }
@@ -167,11 +188,14 @@ class PostgreSql extends DbDumper
             "{$this->dumpBinaryPath}pg_dump",
             "-d {$this->dbName}",
             "-U {$this->userName}",
+            "-h ".($this->socket === '' ? $this->host : $this->socket),
+            "-p {$this->port}",
+            "--file=\"{$dumpFile}\"",
         ];
 
-        $command[] = '-h '.($this->socket === '' ? $this->host : $this->socket);
-        $command[] = "-p {$this->port}";
-        $command[] = "--file=\"{$dumpFile}\"";
+        if($this->useInserts){
+            $command[] = '--inserts';
+        }
 
         return implode(' ', $command);
     }
