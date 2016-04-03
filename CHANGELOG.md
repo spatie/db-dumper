@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.3.0 - 2016-04-03
+
+- Added the ability to use insert when dumping a PostgreSQL db
+
 ## 1.2.4 - 2016-03-24
 
 - Added more details about a dump failure in the error message
