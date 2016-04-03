@@ -188,12 +188,12 @@ class PostgreSql extends DbDumper
             "{$this->dumpBinaryPath}pg_dump",
             "-d {$this->dbName}",
             "-U {$this->userName}",
-            "-h ".($this->socket === '' ? $this->host : $this->socket),
+            '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
             "--file=\"{$dumpFile}\"",
         ];
 
-        if($this->useInserts){
+        if ($this->useInserts) {
             $command[] = '--inserts';
         }
 
