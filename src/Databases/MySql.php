@@ -16,6 +16,7 @@ class MySql extends DbDumper
     protected $socket;
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
+    protected $useSingleTransaction = false;
     protected $timeout;
 
     /**
@@ -145,6 +146,26 @@ class MySql extends DbDumper
 
         return $this;
     }
+    
+    /**
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function useSingleTransaction()
+    {
+        $this->useSingleTransaction = true;
+
+        return $this;
+    }
+
+    /**
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function dontUseSingleTransaction()
+    {
+        $this->useSingleTransaction = false;
+
+        return $this;
+    }
 
     /**
      * Dump the contents of the database to the given file.
@@ -189,8 +210,12 @@ class MySql extends DbDumper
             "{$this->dumpBinaryPath}mysqldump",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
             '--skip-comments',
-            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
+            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert'
         ];
+        
+        if($this->useSingleTransaction) {
+            $command[] = "--single-transaction";
+        }
 
         if ($this->socket != '') {
             $command[] = "--socket={$this->socket}";
