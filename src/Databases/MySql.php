@@ -210,7 +210,7 @@ class MySql extends DbDumper
             "{$this->dumpBinaryPath}mysqldump",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
             '--skip-comments',
-            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert'
+            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
         
         if($this->useSingleTransaction) {
