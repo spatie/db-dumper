@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.4.0 - 2016-04-27
+
+- Added --single-transaction option to Mysql dump command
+
 ## 1.3.0 - 2016-04-03
 
 - Added the ability to use insert when dumping a PostgreSQL db
