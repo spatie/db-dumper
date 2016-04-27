@@ -74,6 +74,19 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_using_single_transaction()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->useSingleTransaction()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --single-transaction dbname > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_a_custom_socket()
     {
         $dumpCommand = MySql::create()
