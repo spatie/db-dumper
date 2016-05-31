@@ -5,6 +5,7 @@ namespace Spatie\DbDumper\Test;
 use PHPUnit_Framework_TestCase;
 use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
 class PostgreSqlTest extends PHPUnit_Framework_TestCase
 {
@@ -84,6 +85,84 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->getDumpCommand('dump.sql');
 
         $this->assertEquals('pg_dump -d dbname -U username -h /var/socket.1234 -p 5432 --file="dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_for_specific_tables_as_array()
+    {
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setTables(array('tb1', 'tb2', 'tb3'))
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_for_specific_tables_as_string()
+    {
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setTables('tb1 tb2 tb3')
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_will_throw_an_exception_when_setting_exclude_tables_after_setting_tables()
+    {
+        $this->setExpectedException(CannotSetParameter::class);
+
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setTables('tb1 tb2 tb3')
+            ->setExcludeTables('tb4 tb5 tb6');
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_excluding_tables_as_array()
+    {
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setExcludeTables(array('tb1', 'tb2', 'tb3'))
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_excluding_tables_as_string()
+    {
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setExcludeTables('tb1 tb2 tb3')
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_will_throw_an_exception_when_setting_tables_after_setting_esclude_tables()
+    {
+        $this->setExpectedException(CannotSetParameter::class);
+
+        $dumpCommand = PoStgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setExcludeTables('tb1 tb2 tb3')
+            ->setTables('tb4 tb5 tb6');
     }
 
     /** @test */
