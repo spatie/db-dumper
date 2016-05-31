@@ -17,6 +17,8 @@ class PostgreSql extends DbDumper
     protected $socket = '';
     protected $dumpBinaryPath = '';
     protected $useInserts = false;
+    protected $tables = array();
+    protected $excludeTables = array();
     protected $timeout = null;
 
     /**
