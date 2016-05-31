@@ -4,6 +4,7 @@ namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
@@ -17,6 +18,8 @@ class MySql extends DbDumper
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
     protected $useSingleTransaction = false;
+    protected $tables = array();
+    protected $excludeTables = array();
     protected $timeout;
 
     /**
@@ -128,6 +131,50 @@ class MySql extends DbDumper
     }
 
     /**
+     * @param string/array $tables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setTables($tables)
+    {
+        if (!empty($this->excludeTables)) {
+            throw CannotSetParameter::conflictParameters('tables', 'excludeTables');
+        }
+
+        if (is_array($tables)) {
+            $this->tables = $tables;
+
+            return $this;
+        }
+
+        $this->tables = explode(' ', $tables);
+
+        return $this;
+    }
+
+    /**
+     * @param string/array $tables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setExcludeTables($tables)
+    {
+         if (!empty($this->tables)) {
+            throw CannotSetParameter::conflictParameters('excludeTables', 'tables');
+        }
+
+        if (is_array($tables)) {
+            $this->excludeTables = $tables;
+
+            return $this;
+        }
+
+        $this->excludeTables = explode(' ', $tables);
+
+        return $this;
+    }
+
+    /**
      * @return \Spatie\DbDumper\Databases\MySql
      */
     public function useExtendedInserts()
@@ -221,7 +268,17 @@ class MySql extends DbDumper
             $command[] = "--socket={$this->socket}";
         }
 
-        $command[] = "{$this->dbName} > \"{$dumpFile}\"";
+        if (!empty($this->excludeTables)) {
+            $command[] = '--ignore-table=' . implode(' --ignore-table=', $this->excludeTables);
+        }
+
+        $command[] = "{$this->dbName}";
+
+        if (!empty($this->tables)) {
+            $command[] = implode(' ', $this->tables);
+        }
+
+        $command[] = "> \"{$dumpFile}\"";
 
         return implode(' ', $command);
     }
