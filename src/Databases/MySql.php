@@ -141,7 +141,7 @@ class MySql extends DbDumper
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
         }
 
-        if (! is_array($includeTables)) {
+        if (!is_array($includeTables)) {
             $includeTables = explode(', ', $includeTables);
         }
 
@@ -157,11 +157,11 @@ class MySql extends DbDumper
      */
     public function excludeTables($excludeTables)
     {
-         if (!empty($this->includeTables)) {
+        if (!empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'tables');
         }
 
-        if (! is_array($excludeTables)) {
+        if (!is_array($excludeTables)) {
             $excludeTables = explode(', ', $excludeTables);
         }
 
@@ -257,7 +257,7 @@ class MySql extends DbDumper
         ];
 
         if ($this->useSingleTransaction) {
-            $command[] = "--single-transaction";
+            $command[] = '--single-transaction';
         }
 
         if ($this->socket != '') {
@@ -265,7 +265,7 @@ class MySql extends DbDumper
         }
 
         if (!empty($this->excludeTables)) {
-            $command[] = '--ignore-table=' . implode(' --ignore-table=', $this->excludeTables);
+            $command[] = '--ignore-table='.implode(' --ignore-table=', $this->excludeTables);
         }
 
         $command[] = "{$this->dbName}";

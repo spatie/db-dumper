@@ -140,7 +140,7 @@ class PostgreSql extends DbDumper
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
         }
 
-        if (! is_array($includeTables)) {
+        if (!is_array($includeTables)) {
             $includeTables = explode(', ', $includeTables);
         }
 
@@ -156,11 +156,11 @@ class PostgreSql extends DbDumper
      */
     public function excludeTables($excludeTables)
     {
-         if (!empty($this->includeTables)) {
+        if (!empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'tables');
         }
 
-        if (! is_array($excludeTables)) {
+        if (!is_array($excludeTables)) {
             $excludeTables = explode(', ', $excludeTables);
         }
 
@@ -239,13 +239,12 @@ class PostgreSql extends DbDumper
             $command[] = '--inserts';
         }
 
-        
         if (!empty($this->includeTables)) {
-            $command[] = '-t ' . implode(' -t ', $this->includeTables);
+            $command[] = '-t '.implode(' -t ', $this->includeTables);
         }
 
         if (!empty($this->excludeTables)) {
-            $command[] = '-T ' . implode(' -T ', $this->excludeTables);
+            $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 
         return implode(' ', $command);

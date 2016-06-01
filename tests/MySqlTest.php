@@ -149,7 +149,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
             '--ignore-table=tb1 --ignore-table=tb2 --ignore-table=tb3 dbname > "dump.sql"', $dumpCommand);
     }
 
@@ -163,7 +163,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' . 
+        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
             '--ignore-table=tb1 --ignore-table=tb2 --ignore-table=tb3 dbname > "dump.sql"', $dumpCommand);
     }
 
