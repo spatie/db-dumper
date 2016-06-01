@@ -4,6 +4,7 @@ namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
@@ -16,6 +17,8 @@ class PostgreSql extends DbDumper
     protected $socket = '';
     protected $dumpBinaryPath = '';
     protected $useInserts = false;
+    protected $tables = array();
+    protected $excludeTables = array();
     protected $timeout = null;
 
     /**
@@ -127,6 +130,49 @@ class PostgreSql extends DbDumper
     }
 
     /**
+     * @param string/array $tables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setTables($tables)
+    {
+        if (!empty($this->excludeTables)) {
+            throw CannotSetParameter::conflictParameters('tables', 'excludeTables');
+        }
+
+        if (is_array($tables)) {
+            $this->tables = $tables;
+
+            return $this;
+        }
+
+        $this->tables = explode(' ', $tables);
+
+        return $this;
+    }
+
+    /**
+     * @param string/array $tables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setExcludeTables($tables)
+    {
+         if (!empty($this->tables)) {
+            throw CannotSetParameter::conflictParameters('excludeTables', 'tables');
+        }
+
+        if (is_array($tables)) {
+            $this->excludeTables = $tables;
+
+            return $this;
+        }
+
+        $this->excludeTables = explode(' ', $tables);
+
+        return $this;
+    }
+    /**
      * @return \Spatie\DbDumper\Databases\PostgreSql
      */
     public function useInserts()
@@ -195,6 +241,15 @@ class PostgreSql extends DbDumper
 
         if ($this->useInserts) {
             $command[] = '--inserts';
+        }
+
+        
+        if (!empty($this->tables)) {
+            $command[] = '-t ' . implode(' -t ', $this->tables);
+        }
+
+        if (!empty($this->excludeTables)) {
+            $command[] = '-T ' . implode(' -T ', $this->excludeTables);
         }
 
         return implode(' ', $command);

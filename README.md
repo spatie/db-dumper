@@ -68,6 +68,52 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
+#### Dump specific tables
+
+Using an array:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setTables(array('table1', 'table2', 'table3'))
+    ->dumpToFile('dump.sql');
+```
+Using a string:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setTables('table1 table2 table3')
+    ->dumpToFile('dump.sql');
+```
+
+#### Excluding tables from the dump
+
+Using an array:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setExcludeTables(array('table1', 'table2', 'table3'))
+    ->dumpToFile('dump.sql');
+```
+Using a string:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setExcludeTables('table1 table2 table3')
+    ->dumpToFile('dump.sql');
+```
+
 ### PostreSQL
 
 This is the simplest way to create a dump of the db:
@@ -90,6 +136,52 @@ Spatie\DbDumper\Databases\PostgreSql::create()
     ->setPassword($password)
     ->dumpToFile('dump.sql');
 ```
+#### Dump specific tables
+
+Using an array:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setTables(array('table1', 'table2', 'table3'))
+    ->dumpToFile('dump.sql');
+```
+Using a string:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setTables('table1 table2 table3')
+    ->dumpToFile('dump.sql');
+```
+
+#### Excluding tables from the dump
+
+Using an array:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setExcludeTables(array('table1', 'table2', 'table3'))
+    ->dumpToFile('dump.sql');
+```
+Using a string:
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setExcludeTables('table1 table2 table3')
+    ->dumpToFile('dump.sql');
+```
+
 
 ## Changelog
 
