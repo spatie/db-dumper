@@ -94,7 +94,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables(array('tb1', 'tb2', 'tb3'))
+            ->includeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
@@ -107,7 +107,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables('tb1 tb2 tb3')
+            ->includeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
@@ -122,8 +122,8 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables('tb1 tb2 tb3')
-            ->setExcludeTables('tb4 tb5 tb6');
+            ->includeTables('tb1, tb2, tb3')
+            ->excludeTables('tb4, tb5, tb6');
     }
 
     /** @test */
@@ -133,7 +133,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables(array('tb1', 'tb2', 'tb3'))
+            ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
@@ -146,14 +146,14 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables('tb1 tb2 tb3')
+            ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('pg_dump -d dbname -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
     }
 
     /** @test */
-    public function it_will_throw_an_exception_when_setting_tables_after_setting_esclude_tables()
+    public function it_will_throw_an_exception_when_setting_tables_after_setting_exclude_tables()
     {
         $this->setExpectedException(CannotSetParameter::class);
 
@@ -161,8 +161,8 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables('tb1 tb2 tb3')
-            ->setTables('tb4 tb5 tb6');
+            ->excludeTables('tb1, tb2, tb3')
+            ->includeTables('tb4, tb5, tb6');
     }
 
     /** @test */

@@ -17,7 +17,7 @@ class PostgreSql extends DbDumper
     protected $socket = '';
     protected $dumpBinaryPath = '';
     protected $useInserts = false;
-    protected $tables = array();
+    protected $includeTables = array();
     protected $excludeTables = array();
     protected $timeout = null;
 
@@ -130,45 +130,41 @@ class PostgreSql extends DbDumper
     }
 
     /**
-     * @param string/array $tables
+     * @param string|array $includeTables
      *
      * @return \Spatie\DbDumper\Databases\MySql
      */
-    public function setTables($tables)
+    public function includeTables($includeTables)
     {
         if (!empty($this->excludeTables)) {
-            throw CannotSetParameter::conflictParameters('tables', 'excludeTables');
+            throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
         }
 
-        if (is_array($tables)) {
-            $this->tables = $tables;
-
-            return $this;
+        if (! is_array($includeTables)) {
+            $includeTables = explode(', ', $includeTables);
         }
 
-        $this->tables = explode(' ', $tables);
+        $this->includeTables = $includeTables;
 
         return $this;
     }
 
     /**
-     * @param string/array $tables
+     * @param string|array $excludeTables
      *
      * @return \Spatie\DbDumper\Databases\MySql
      */
-    public function setExcludeTables($tables)
+    public function excludeTables($excludeTables)
     {
-         if (!empty($this->tables)) {
-            throw CannotSetParameter::conflictParameters('excludeTables', 'tables');
+         if (!empty($this->includeTables)) {
+            throw CannotSetParameter::conflictingParameters('excludeTables', 'tables');
         }
 
-        if (is_array($tables)) {
-            $this->excludeTables = $tables;
-
-            return $this;
+        if (! is_array($excludeTables)) {
+            $excludeTables = explode(', ', $excludeTables);
         }
 
-        $this->excludeTables = explode(' ', $tables);
+        $this->excludeTables = $excludeTables;
 
         return $this;
     }
@@ -244,8 +240,8 @@ class PostgreSql extends DbDumper
         }
 
         
-        if (!empty($this->tables)) {
-            $command[] = '-t ' . implode(' -t ', $this->tables);
+        if (!empty($this->includeTables)) {
+            $command[] = '-t ' . implode(' -t ', $this->includeTables);
         }
 
         if (!empty($this->excludeTables)) {

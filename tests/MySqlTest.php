@@ -107,7 +107,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables(array('tb1', 'tb2', 'tb3'))
+            ->includeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname tb1 tb2 tb3 > "dump.sql"', $dumpCommand);
@@ -120,7 +120,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables('tb1 tb2 tb3')
+            ->includeTables('tb1 tb2 tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname tb1 tb2 tb3 > "dump.sql"', $dumpCommand);
@@ -135,8 +135,8 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setTables('tb1 tb2 tb3')
-            ->setExcludeTables('tb4 tb5 tb6');
+            ->includeTables('tb1 tb2 tb3')
+            ->excludeTables('tb4 tb5 tb6');
     }
 
     /** @test */
@@ -146,7 +146,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables(array('tb1', 'tb2', 'tb3'))
+            ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
@@ -160,7 +160,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables('tb1 tb2 tb3')
+            ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' . 
@@ -176,8 +176,8 @@ class MySqlTest extends PHPUnit_Framework_TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setExcludeTables('tb1 tb2 tb3')
-            ->setTables('tb4 tb5 tb6');
+            ->excludeTables('tb1 tb2 tb3')
+            ->includeTables('tb4 tb5 tb6');
     }
 
     /** @test */

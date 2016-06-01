@@ -12,7 +12,7 @@ class CannotSetParameter extends Exception
      *
      * @return \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
-    public static function conflictParameters($name, $conflictName)
+    public static function conflictingParameters($name, $conflictName)
     {
         return new static("Cannot set {$name}! Conflicts with parameter {$conflictName}.");
     }

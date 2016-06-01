@@ -77,7 +77,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setTables(array('table1', 'table2', 'table3'))
+    ->includeTables(['table1', 'table2', 'table3'])
     ->dumpToFile('dump.sql');
 ```
 Using a string:
@@ -87,7 +87,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setTables('table1 table2 table3')
+    ->includeTables('table1, table2, table3')
     ->dumpToFile('dump.sql');
 ```
 
@@ -100,7 +100,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setExcludeTables(array('table1', 'table2', 'table3'))
+    ->excludeTables(['table1', 'table2', 'table3'])
     ->dumpToFile('dump.sql');
 ```
 Using a string:
@@ -110,7 +110,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setExcludeTables('table1 table2 table3')
+    ->excludeTables('table1, table2, table3')
     ->dumpToFile('dump.sql');
 ```
 
@@ -168,7 +168,7 @@ Spatie\DbDumper\Databases\PostgreSql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setExcludeTables(array('table1', 'table2', 'table3'))
+    ->excludeTables(array('table1', 'table2', 'table3'))
     ->dumpToFile('dump.sql');
 ```
 Using a string:
@@ -178,7 +178,7 @@ Spatie\DbDumper\Databases\PostgreSql::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->setExcludeTables('table1 table2 table3')
+    ->excludeTables('table1 table2 table3')
     ->dumpToFile('dump.sql');
 ```
 
