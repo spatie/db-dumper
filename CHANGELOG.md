@@ -2,6 +2,9 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.4.0 - 2016-06-01
+- Added `includeTables` and `excludeTables`
+
 ## 1.4.0 - 2016-04-27
 
 - Added --single-transaction option to Mysql dump command
