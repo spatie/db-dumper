@@ -2,6 +2,9 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 1.5.1 - 2016-06-14
+-  Removed -d flag from pg_dump for compability with pgsql 7.3+
+
 ## 1.5.0 - 2016-06-01
 - Added `includeTables` and `excludeTables`
 
