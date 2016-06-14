@@ -228,7 +228,6 @@ class PostgreSql extends DbDumper
     {
         $command = [
             "{$this->dumpBinaryPath}pg_dump",
-            "-d {$this->dbName}",
             "-U {$this->userName}",
             '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
@@ -284,6 +283,7 @@ class PostgreSql extends DbDumper
     {
         return [
             'PGPASSFILE' => $temporaryCredentialsFile,
+            'PGDATABASE' => $this->dbName,
         ];
     }
 }
