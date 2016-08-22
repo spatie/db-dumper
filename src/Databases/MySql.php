@@ -14,7 +14,9 @@ class MySql extends DbDumper
     protected $password;
     protected $host = 'localhost';
     protected $port = 3306;
-    protected $ssl_options = [];
+    protected $ssl_ca_path;
+    protected $ssl_cert_path;
+    protected $ssl_key_path;
     protected $socket;
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
@@ -92,13 +94,37 @@ class MySql extends DbDumper
     }
     
     /**
-     * @param array $options
+     * @param string $options
      *
      * @return \Spatie\DbDumper\Databases\MySql
      */
-    public function setSSLOptions($options)
+    public function setSSLCaPath($path)
     {
-        $this->ssl_options = $options;
+        $this->ssl_ca_path = $path;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $path
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setSSLCertPath($path)
+    {
+        $this->ssl_cert_path = $path;
+
+        return $this;
+    }
+    
+    /**
+     * @param string $path
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setSSLKeyPath($path)
+    {
+        $this->ssl_key_path = $path;
 
         return $this;
     }
@@ -305,9 +331,11 @@ class MySql extends DbDumper
             "port = '{$this->port}'",
         ];
         
-        if(count($this->ssl_options) > 0)
+        if($this->ssl_ca_path && $this->ssl_cert_path && $this->ssl_key_path)
         {
-          $contents = array_merge($contents,$this->ssl_options);    
+            $contents = array_push($contents,'ssl-ca',$this->ssl_ca_path);
+            $contents = array_push($contents,'ssl-cert',$this->ssl_cert_path);
+            $contents = array_push($contents,'ssl-key',$this->ssl_key_path);
         }
 
         return implode(PHP_EOL, $contents);
