@@ -14,6 +14,7 @@ class MySql extends DbDumper
     protected $password;
     protected $host = 'localhost';
     protected $port = 3306;
+    protected $ssl_options = [];
     protected $socket;
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
@@ -86,6 +87,18 @@ class MySql extends DbDumper
     public function setPort($port)
     {
         $this->port = $port;
+
+        return $this;
+    }
+    
+    /**
+     * @param array $options
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     */
+    public function setSSLOptions($options)
+    {
+        $this->ssl_options = $options;
 
         return $this;
     }
@@ -291,6 +304,11 @@ class MySql extends DbDumper
             "host = '{$this->host}'",
             "port = '{$this->port}'",
         ];
+        
+        if(count($this->ssl_options) > 0)
+        {
+          $contents = array_merge($contents,$this->ssl_options);    
+        }
 
         return implode(PHP_EOL, $contents);
     }
