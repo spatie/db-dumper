@@ -18,7 +18,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_will_throw_an_exception_when_no_credentials_are_set()
     {
-        $this->setExpectedException(CannotStartDump::class);
+        $this->expectException(CannotStartDump::class);
 
         MySql::create()->dumpToFile('test.sql');
     }
@@ -170,7 +170,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_will_throw_an_exception_when_setting_tables_after_setting_esclude_tables()
     {
-        $this->setExpectedException(CannotSetParameter::class);
+        $this->expectException(CannotSetParameter::class);
 
         $dumpCommand = MySql::create()
             ->setDbName('dbname')

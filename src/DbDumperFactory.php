@@ -8,7 +8,7 @@ use Spatie\DbDumper\Exceptions\CannotCreateDumper;
 
 class DbDumperFactory
 {
-    public function create(string $type)
+    public static function create(string $type)
     {
         $type = strtolower($type);
 

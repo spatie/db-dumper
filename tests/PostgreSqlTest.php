@@ -155,7 +155,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_will_throw_an_exception_when_setting_tables_after_setting_exclude_tables()
     {
-        $this->setExpectedException(CannotSetParameter::class);
+        $this->expectException(CannotSetParameter::class);
 
         $dumpCommand = PoStgreSql::create()
             ->setDbName('dbname')

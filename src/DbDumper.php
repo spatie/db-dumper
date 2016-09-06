@@ -2,6 +2,7 @@
 
 namespace Spatie\DbDumper;
 
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\DumpFailed;
 use Symfony\Component\Process\Process;
 
@@ -22,14 +23,20 @@ abstract class DbDumper
     /** @var int */
     protected $port = 5432;
 
-    /** @var int */
-    protected $socket = 0;
+    /** @var string */
+    protected $socket = '';
 
     /** @var int */
     protected $timeout = 0;
 
     /** @var string */
     protected $dumpBinaryPath = '';
+
+    /** @var array */
+    protected $includeTables = [];
+
+    /** @var array */
+    protected $excludeTables = [];
 
     public static function create()
     {
@@ -102,11 +109,11 @@ abstract class DbDumper
     }
 
     /**
-     * @param int $socket
+     * @param string $socket
      *
      * @return \Spatie\DbDumper\Databases\PostgreSql
      */
-    public function setSocket(int $socket)
+    public function setSocket(string $socket)
     {
         $this->socket = $socket;
 
@@ -137,6 +144,50 @@ abstract class DbDumper
         }
 
         $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    /**
+     * @param string|array $includeTables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
+     */
+    public function includeTables($includeTables)
+    {
+        if (!empty($this->excludeTables)) {
+            throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
+        }
+
+        if (!is_array($includeTables)) {
+            $includeTables = explode(', ', $includeTables);
+        }
+
+        $this->includeTables = $includeTables;
+
+        return $this;
+    }
+
+    /**
+     * @param string|array $excludeTables
+     *
+     * @return \Spatie\DbDumper\Databases\MySql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
+     */
+    public function excludeTables($excludeTables)
+    {
+        if (!empty($this->includeTables)) {
+            throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
+        }
+
+        if (!is_array($excludeTables)) {
+            $excludeTables = explode(', ', $excludeTables);
+        }
+
+        $this->excludeTables = $excludeTables;
 
         return $this;
     }

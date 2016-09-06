@@ -4,64 +4,18 @@ namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
-use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
     protected $useExtendedInserts = true;
     protected $useSingleTransaction = false;
-    protected $includeTables = [];
-    protected $excludeTables = [];
+
     protected $timeout;
 
     public function __construct()
     {
         $this->port = 3306;
-    }
-
-    /**
-     * @param string|array $includeTables
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function includeTables($includeTables)
-    {
-        if (!empty($this->excludeTables)) {
-            throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
-        }
-
-        if (!is_array($includeTables)) {
-            $includeTables = explode(', ', $includeTables);
-        }
-
-        $this->includeTables = $includeTables;
-
-        return $this;
-    }
-
-    /**
-     * @param string|array $excludeTables
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function excludeTables($excludeTables)
-    {
-        if (!empty($this->includeTables)) {
-            throw CannotSetParameter::conflictingParameters('excludeTables', 'tables');
-        }
-
-        if (!is_array($excludeTables)) {
-            $excludeTables = explode(', ', $excludeTables);
-        }
-
-        $this->excludeTables = $excludeTables;
-
-        return $this;
     }
 
     /**
@@ -154,7 +108,7 @@ class MySql extends DbDumper
             $command[] = '--single-transaction';
         }
 
-        if ($this->socket !== 0) {
+        if ($this->socket !== '') {
             $command[] = "--socket={$this->socket}";
         }
 

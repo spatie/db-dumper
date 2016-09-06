@@ -4,7 +4,6 @@ namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
-use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
@@ -12,72 +11,18 @@ class PostgreSql extends DbDumper
     protected $useInserts = false;
     protected $includeTables = [];
     protected $excludeTables = [];
-    protected $timeout = null;
 
     public function __construct()
     {
         $this->port = 5432;
     }
-    
-    /**
-     * @param string|array $includeTables
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function includeTables($includeTables)
-    {
-        if (!empty($this->excludeTables)) {
-            throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
-        }
 
-        if (!is_array($includeTables)) {
-            $includeTables = explode(', ', $includeTables);
-        }
-
-        $this->includeTables = $includeTables;
-
-        return $this;
-    }
-
-    /**
-     * @param string|array $excludeTables
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function excludeTables($excludeTables)
-    {
-        if (!empty($this->includeTables)) {
-            throw CannotSetParameter::conflictingParameters('excludeTables', 'tables');
-        }
-
-        if (!is_array($excludeTables)) {
-            $excludeTables = explode(', ', $excludeTables);
-        }
-
-        $this->excludeTables = $excludeTables;
-
-        return $this;
-    }
     /**
      * @return \Spatie\DbDumper\Databases\PostgreSql
      */
     public function useInserts()
     {
         $this->useInserts = true;
-
-        return $this;
-    }
-
-    /**
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function dontUseInserts()
-    {
-        $this->useInserts = false;
 
         return $this;
     }
@@ -123,7 +68,7 @@ class PostgreSql extends DbDumper
         $command = [
             "{$this->dumpBinaryPath}pg_dump",
             "-U {$this->userName}",
-            '-h '.($this->socket === 0 ? $this->host : $this->socket),
+            '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
             "--file=\"{$dumpFile}\"",
         ];
