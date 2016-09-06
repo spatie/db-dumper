@@ -107,7 +107,7 @@ class PostgreSql extends DbDumper
     protected function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if ($this->$requiredProperty == '') {
+            if (empty($this->$requiredProperty)) {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
