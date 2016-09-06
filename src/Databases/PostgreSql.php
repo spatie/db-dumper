@@ -11,7 +11,6 @@ class PostgreSql extends DbDumper
     /** @var bool */
     protected $useInserts = false;
 
-
     public function __construct()
     {
         $this->port = 5432;
@@ -47,7 +46,7 @@ class PostgreSql extends DbDumper
 
         $process = new Process($command, null, $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile));
 
-        if (!is_null($this->timeout)) {
+        if (! is_null($this->timeout)) {
             $process->setTimeout($this->timeout);
         }
 
@@ -77,15 +76,15 @@ class PostgreSql extends DbDumper
             $command[] = '--inserts';
         }
 
-        foreach($this->extraOptions as $extraOption) {
+        foreach ($this->extraOptions as $extraOption) {
             $command[] = $extraOption;
         }
 
-        if (!empty($this->includeTables)) {
+        if (! empty($this->includeTables)) {
             $command[] = '-t '.implode(' -t ', $this->includeTables);
         }
 
-        if (!empty($this->excludeTables)) {
+        if (! empty($this->excludeTables)) {
             $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 

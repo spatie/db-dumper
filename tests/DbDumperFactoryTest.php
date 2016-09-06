@@ -8,7 +8,6 @@ use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\DbDumperFactory;
 use Spatie\DbDumper\Exceptions\CannotCreateDumper;
 
-
 class DbDumperFactoryTest extends PHPUnit_Framework_TestCase
 {
     /** @test */

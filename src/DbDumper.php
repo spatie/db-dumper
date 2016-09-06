@@ -160,11 +160,11 @@ abstract class DbDumper
      */
     public function includeTables($includeTables)
     {
-        if (!empty($this->excludeTables)) {
+        if (! empty($this->excludeTables)) {
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
         }
 
-        if (!is_array($includeTables)) {
+        if (! is_array($includeTables)) {
             $includeTables = explode(', ', $includeTables);
         }
 
@@ -182,11 +182,11 @@ abstract class DbDumper
      */
     public function excludeTables($excludeTables)
     {
-        if (!empty($this->includeTables)) {
+        if (! empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
         }
 
-        if (!is_array($excludeTables)) {
+        if (! is_array($excludeTables)) {
             $excludeTables = explode(', ', $excludeTables);
         }
 
@@ -208,11 +208,11 @@ abstract class DbDumper
 
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile): bool
     {
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
         }
 
-        if (!file_exists($outputFile)) {
+        if (! file_exists($outputFile)) {
             throw DumpFailed::dumpfileWasNotCreated();
         }
 
