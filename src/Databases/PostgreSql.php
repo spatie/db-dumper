@@ -9,130 +9,22 @@ use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
 {
-    protected $dbName;
-    protected $userName;
-    protected $password;
-    protected $host = 'localhost';
-    protected $port = 5432;
-    protected $socket = '';
-    protected $dumpBinaryPath = '';
     protected $useInserts = false;
-    protected $includeTables = array();
-    protected $excludeTables = array();
+    protected $includeTables = [];
+    protected $excludeTables = [];
     protected $timeout = null;
 
-    /**
-     * @return string
-     */
-    public function getDbName()
+    public function __construct()
     {
-        return $this->dbName;
+        $this->port = 5432;
     }
-
-    /**
-     * @param string $dbName
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setDbName($dbName)
-    {
-        $this->dbName = $dbName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $userName
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @param string $host
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setHost($host)
-    {
-        $this->host = $host;
-
-        return $this;
-    }
-
-    /**
-     * @param int $port
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-
-        return $this;
-    }
-
-    /**
-     * @param string $socket
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setSocket($socket)
-    {
-        $this->socket = $socket;
-
-        return $this;
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-
-        return $this;
-    }
-
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setDumpBinaryPath($dumpBinaryPath)
-    {
-        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
-            $dumpBinaryPath .= '/';
-        }
-
-        $this->dumpBinaryPath = $dumpBinaryPath;
-
-        return $this;
-    }
-
+    
     /**
      * @param string|array $includeTables
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
     public function includeTables($includeTables)
     {
@@ -152,7 +44,9 @@ class PostgreSql extends DbDumper
     /**
      * @param string|array $excludeTables
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
     public function excludeTables($excludeTables)
     {
@@ -196,7 +90,7 @@ class PostgreSql extends DbDumper
      * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
      * @throws \Spatie\DbDumper\Exceptions\DumpFailed
      */
-    public function dumpToFile($dumpFile)
+    public function dumpToFile(string $dumpFile)
     {
         $this->guardAgainstIncompleteCredentials();
 
@@ -224,12 +118,12 @@ class PostgreSql extends DbDumper
      *
      * @return string
      */
-    public function getDumpCommand($dumpFile)
+    public function getDumpCommand(string $dumpFile): string
     {
         $command = [
             "{$this->dumpBinaryPath}pg_dump",
             "-U {$this->userName}",
-            '-h '.($this->socket === '' ? $this->host : $this->socket),
+            '-h '.($this->socket === 0 ? $this->host : $this->socket),
             "-p {$this->port}",
             "--file=\"{$dumpFile}\"",
         ];
@@ -249,10 +143,7 @@ class PostgreSql extends DbDumper
         return implode(' ', $command);
     }
 
-    /**
-     * @return string
-     */
-    public function getContentsOfCredentialsFile()
+    public function getContentsOfCredentialsFile(): string
     {
         $contents = [
             $this->host,
@@ -274,12 +165,7 @@ class PostgreSql extends DbDumper
         }
     }
 
-    /**
-     * @param $temporaryCredentialsFile
-     *
-     * @return array
-     */
-    private function getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile)
+    protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
     {
         return [
             'PGPASSFILE' => $temporaryCredentialsFile,

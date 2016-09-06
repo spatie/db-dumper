@@ -7,32 +7,143 @@ use Symfony\Component\Process\Process;
 
 abstract class DbDumper
 {
+    /** @var string */
+    protected $dbName;
+
+    /** @var string */
+    protected $userName;
+
+    /** @var string */
+    protected $password;
+
+    /** @var string */
+    protected $host = 'localhost';
+
+    /** @var int */
+    protected $port = 5432;
+
+    /** @var int */
+    protected $socket = 0;
+
+    /** @var int */
+    protected $timeout = 0;
+
+    /** @var string */
+    protected $dumpBinaryPath = '';
+
     public static function create()
     {
         return new static();
     }
 
-    /**
-     * Dump the contents of the database to the given file.
-     *
-     * @param string $dumpFile
-     */
-    abstract public function dumpToFile($dumpFile);
+    public function getDbName(): string
+    {
+        return $this->dbName;
+    }
 
     /**
-     * @return string
+     * @param string $dbName
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
      */
-    abstract public function getDbName();
+    public function setDbName(string $dbName)
+    {
+        $this->dbName = $dbName;
+
+        return $this;
+    }
 
     /**
-     * @param \Symfony\Component\Process\Process $process
-     * @param string                             $outputFile
+     * @param string $userName
      *
-     * @return bool
-     *
-     * @throws \Spatie\DbDumper\Exceptions\DumpFailed
+     * @return \Spatie\DbDumper\Databases\PostgreSql
      */
-    protected function checkIfDumpWasSuccessFul(Process $process, $outputFile)
+    public function setUserName(string $userName)
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+
+    /**
+     * @param string $password
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @param string $host
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setHost(string $host)
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * @param int $port
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setPort(int $port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * @param int $socket
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setSocket(int $socket)
+    {
+        $this->socket = $socket;
+
+        return $this;
+    }
+
+    /**
+     * @param int $timeout
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setTimeout(int $timeout)
+    {
+        $this->timeout = $timeout;
+
+        return $this;
+    }
+
+    /**
+     * @param string $dumpBinaryPath
+     *
+     * @return \Spatie\DbDumper\Databases\PostgreSql
+     */
+    public function setDumpBinaryPath(string $dumpBinaryPath)
+    {
+        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
+            $dumpBinaryPath .= '/';
+        }
+
+        $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    abstract public function dumpToFile(string $dumpFile);
+
+    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile): bool
     {
         if (!$process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);

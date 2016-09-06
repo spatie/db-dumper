@@ -9,131 +9,23 @@ use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
-    protected $dbName;
-    protected $userName;
-    protected $password;
-    protected $host = 'localhost';
-    protected $port = 3306;
-    protected $socket;
-    protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
     protected $useSingleTransaction = false;
-    protected $includeTables = array();
-    protected $excludeTables = array();
+    protected $includeTables = [];
+    protected $excludeTables = [];
     protected $timeout;
 
-    /**
-     * @return string
-     */
-    public function getDbName()
+    public function __construct()
     {
-        return $this->dbName;
-    }
-
-    /**
-     * @param string $dbName
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setDbName($dbName)
-    {
-        $this->dbName = $dbName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $userName
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setUserName($userName)
-    {
-        $this->userName = $userName;
-
-        return $this;
-    }
-
-    /**
-     * @param string $password
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @param string $host
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setHost($host)
-    {
-        $this->host = $host;
-
-        return $this;
-    }
-
-    /**
-     * @param int $port
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setPort($port)
-    {
-        $this->port = $port;
-
-        return $this;
-    }
-
-    /**
-     * @param int $socket
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setSocket($socket)
-    {
-        $this->socket = $socket;
-
-        return $this;
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
-     */
-    public function setTimeout($timeout)
-    {
-        $this->timeout = $timeout;
-
-        return $this;
-    }
-
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return \Spatie\DbDumper\Databases\MySql
-     */
-    public function setDumpBinaryPath($dumpBinaryPath)
-    {
-        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
-            $dumpBinaryPath .= '/';
-        }
-
-        $this->dumpBinaryPath = $dumpBinaryPath;
-
-        return $this;
+        $this->port = 3306;
     }
 
     /**
      * @param string|array $includeTables
      *
      * @return \Spatie\DbDumper\Databases\MySql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
     public function includeTables($includeTables)
     {
@@ -151,9 +43,11 @@ class MySql extends DbDumper
     }
 
     /**
-     * @param string/array $excludeTables
+     * @param string|array $excludeTables
      *
      * @return \Spatie\DbDumper\Databases\MySql
+     *
+     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
     public function excludeTables($excludeTables)
     {
@@ -218,7 +112,7 @@ class MySql extends DbDumper
      * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
      * @throws \Spatie\DbDumper\Exceptions\DumpFailed
      */
-    public function dumpToFile($dumpFile)
+    public function dumpToFile(string $dumpFile)
     {
         $this->guardAgainstIncompleteCredentials();
 
@@ -247,7 +141,7 @@ class MySql extends DbDumper
      *
      * @return string
      */
-    public function getDumpCommand($dumpFile, $temporaryCredentialsFile)
+    public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $command = [
             "{$this->dumpBinaryPath}mysqldump",
@@ -260,12 +154,12 @@ class MySql extends DbDumper
             $command[] = '--single-transaction';
         }
 
-        if ($this->socket != '') {
+        if ($this->socket !== 0) {
             $command[] = "--socket={$this->socket}";
         }
 
         if (!empty($this->excludeTables)) {
-            $command[] = '--ignore-table='.implode(' --ignore-table=', $this->excludeTables);
+            $command[] = '--ignore-table=' . implode(' --ignore-table=', $this->excludeTables);
         }
 
         $command[] = "{$this->dbName}";
@@ -279,10 +173,7 @@ class MySql extends DbDumper
         return implode(' ', $command);
     }
 
-    /**
-     * @return string
-     */
-    public function getContentsOfCredentialsFile()
+    public function getContentsOfCredentialsFile(): string
     {
         $contents = [
             '[client]',
