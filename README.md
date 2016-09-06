@@ -9,7 +9,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
 This repo contains an easy to use class to dump a database using PHP. Currently MySQL and PostgreSQL are supported. Behind
-the scences `mysqldump` and `pg_dump` are used.
+the scenes `mysqldump` and `pg_dump` are used.
 
 Here's a simple example of how to create a dump of MySQL-datbase:
 
@@ -54,9 +54,7 @@ $ composer require spatie/db-dumper
 
 ## Usage
 
-### MySQL
-
-This is the simplest way to create a dump of the db:
+This is the simplest way to create a dump of a MySql db:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -66,7 +64,17 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-If the `mysqldump`  binary is installed in a non default location you can let the package know by using the`setDumpBinaryPath()`-function:
+If you're working with PostgreSQL just use that dumper, most methods are available on both the MySql. and PostgreSql-dumper.
+
+```php
+Spatie\DbDumper\Databases\PostgreSql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+If the `mysqldump` (or `pg_dump`) binary is installed in a non default location you can let the package know by using the`setDumpBinaryPath()`-function:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -77,7 +85,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-#### Dump specific tables
+### Dump specific tables
 
 Using an array:
 
@@ -123,75 +131,9 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-### PostreSQL
 
-This is the simplest way to create a dump of the db:
 
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->dumpToFile('dump.sql');
-```
-
-If the `pg_dump` binary is installed in a non default location you can let the package know by using the `setDumpBinaryPath()`-function:
-
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDumpBinaryPath('/custom/location')
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->dumpToFile('dump.sql');
-```
-#### Dump specific tables
-
-Using an array:
-
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->setTables(array('table1', 'table2', 'table3'))
-    ->dumpToFile('dump.sql');
-```
-Using a string:
-
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->setTables('table1 table2 table3')
-    ->dumpToFile('dump.sql');
-```
-
-#### Excluding tables from the dump
-
-Using an array:
-
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->excludeTables(array('table1', 'table2', 'table3'))
-    ->dumpToFile('dump.sql');
-```
-Using a string:
-
-```php
-Spatie\DbDumper\Databases\PostgreSql::create()
-    ->setDbName($databaseName)
-    ->setUserName($userName)
-    ->setPassword($password)
-    ->excludeTables('table1 table2 table3')
-    ->dumpToFile('dump.sql');
-```
-
-#### Adding extra options
+### Adding extra options
 If you want to add an arbitrary option to the dump command you can use `addOption`
 
 ```php
