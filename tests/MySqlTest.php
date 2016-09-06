@@ -131,7 +131,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(CannotSetParameter::class);
 
-        $dumpCommand = MySql::create()
+        MySql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -172,7 +172,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     {
         $this->expectException(CannotSetParameter::class);
 
-        $dumpCommand = MySql::create()
+        MySql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
