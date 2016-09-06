@@ -190,6 +190,17 @@ Spatie\DbDumper\Databases\PostgreSql::create()
     ->dumpToFile('dump.sql');
 ```
 
+#### Adding extra options
+If you want to add an arbitrary option to the dump command you can use `addOption`
+
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->addExtraOption('--xml')
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
 
 ## Changelog
 

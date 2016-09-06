@@ -90,7 +90,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_generate_a_dump_command_for_specific_tables_as_array()
     {
-        $dumpCommand = PoStgreSql::create()
+        $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -103,7 +103,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_generate_a_dump_command_for_specific_tables_as_string()
     {
-        $dumpCommand = PoStgreSql::create()
+        $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -118,7 +118,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(CannotSetParameter::class);
 
-        $dumpCommand = PoStgreSql::create()
+        PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -129,7 +129,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_generate_a_dump_command_excluding_tables_as_array()
     {
-        $dumpCommand = PoStgreSql::create()
+        $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -142,7 +142,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_can_generate_a_dump_command_excluding_tables_as_string()
     {
-        $dumpCommand = PoStgreSql::create()
+        $dumpCommand = PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -157,7 +157,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     {
         $this->expectException(CannotSetParameter::class);
 
-        $dumpCommand = PoStgreSql::create()
+        PostgreSql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
@@ -187,5 +187,18 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
         $dbDumper = PostgreSql::create()->setDbName($dbName);
 
         $this->assertEquals($dbName, $dbDumper->getDbName());
+    }
+
+    /** @test */
+    public function it_can_add_an_extra_option()
+    {
+        $dumpCommand = PostgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->addExtraOption('-something-else')
+            ->getDumpCommand('dump.sql');
+
+        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -something-else', $dumpCommand);
     }
 }

@@ -8,10 +8,11 @@ use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
+    /** @var bool */
     protected $useExtendedInserts = true;
-    protected $useSingleTransaction = false;
 
-    protected $timeout;
+    /** @var bool */
+    protected $useSingleTransaction = false;
 
     public function __construct()
     {
@@ -114,6 +115,10 @@ class MySql extends DbDumper
 
         if (!empty($this->excludeTables)) {
             $command[] = '--ignore-table=' . implode(' --ignore-table=', $this->excludeTables);
+        }
+
+        foreach($this->extraOptions as $extraOption) {
+            $command[] = $extraOption;
         }
 
         $command[] = "{$this->dbName}";

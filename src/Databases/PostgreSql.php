@@ -8,9 +8,9 @@ use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
 {
+    /** @var bool */
     protected $useInserts = false;
-    protected $includeTables = [];
-    protected $excludeTables = [];
+
 
     public function __construct()
     {
@@ -75,6 +75,10 @@ class PostgreSql extends DbDumper
 
         if ($this->useInserts) {
             $command[] = '--inserts';
+        }
+
+        foreach($this->extraOptions as $extraOption) {
+            $command[] = $extraOption;
         }
 
         if (!empty($this->includeTables)) {

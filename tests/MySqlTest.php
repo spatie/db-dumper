@@ -205,4 +205,18 @@ class MySqlTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($dbName, $dbDumper->getDbName());
     }
+
+    /** @test */
+    public function it_can_add_extra_options()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->addExtraOption('--extra-option')
+            ->addExtraOption('--another-extra-option="value"')
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('mysqldump --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"', $dumpCommand);
+    }
 }

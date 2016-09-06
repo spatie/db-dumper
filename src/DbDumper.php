@@ -38,6 +38,9 @@ abstract class DbDumper
     /** @var array */
     protected $excludeTables = [];
 
+    /** @var array */
+    protected $extraOptions = [];
+
     public static function create()
     {
         return new static();
@@ -188,6 +191,15 @@ abstract class DbDumper
         }
 
         $this->excludeTables = $excludeTables;
+
+        return $this;
+    }
+
+    public function addExtraOption(string $extraOption = '')
+    {
+        if (! empty($extraOption)) {
+            $this->extraOptions[] = $extraOption;
+        }
 
         return $this;
     }
