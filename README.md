@@ -34,7 +34,8 @@ Spatie\DbDumper\Databases\PostgreSql::create()
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
 ## Requirements
-For dumping MySQL-db's `mysqldump` should be installed
+For dumping MySQL-db's `mysqldump` should be installed.
+
 For dumping PostgreSQL-db's `pg_dump` should be installed.
 
 ## Postcardware
