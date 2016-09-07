@@ -2,7 +2,13 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 2.0.0 - 2016-09-07
+
+- refactored all classes
+- added the ability to add artribrary options
+
 ## 1.5.1 - 2016-06-14
+
 -  Removed -d flag from pg_dump for compability with pgsql 7.3+
 
 ## 1.5.0 - 2016-06-01
