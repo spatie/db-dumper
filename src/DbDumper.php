@@ -54,7 +54,7 @@ abstract class DbDumper
     /**
      * @param string $dbName
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setDbName(string $dbName)
     {
@@ -66,7 +66,7 @@ abstract class DbDumper
     /**
      * @param string $userName
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setUserName(string $userName)
     {
@@ -78,7 +78,7 @@ abstract class DbDumper
     /**
      * @param string $password
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setPassword(string $password)
     {
@@ -90,7 +90,7 @@ abstract class DbDumper
     /**
      * @param string $host
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setHost(string $host)
     {
@@ -102,7 +102,7 @@ abstract class DbDumper
     /**
      * @param int $port
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setPort(int $port)
     {
@@ -114,7 +114,7 @@ abstract class DbDumper
     /**
      * @param string $socket
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setSocket(string $socket)
     {
@@ -126,7 +126,7 @@ abstract class DbDumper
     /**
      * @param int $timeout
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setTimeout(int $timeout)
     {
@@ -138,7 +138,7 @@ abstract class DbDumper
     /**
      * @param string $dumpBinaryPath
      *
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function setDumpBinaryPath(string $dumpBinaryPath)
     {
@@ -154,7 +154,7 @@ abstract class DbDumper
     /**
      * @param string|array $includeTables
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      *
      * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
@@ -176,7 +176,7 @@ abstract class DbDumper
     /**
      * @param string|array $excludeTables
      *
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      *
      * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
      */
@@ -195,7 +195,12 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOption(string $extraOption = '')
+    /**
+     * @param string $extraOption
+     *
+     * @return $this
+     */
+    public function addExtraOption(string $extraOption)
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
@@ -206,7 +211,7 @@ abstract class DbDumper
 
     abstract public function dumpToFile(string $dumpFile);
 
-    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile): bool
+    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
     {
         if (! $process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
@@ -219,7 +224,5 @@ abstract class DbDumper
         if (filesize($outputFile) === 0) {
             throw DumpFailed::dumpfileWasEmpty();
         }
-
-        return true;
     }
 }
