@@ -195,7 +195,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOption(string $extraOption = '')
+    public function addExtraOption(string $extraOption)
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
