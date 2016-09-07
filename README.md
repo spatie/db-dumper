@@ -11,7 +11,7 @@
 This repo contains an easy to use class to dump a database using PHP. Currently MySQL and PostgreSQL are supported. Behind
 the scenes `mysqldump` and `pg_dump` are used.
 
-Here's a simple example of how to create a dump of MySQL-datbase:
+Here's a simple example of how to create a dump of MySQL-database:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
