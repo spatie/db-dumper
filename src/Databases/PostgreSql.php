@@ -17,7 +17,7 @@ class PostgreSql extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\PostgreSql
+     * @return $this
      */
     public function useInserts()
     {

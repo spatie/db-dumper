@@ -20,7 +20,7 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function useExtendedInserts()
     {
@@ -30,7 +30,7 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function dontUseExtendedInserts()
     {
@@ -40,7 +40,7 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function useSingleTransaction()
     {
@@ -50,7 +50,7 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\MySql
+     * @return $this
      */
     public function dontUseSingleTransaction()
     {
