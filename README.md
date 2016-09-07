@@ -108,7 +108,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-#### Excluding tables from the dump
+### Excluding tables from the dump
 
 Using an array:
 
