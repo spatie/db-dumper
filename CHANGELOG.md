@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 2.0.1 - 2016-09-17
+
+- fix for dump paths with spaces
+
 ## 2.0.0 - 2016-09-07
 
 - refactored all classes

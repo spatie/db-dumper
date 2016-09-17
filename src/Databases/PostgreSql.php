@@ -65,7 +65,7 @@ class PostgreSql extends DbDumper
     public function getDumpCommand(string $dumpFile): string
     {
         $command = [
-            "{$this->dumpBinaryPath}pg_dump",
+            "'{$this->dumpBinaryPath}pg_dump'",
             "-U {$this->userName}",
             '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",

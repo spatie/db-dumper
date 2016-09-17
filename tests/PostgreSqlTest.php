@@ -18,7 +18,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function it_will_throw_an_exception_when_no_credentials_are_set()
     {
-        $this->setExpectedException(CannotStartDump::class);
+        $this->expectException(CannotStartDump::class);
 
         PostgreSql::create()->dumpToFile('test.sql');
     }
@@ -32,7 +32,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setPassword('password')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -45,7 +45,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->useInserts()
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" --inserts', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" --inserts', $dumpCommand);
     }
 
     /** @test */
@@ -58,7 +58,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setPort(1234)
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 1234 --file="dump.sql"', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 1234 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -71,7 +71,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('/custom/directory/pg_dump -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
+        $this->assertSame('\'/custom/directory/pg_dump\' -U username -h localhost -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -84,7 +84,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->setSocket('/var/socket.1234')
             ->getDumpCommand('dump.sql');
 
-        $this->assertEquals('pg_dump -U username -h /var/socket.1234 -p 5432 --file="dump.sql"', $dumpCommand);
+        $this->assertEquals('\'pg_dump\' -U username -h /var/socket.1234 -p 5432 --file="dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -97,7 +97,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->includeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
     }
 
     /** @test */
@@ -110,13 +110,13 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->includeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -t tb1 -t tb2 -t tb3', $dumpCommand);
     }
 
     /** @test */
     public function it_will_throw_an_exception_when_setting_exclude_tables_after_setting_tables()
     {
-        $this->setExpectedException(CannotSetParameter::class);
+        $this->expectException(CannotSetParameter::class);
 
         PostgreSql::create()
             ->setDbName('dbname')
@@ -136,7 +136,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
     }
 
     /** @test */
@@ -149,7 +149,7 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -T tb1 -T tb2 -T tb3', $dumpCommand);
     }
 
     /** @test */
@@ -199,6 +199,6 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
             ->addExtraOption('-something-else')
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('pg_dump -U username -h localhost -p 5432 --file="dump.sql" -something-else', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -something-else', $dumpCommand);
     }
 }

@@ -99,7 +99,7 @@ class MySql extends DbDumper
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $command = [
-            "{$this->dumpBinaryPath}mysqldump",
+            "'{$this->dumpBinaryPath}mysqldump'",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
             '--skip-comments',
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
