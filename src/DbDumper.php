@@ -99,6 +99,11 @@ abstract class DbDumper
         return $this;
     }
 
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
     /**
      * @param int $port
      *

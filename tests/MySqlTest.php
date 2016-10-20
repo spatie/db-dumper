@@ -219,4 +219,12 @@ class MySqlTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"', $dumpCommand);
     }
+
+    /** @test */
+    public function it_can_get_the_host()
+    {
+        $dumper = MySql::create()->setHost('myHost');
+
+        $this->assertEquals('myHost', $dumper->getHost());
+    }
 }

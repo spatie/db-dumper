@@ -201,4 +201,12 @@ class PostgreSqlTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --file="dump.sql" -something-else', $dumpCommand);
     }
+
+    /** @test */
+    public function it_can_get_the_host()
+    {
+        $dumper = PostgreSql::create()->setHost('myHost');
+
+        $this->assertEquals('myHost', $dumper->getHost());
+    }
 }
