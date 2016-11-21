@@ -38,13 +38,14 @@ class Sqlite extends DbDumper
      */
     public function getDumpCommand(string $dumpFile): string
     {
-        $command[] = 'echo $\'BEGIN IMMEDIATE;\n.dump\'';
-        $command[] = '|';
-        $command[] = "\"{$this->dumpBinaryPath}sqlite3\" --bail";
-        $command[] = "\"$this->dbName\"";
-        $command[] = '>';
-        $command[] = "\"{$dumpFile}\"";
 
-        return implode(' ', $command);
+        return implode(' ', [
+            'echo $\'BEGIN IMMEDIATE;\n.dump\'',
+            '|',
+            "\"{$this->dumpBinaryPath}sqlite3\" --bail",
+            "\"$this->dbName\"",
+            '>',
+            "\"{$dumpFile}\"",
+        ]);
     }
 }
