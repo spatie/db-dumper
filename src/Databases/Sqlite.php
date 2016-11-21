@@ -43,7 +43,7 @@ class Sqlite extends DbDumper
             'echo $\'BEGIN IMMEDIATE;\n.dump\'',
             '|',
             "\"{$this->dumpBinaryPath}sqlite3\" --bail",
-            "\"$this->dbName\"",
+            "\"{$this->dbName}\"",
             '>',
             "\"{$dumpFile}\"",
         ]);
