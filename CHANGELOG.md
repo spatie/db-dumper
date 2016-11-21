@@ -2,7 +2,7 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
-## 2.1.1 - 2016-11-21
+## 2.1.2 - 2016-11-21
 
 - Add a support for SQLite
 
