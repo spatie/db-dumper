@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## Unreleased
+
+- Add a basic support for SQLite
+
 ## 2.1.1 - 2016-11-19
 
 - made a change so the package can be used on Windows
