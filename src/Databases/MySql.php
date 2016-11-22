@@ -127,6 +127,10 @@ class MySql extends DbDumper
             $command[] = implode(' ', $this->includeTables);
         }
 
+        if($this->extraOption){
+            $command[] = $this->extraOption;
+        }
+
         $command[] = "> \"{$dumpFile}\"";
 
         return implode(' ', $command);
