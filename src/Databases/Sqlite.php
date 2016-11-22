@@ -38,7 +38,6 @@ class Sqlite extends DbDumper
      */
     public function getDumpCommand(string $dumpFile): string
     {
-
         return implode(' ', [
             'echo $\'BEGIN IMMEDIATE;\n.dump\' |',
             "\"{$this->dumpBinaryPath}sqlite3\" --bail",
