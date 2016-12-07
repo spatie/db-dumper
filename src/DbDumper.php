@@ -2,9 +2,9 @@
 
 namespace Spatie\DbDumper;
 
-use Spatie\DbDumper\Exceptions\CannotSetParameter;
-use Spatie\DbDumper\Exceptions\DumpFailed;
 use Symfony\Component\Process\Process;
+use Spatie\DbDumper\Exceptions\DumpFailed;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
 abstract class DbDumper
 {
