@@ -4,8 +4,8 @@ namespace Spatie\DbDumper\Test;
 
 use PHPUnit_Framework_TestCase;
 use Spatie\DbDumper\Databases\PostgreSql;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class PostgreSqlTest extends PHPUnit_Framework_TestCase
 {
