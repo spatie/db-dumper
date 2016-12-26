@@ -233,7 +233,9 @@ class PostgreSql extends DbDumper
             "-p {$this->port}",
             "--file=\"{$dumpFile}\"",
         ];
-
+        if (!file_exists("{$this->dumpBinaryPath}pg_dump")) {
+            throw new \Exception("The pg_dump executable could not be found");
+        }
         if ($this->useInserts) {
             $command[] = '--inserts';
         }

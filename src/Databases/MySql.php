@@ -227,7 +227,6 @@ class MySql extends DbDumper
         $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
-
         $process = new Process($command);
 
         if (!is_null($this->timeout)) {
@@ -255,6 +254,9 @@ class MySql extends DbDumper
             '--skip-comments',
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
+        if (!file_exists("{$this->dumpBinaryPath}mysqldump")) {
+            throw new \Exception("The mysqldump executable could not be found");
+        }
 
         if ($this->useSingleTransaction) {
             $command[] = '--single-transaction';
