@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
@@ -17,8 +17,8 @@ class PostgreSql extends DbDumper
     protected $socket = '';
     protected $dumpBinaryPath = '';
     protected $useInserts = false;
-    protected $includeTables = array();
-    protected $excludeTables = array();
+    protected $includeTables = [];
+    protected $excludeTables = [];
     protected $timeout = null;
 
     /**
@@ -168,6 +168,7 @@ class PostgreSql extends DbDumper
 
         return $this;
     }
+
     /**
      * @return \Spatie\DbDumper\Databases\PostgreSql
      */
@@ -233,7 +234,9 @@ class PostgreSql extends DbDumper
             "-p {$this->port}",
             "--file=\"{$dumpFile}\"",
         ];
-
+        if (!file_exists("{$this->dumpBinaryPath}pg_dump")) {
+            throw new \Exception('The pg_dump executable could not be found');
+        }
         if ($this->useInserts) {
             $command[] = '--inserts';
         }
