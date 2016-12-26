@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
@@ -18,8 +18,8 @@ class MySql extends DbDumper
     protected $dumpBinaryPath = '';
     protected $useExtendedInserts = true;
     protected $useSingleTransaction = false;
-    protected $includeTables = array();
-    protected $excludeTables = array();
+    protected $includeTables = [];
+    protected $excludeTables = [];
     protected $timeout;
 
     /**
@@ -255,7 +255,7 @@ class MySql extends DbDumper
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
         if (!file_exists("{$this->dumpBinaryPath}mysqldump")) {
-            throw new \Exception("The mysqldump executable could not be found");
+            throw new \Exception('The mysqldump executable could not be found');
         }
 
         if ($this->useSingleTransaction) {
