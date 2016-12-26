@@ -4,8 +4,8 @@ namespace Spatie\DbDumper\Test;
 
 use PHPUnit_Framework_TestCase;
 use Spatie\DbDumper\Databases\MySql;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MySqlTest extends PHPUnit_Framework_TestCase
 {

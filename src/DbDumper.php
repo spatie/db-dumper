@@ -28,9 +28,9 @@ abstract class DbDumper
      * @param \Symfony\Component\Process\Process $process
      * @param string                             $outputFile
      *
-     * @return bool
-     *
      * @throws \Spatie\DbDumper\Exceptions\DumpFailed
+     *
+     * @return bool
      */
     protected function checkIfDumpWasSuccessFul(Process $process, $outputFile)
     {
