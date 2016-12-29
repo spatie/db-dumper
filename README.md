@@ -8,11 +8,12 @@
 [![StyleCI](https://styleci.io/repos/49829051/shield?branch=master)](https://styleci.io/repos/49829051)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This repo contains an easy to use class to dump a database using PHP. Currently MySQL and PostgreSQL are supported. Behind
-the scenes `mysqldump` and `pg_dump` are used.
+This repo contains an easy to use class to dump a database using PHP. Currently MySQL, PostgreSQL and SQLite are supported. Behind
+the scenes `mysqldump`, `pg_dump` and `sqlite3` are used.
 
-Here's a simple example of how to create a dump of MySQL-database:
+Here's are simple examples of how to create a database dump with different drivers:
 
+**MySQL**
 ```php
 Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
@@ -21,7 +22,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-And here's the PostgreSQL version of that:
+**PostgreSQL**
 
 ```php
 Spatie\DbDumper\Databases\PostgreSql::create()
@@ -31,12 +32,22 @@ Spatie\DbDumper\Databases\PostgreSql::create()
     ->dumpToFile('dump.sql');
 ```
 
+**SQLite**
+
+```php
+Spatie\DbDumper\Databases\Sqlite::create()
+    ->setDbName($pathToDatabaseFile)
+    ->dumpToFile('dump.sql');
+```
+
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
 ## Requirements
 For dumping MySQL-db's `mysqldump` should be installed.
 
 For dumping PostgreSQL-db's `pg_dump` should be installed.
+
+For dumping SQLite-db's `sqlite3` should be installed.
 
 ## Postcardware
 
@@ -169,7 +180,7 @@ If you discover any security related issues, please email freek@spatie.be instea
 - [Freek Van der Herten](https://github.com/freekmurze)
 - [All Contributors](../../contributors)
 
-Initial PostgreSQL support was contributed by [Adriano Machado](https://github.com/ammachado).
+Initial PostgreSQL support was contributed by [Adriano Machado](https://github.com/ammachado). SQlite support was contributed by [Peter Matseykanets](https://twitter.com/pmatseykanets).
 
 ## About Spatie
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
