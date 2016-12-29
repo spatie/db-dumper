@@ -121,8 +121,10 @@ class MySql extends DbDumper
      */
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
+        $quote = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? "\"" : "'");
+        
         $command = [
-            "\"{$this->dumpBinaryPath}mysqldump\"",
+            "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
