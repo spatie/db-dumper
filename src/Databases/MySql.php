@@ -14,6 +14,9 @@ class MySql extends DbDumper
     /** @var bool */
     protected $useSingleTransaction = false;
 
+    /** @var bool */
+    protected $useSkipComments = true;
+
     public function __construct()
     {
         $this->port = 3306;
@@ -60,6 +63,26 @@ class MySql extends DbDumper
     }
 
     /**
+     * @return $this
+     */
+    public function useSkipComments()
+    {
+        $this->useSkipComments = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontUseSkipComments()
+    {
+        $this->useSkipComments = false;
+
+        return $this;
+    }
+
+    /**
      * Dump the contents of the database to the given file.
      *
      * @param string $dumpFile
@@ -99,11 +122,14 @@ class MySql extends DbDumper
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $command = [
-            "'{$this->dumpBinaryPath}mysqldump'",
+            "\"{$this->dumpBinaryPath}mysqldump\"",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
-            '--skip-comments',
             $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
+
+        if ($this->useSkipComments) {
+            $command[] = '--skip-comments';
+        }
 
         if ($this->useSingleTransaction) {
             $command[] = '--single-transaction';
