@@ -125,7 +125,7 @@ class MySql extends DbDumper
 
         $command = [
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
-            "--defaults-extra-file=\"{$temporaryCredentialsFile}\""
+            "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
         if ($this->skipComments) {
