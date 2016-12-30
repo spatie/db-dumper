@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 2.4.0 - 2016-12-30
+
+- Add `skipComments`
+
 ## 2.3.0 - 2016-11-21
 
 - Add support for SQLite

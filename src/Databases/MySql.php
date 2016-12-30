@@ -121,10 +121,8 @@ class MySql extends DbDumper
      */
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
-        $quote = $this->determineQuote($temporaryCredentialsFile);
-
         $command = [
-            "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
+            "\"{$this->dumpBinaryPath}mysqldump\"",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
@@ -181,17 +179,5 @@ class MySql extends DbDumper
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
-    }
-
-    public function determineQuote($temporaryCredentialsFile)
-    {
-        $quote = '"';
-
-        /* if call is not made from MySqlTest */
-        if ($temporaryCredentialsFile != 'credentials.txt') {
-            $quote = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'");
-        }
-
-        return $quote;
     }
 }
