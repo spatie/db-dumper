@@ -122,7 +122,7 @@ class MySql extends DbDumper
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $quote = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'");
-        
+
         $command = [
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
