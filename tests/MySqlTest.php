@@ -47,7 +47,7 @@ class MySqlTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame('"mysqldump" --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"', $dumpCommand);
     }
-    
+
     /** @test */
     public function it_can_generate_a_dump_command_without_using_comments()
     {
