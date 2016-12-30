@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MySql extends DbDumper
 {
@@ -130,8 +130,8 @@ class MySql extends DbDumper
 
         $command = [];
 
-        $command[] = $quote . $this->dumpBinaryPath . 'mysqldump' . $quote;
-        $command[] = '--defaults-extra-file="' . $temporaryCredentialsFile . '"';
+        $command[] = $quote.$this->dumpBinaryPath.'mysqldump'.$quote;
+        $command[] = '--defaults-extra-file="'.$temporaryCredentialsFile.'"';
         $command[] = $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert';
 
         if ($this->useSkipComments) {
@@ -143,7 +143,7 @@ class MySql extends DbDumper
         }
 
         if ($this->socket !== '') {
-            $command[] = '--socket=' . $this->socket;
+            $command[] = '--socket='.$this->socket;
         }
 
         if (! empty($this->excludeTables)) {
