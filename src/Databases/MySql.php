@@ -9,6 +9,9 @@ use Spatie\DbDumper\Exceptions\CannotStartDump;
 class MySql extends DbDumper
 {
     /** @var bool */
+    protected $skipComments = true;
+
+    /** @var bool */
     protected $useExtendedInserts = true;
 
     /** @var bool */
@@ -17,6 +20,26 @@ class MySql extends DbDumper
     public function __construct()
     {
         $this->port = 3306;
+    }
+
+    /**
+     * @return $this
+     */
+    public function skipComments()
+    {
+        $this->skipComments = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontSkipComments()
+    {
+        $this->skipComments = false;
+
+        return $this;
     }
 
     /**
@@ -98,12 +121,18 @@ class MySql extends DbDumper
      */
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
+        $quote = $this->determineQuote($temporaryCredentialsFile);
+
         $command = [
-            "\"{$this->dumpBinaryPath}mysqldump\"",
+            "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
-            '--skip-comments',
-            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
         ];
+
+        if ($this->skipComments) {
+            $command[] = '--skip-comments';
+        }
+
+        $command[] = $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert';
 
         if ($this->useSingleTransaction) {
             $command[] = '--single-transaction';
@@ -152,5 +181,17 @@ class MySql extends DbDumper
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
+    }
+
+    public function determineQuote($temporaryCredentialsFile)
+    {
+        $quote = '"';
+
+        /* if call is not made from MySqlTest */
+        if ($temporaryCredentialsFile != 'credentials.txt') {
+            $quote = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'");
+        }
+
+        return $quote;
     }
 }

@@ -36,6 +36,19 @@ class MySqlTest extends PHPUnit_Framework_TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_without_using_comments()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->dontSkipComments()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('"mysqldump" --defaults-extra-file="credentials.txt" --extended-insert dbname > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_without_using_extended_insterts()
     {
         $dumpCommand = MySql::create()
