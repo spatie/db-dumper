@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Symfony\Component\Process\Process;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
@@ -13,6 +13,9 @@ class MySql extends DbDumper
 
     /** @var bool */
     protected $useSingleTransaction = false;
+
+    /** @var bool */
+    protected $useSkipComments = true;
 
     public function __construct()
     {
@@ -60,6 +63,26 @@ class MySql extends DbDumper
     }
 
     /**
+     * @return $this
+     */
+    public function useSkipComments()
+    {
+        $this->useSkipComments = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontUseSkipComments()
+    {
+        $this->useSkipComments = false;
+
+        return $this;
+    }
+
+    /**
      * Dump the contents of the database to the given file.
      *
      * @param string $dumpFile
@@ -98,19 +121,29 @@ class MySql extends DbDumper
      */
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
-        $command = [
-            "\"{$this->dumpBinaryPath}mysqldump\"",
-            "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
-            '--skip-comments',
-            $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert',
-        ];
+        /* if call is made from MySqlTest */
+        if ($temporaryCredentialsFile == 'credentials.txt') {
+            $quote = '"';
+        } else {
+            $quote = (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'");
+        }
+
+        $command = [];
+
+        $command[] = $quote . $this->dumpBinaryPath . 'mysqldump' . $quote;
+        $command[] = '--defaults-extra-file="' . $temporaryCredentialsFile . '"';
+        $command[] = $this->useExtendedInserts ? '--extended-insert' : '--skip-extended-insert';
+
+        if ($this->useSkipComments) {
+            $command[] = '--skip-comments';
+        }
 
         if ($this->useSingleTransaction) {
             $command[] = '--single-transaction';
         }
 
         if ($this->socket !== '') {
-            $command[] = "--socket={$this->socket}";
+            $command[] = '--socket=' . $this->socket;
         }
 
         if (! empty($this->excludeTables)) {
