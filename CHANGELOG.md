@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 2.4.1 - 2016-12-31
+
+- fix bug where custom binary path with spaces on linux would not process correctly
+
 ## 2.4.0 - 2016-12-30
 
 - Add `skipComments`
