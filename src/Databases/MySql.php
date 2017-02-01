@@ -142,8 +142,8 @@ class MySql extends DbDumper
             $command[] = "--socket={$this->socket}";
         }
 
-        foreach($this->excludedTables as $excludedTable) {
-            $command[] = "--ignore-table={$this->dbName}.{$excludedTable}";
+        foreach($this->excludeTables as $table) {
+            $command[] = "--ignore-table={$this->dbName}.{$table}";
         }
 
         foreach ($this->extraOptions as $extraOption) {
