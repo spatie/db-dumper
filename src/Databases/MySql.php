@@ -17,6 +17,9 @@ class MySql extends DbDumper
     /** @var bool */
     protected $useSingleTransaction = false;
 
+    /** @var string */
+    protected $defaultCharacterSet = '';
+
     public function __construct()
     {
         $this->port = 3306;
@@ -78,6 +81,18 @@ class MySql extends DbDumper
     public function dontUseSingleTransaction()
     {
         $this->useSingleTransaction = false;
+
+        return $this;
+    }
+
+    /**
+     * @param string $characterSet
+     *
+     * @return $this
+     */
+    public function setDefaultCharacterSet(string $characterSet)
+    {
+        $this->defaultCharacterSet = $characterSet;
 
         return $this;
     }
@@ -146,17 +161,21 @@ class MySql extends DbDumper
             $command[] = '--ignore-table='.implode(' --ignore-table=', $this->excludeTables);
         }
 
+        if (! empty($this->defaultCharacterSet)) {
+            $command[] = '--default-character-set='.$this->defaultCharacterSet;
+        }
+
         foreach ($this->extraOptions as $extraOption) {
             $command[] = $extraOption;
         }
+
+        $command[] = "--result-file=\"{$dumpFile}\"";
 
         $command[] = "{$this->dbName}";
 
         if (! empty($this->includeTables)) {
             $command[] = implode(' ', $this->includeTables);
         }
-
-        $command[] = "> \"{$dumpFile}\"";
 
         return implode(' ', $command);
     }
