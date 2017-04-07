@@ -117,7 +117,7 @@ class MySql extends DbDumper
 
         $process = new Process($command);
 
-        if (! is_null($this->timeout)) {
+        if (!is_null($this->timeout)) {
             $process->setTimeout($this->timeout);
         }
 
@@ -157,12 +157,12 @@ class MySql extends DbDumper
             $command[] = "--socket={$this->socket}";
         }
 
-        if (! empty($this->excludeTables)) {
-            $command[] = '--ignore-table='.implode(' --ignore-table=', $this->excludeTables);
+        foreach ($this->excludeTables as $tableName) {
+            $command[] = "--ignore-table={$this->dbName}.{$tableName}";
         }
 
-        if (! empty($this->defaultCharacterSet)) {
-            $command[] = '--default-character-set='.$this->defaultCharacterSet;
+        if (!empty($this->defaultCharacterSet)) {
+            $command[] = '--default-character-set=' . $this->defaultCharacterSet;
         }
 
         foreach ($this->extraOptions as $extraOption) {
@@ -173,7 +173,7 @@ class MySql extends DbDumper
 
         $command[] = "{$this->dbName}";
 
-        if (! empty($this->includeTables)) {
+        if (!empty($this->includeTables)) {
             $command[] = implode(' ', $this->includeTables);
         }
 

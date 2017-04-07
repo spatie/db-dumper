@@ -2,6 +2,10 @@
 
 All Notable changes to `db-dumper` will be documented in this file
 
+## 2.5.1 - 2017-04-07
+
+- prefix excluded tables with database name when dumping a MySql db
+
 ## 2.5.0 - 2017-04-05
 
 - add `--default-character-set` option for MySql
