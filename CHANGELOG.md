@@ -1,6 +1,6 @@
 # Changelog
 
-All Notable changes to `db-dumper` will be documented in this file
+All notable changes to `db-dumper` will be documented in this file
 
 ## 2.5.1 - 2017-04-07
 
