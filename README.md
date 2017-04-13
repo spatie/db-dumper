@@ -40,7 +40,7 @@ Spatie\DbDumper\Databases\Sqlite::create()
     ->dumpToFile('dump.sql');
 ```
 
-**MondoDB**
+**MongoDB**
 
 ```php
 Spatie\DbDumper\Databases\MongoDb::create()
