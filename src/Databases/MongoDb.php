@@ -8,10 +8,6 @@ use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MongoDb extends DbDumper
 {
-    /**
-     * Mongodb Port.
-     * @var int
-     */
     protected $port = 27017;
 
     /**
@@ -61,9 +57,8 @@ class MongoDb extends DbDumper
     }
 
     /**
-     * Set the collection property.
+     * @param string $collection
      *
-     * @param  string $collection
      * @return \Spatie\DbDumper\Databases\MongoDb
      */
     public function setCollection(string $collection)
@@ -76,7 +71,8 @@ class MongoDb extends DbDumper
     /**
      * Generate the dump command for MongoDb.
      *
-     * @param  string $filename
+     * @param string $filename
+     *
      * @return string
      */
     public function getDumpCommand(string $filename) : string

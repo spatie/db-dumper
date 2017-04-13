@@ -2,11 +2,11 @@
 
 namespace Spatie\DbDumper\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 
-class MongoDbTest extends PHPUnit_Framework_TestCase
+class MongoDbTest extends TestCase
 {
     /** @test */
     public function it_provides_a_factory_method()

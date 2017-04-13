@@ -2,12 +2,12 @@
 
 namespace Spatie\DbDumper\Test;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
-class PostgreSqlTest extends PHPUnit_Framework_TestCase
+class PostgreSqlTest extends TestCase
 {
     /** @test */
     public function it_provides_a_factory_method()
