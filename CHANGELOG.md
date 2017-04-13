@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.6.0 - 2017-04-13
+
+- add support for MongoDB
+
 ## 2.5.1 - 2017-04-07
 
 - prefix excluded tables with database name when dumping a MySql db
