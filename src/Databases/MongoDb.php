@@ -11,7 +11,6 @@ class MongoDb extends DbDumper
     protected $port = 27017;
 
     /**
-     * Collection to dump.
      * @var null|string
      */
     protected $collection = null;
