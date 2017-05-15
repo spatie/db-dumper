@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.6.1 - 2017-04-13
+
+- fix sqlite dumper
+
 ## 2.6.0 - 2017-04-13
 
 - add support for MongoDB
