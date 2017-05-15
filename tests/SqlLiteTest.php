@@ -41,8 +41,8 @@ class SqlLiteTest extends TestCase
     /** @test */
     public function it_successfully_creates_a_backup()
     {
-        $dbPath = __DIR__.'/files/database.sqlite';
-        $dbBackupPath = __DIR__.'/files/backup.sql';
+        $dbPath = __DIR__ . '/stubs/database.sqlite';
+        $dbBackupPath = __DIR__ . '/temp/backup.sql';
 
         Sqlite::create()
             ->setDbName($dbPath)
