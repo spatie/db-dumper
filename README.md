@@ -47,6 +47,7 @@ Spatie\DbDumper\Databases\MongoDb::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
+    ->enableCompression()
     ->dumpToFile('dump.gz');
 ```
 

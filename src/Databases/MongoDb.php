@@ -10,10 +10,11 @@ class MongoDb extends DbDumper
 {
     protected $port = 27017;
 
-    /**
-     * @var null|string
-     */
+    /** @var null|string */
     protected $collection = null;
+
+    /** @var bool */
+    protected $enableCompression = false;
 
     /**
      * Dump the contents of the database to the given file.
@@ -68,6 +69,16 @@ class MongoDb extends DbDumper
     }
 
     /**
+     * @return \Spatie\DbDumper\Databases\MongoDb
+     */
+    public function enableCompression()
+    {
+        $this->enableCompression = true;
+
+        return $this;
+    }
+
+    /**
      * Generate the dump command for MongoDb.
      *
      * @param string $filename
@@ -79,7 +90,6 @@ class MongoDb extends DbDumper
         $command = [
             "'{$this->dumpBinaryPath}mongodump'",
             "--db {$this->dbName}",
-            '--gzip',
             "--archive=$filename",
         ];
 
@@ -101,6 +111,10 @@ class MongoDb extends DbDumper
 
         if (isset($this->collection)) {
             $command[] = "--collection {$this->collection}";
+        }
+
+        if ($this->enableCompression) {
+            $command[] = '--gzip';
         }
 
         return implode(' ', $command);

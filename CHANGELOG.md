@@ -2,6 +2,11 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.7.0 - 2017-04-13
+
+- `MongoDb` dumps won't be compressed by default anymore
+- add `enableCompression` on `MongoDb`
+
 ## 2.6.1 - 2017-04-13
 
 - fix sqlite dumper

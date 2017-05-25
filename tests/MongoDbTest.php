@@ -29,8 +29,20 @@ class MongoDbTest extends TestCase
             ->setDbName('dbname')
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname --gzip'
+        $this->assertSame('\'mongodump\' --db dbname'
             .' --archive=dbname.gz --host localhost --port 27017', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_compression_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->enableCompression()
+            ->getDumpCommand('dbname.gz');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive=dbname.gz --host localhost --port 27017 --gzip', $dumpCommand);
     }
 
     /** @test */
@@ -42,7 +54,7 @@ class MongoDbTest extends TestCase
             ->setPassword('password')
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname --gzip --archive=dbname.gz'
+        $this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
             .' --username username --password password --host localhost --port 27017', $dumpCommand);
     }
 
@@ -55,7 +67,7 @@ class MongoDbTest extends TestCase
             ->setPort(27018)
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname --gzip --archive=dbname.gz'
+        $this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
          .' --host mongodb.test.com --port 27018', $dumpCommand);
     }
 
@@ -67,7 +79,7 @@ class MongoDbTest extends TestCase
             ->setCollection('mycollection')
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname --gzip --archive=dbname.gz'
+        $this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
             .' --host localhost --port 27017 --collection mycollection', $dumpCommand);
     }
 
@@ -79,7 +91,7 @@ class MongoDbTest extends TestCase
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'/custom/directory/mongodump\' --db dbname --gzip --archive=dbname.gz'
+        $this->assertSame('\'/custom/directory/mongodump\' --db dbname --archive=dbname.gz'
             .' --host localhost --port 27017', $dumpCommand);
     }
 }
