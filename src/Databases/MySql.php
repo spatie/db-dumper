@@ -109,7 +109,7 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $tempFileHandle = tmpfile();
+        $tempFileHandle = fopen($dumpFile . "_cred", "w+");
         fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
         $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
