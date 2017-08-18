@@ -171,10 +171,11 @@ class MySql extends DbDumper
 
         $command[] = "--result-file=\"{$dumpFile}\"";
 
-        $command[] = "{$this->dbName}";
+        $command[] = "--databases {$this->dbName}";
 
         if (! empty($this->includeTables)) {
-            $command[] = implode(' ', $this->includeTables);
+            $includeTables = implode(' ', $this->includeTables);
+            $command[] = "--tables {$includeTables}";
         }
 
         return implode(' ', $command);
