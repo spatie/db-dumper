@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.8.0 - 2017-09-07
+
+- make `--databases` optional
+
 ## 2.7.0 - 2017-04-13
 
 - `MongoDb` dumps won't be compressed by default anymore
