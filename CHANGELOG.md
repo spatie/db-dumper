@@ -2,9 +2,13 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
-## 2.8.0 - 2017-09-07
+## 2.7.2 - 2017-09-07
 
 - make `--databases` optional
+
+## 2.7.1 - 2017-08-18
+
+- made option passing more flexible by adding `--databases` option to the MySQL dumper
 
 ## 2.7.0 - 2017-04-13
 
