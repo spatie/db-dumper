@@ -159,7 +159,7 @@ Spatie\DbDumper\Databases\MySql::create()
 
 
 ### Adding extra options
-If you want to add an arbitrary option to the dump command you can use `addOption`
+If you want to add an arbitrary option to the dump command you can use `addExtraOption`
 
 ```php
 $dumpCommand = MySql::create()
@@ -169,6 +169,21 @@ $dumpCommand = MySql::create()
     ->addExtraOption('--xml')
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
+
+If you're working with MySql you can set the database name using `--databases` as an extra option. This is particularly useful when used in conjunction with the `--add-drop-database` `mysqldump` option (see the [mysqldump docs](https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html#option_mysqldump_add-drop-database)).
+
+```php
+$dumpCommand = MySql::create()
+    ->setUserName('username')
+    ->setPassword('password')
+    ->addExtraOption('--databases dbname')
+    ->addExtraOption('--add-drop-database')
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
+Please note that using the `->addExtraOption('--databases dbname')` will override the database name set on a previous `->setDbName()` call.
+
+
 
 ## Changelog
 

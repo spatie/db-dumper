@@ -20,6 +20,9 @@ class MySql extends DbDumper
     /** @var string */
     protected $defaultCharacterSet = '';
 
+    /** @var bool */
+    protected $dbNameWasSetAsExtraOption = false;
+
     public function __construct()
     {
         $this->port = 3306;
@@ -126,6 +129,16 @@ class MySql extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
+    public function addExtraOption(string $extraOption)
+    {
+        if (preg_match('/^--databases (\S+)/', $extraOption, $matches) === 1) {
+            $this->setDbName($matches[1]);
+            $this->dbNameWasSetAsExtraOption = true;
+        }
+
+        return parent::addExtraOption($extraOption);
+    }
+
     /**
      * Get the command that should be performed to dump the database.
      *
@@ -171,7 +184,9 @@ class MySql extends DbDumper
 
         $command[] = "--result-file=\"{$dumpFile}\"";
 
-        $command[] = "--databases {$this->dbName}";
+        if (! $this->dbNameWasSetAsExtraOption) {
+            $command[] = $this->dbName;
+        }
 
         if (! empty($this->includeTables)) {
             $includeTables = implode(' ', $this->includeTables);
