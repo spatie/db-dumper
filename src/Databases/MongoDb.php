@@ -93,11 +93,11 @@ class MongoDb extends DbDumper
             "--archive=$filename",
         ];
 
-        if (isset($this->userName)) {
+        if ($this->userName) {
             $command[] = "--username {$this->userName}";
         }
 
-        if (isset($this->password)) {
+        if ($this->password) {
             $command[] = "--password {$this->password}";
         }
 
