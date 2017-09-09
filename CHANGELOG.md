@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.7.3 - 2017-09-09
+
+- allow empty passwords for MongoDB dumps
+
 ## 2.7.2 - 2017-09-07
 
 - make `--databases` optional
