@@ -94,11 +94,11 @@ class MongoDb extends DbDumper
         ];
 
         if ($this->userName) {
-            $command[] = "--username {$this->userName}";
+            $command[] = "--username '{$this->userName}'";
         }
 
         if ($this->password) {
-            $command[] = "--password {$this->password}";
+            $command[] = "--password '{$this->password}'";
         }
 
         if (isset($this->host)) {
