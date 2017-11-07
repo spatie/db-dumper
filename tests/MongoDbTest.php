@@ -55,7 +55,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
-            .' --username username --password password --host localhost --port 27017', $dumpCommand);
+            .' --username \'username\' --password \'password\' --host localhost --port 27017', $dumpCommand);
     }
 
     /** @test */
