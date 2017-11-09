@@ -16,6 +16,9 @@ class MongoDb extends DbDumper
     /** @var bool */
     protected $enableCompression = false;
 
+	/** @var null|string */
+	protected $authenticationDatabase = null;
+
     /**
      * Dump the contents of the database to the given file.
      *
@@ -78,6 +81,18 @@ class MongoDb extends DbDumper
         return $this;
     }
 
+	/**
+	 * @param string $authenticationDatabase
+	 *
+	 * @return \Spatie\DbDumper\Databases\MongoDb
+	 */
+	public function setAuthenticationDatabase(string $authenticationDatabase)
+	{
+		$this->authenticationDatabase = $authenticationDatabase;
+
+		return $this;
+	}
+
     /**
      * Generate the dump command for MongoDb.
      *
@@ -112,6 +127,10 @@ class MongoDb extends DbDumper
         if (isset($this->collection)) {
             $command[] = "--collection {$this->collection}";
         }
+
+		if ($this->authenticationDatabase) {
+			$command[] = "--authenticationDatabase {$this->authenticationDatabase}";
+		}
 
         if ($this->enableCompression) {
             $command[] = '--gzip';
