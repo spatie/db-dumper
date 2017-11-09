@@ -95,15 +95,15 @@ class MongoDbTest extends TestCase
             .' --host localhost --port 27017', $dumpCommand);
     }
 
-	/** @test */
-	public function it_can_generate_a_dump_command_with_authentication_database()
-	{
-		$dumpCommand = MongoDb::create()
-			->setDbName('dbname')
-			->setAuthenticationDatabase('admin')
-			->getDumpCommand('dbname.gz');
+    /** @test */
+    public function it_can_generate_a_dump_command_with_authentication_database()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->setAuthenticationDatabase('admin')
+            ->getDumpCommand('dbname.gz');
 
-		$this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
-			.' --host localhost --port 27017 --authenticationDatabase admin', $dumpCommand);
-	}
+        $this->assertSame('\'mongodump\' --db dbname --archive=dbname.gz'
+            .' --host localhost --port 27017 --authenticationDatabase admin', $dumpCommand);
+    }
 }
