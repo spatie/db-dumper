@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.8.0 - 2017-11-13
+
+- add `setAuthenticationDatabase`
+
 ## 2.7.4 - 2017-11-07
 
 - fix for dumping a MongoDB without username or password
