@@ -5,7 +5,7 @@ namespace Spatie\DbDumper\Test;
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\Sqlite;
 
-class SqlLiteTest extends TestCase
+class SqliteTest extends TestCase
 {
     /** @test */
     public function it_provides_a_factory_method()
