@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.8.2 - 2018-01-20
+
+- add support for Symfony 4
+
 ## 2.8.1 - 2017-11-24
 
 - fix SQLite dump
