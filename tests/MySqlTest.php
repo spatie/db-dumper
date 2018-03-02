@@ -303,4 +303,17 @@ class MySqlTest extends TestCase
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
                           '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname --result-file="dump.sql"', $dumpCommand);
     }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_set_gtid_purged()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setGtidPurged()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF --result-file="dump.sql" dbname', $dumpCommand);
+    }
 }
