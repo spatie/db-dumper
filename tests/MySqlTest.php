@@ -311,7 +311,7 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->setGtidPurged()
+            ->setGtidPurged('OFF')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF --result-file="dump.sql" dbname', $dumpCommand);
