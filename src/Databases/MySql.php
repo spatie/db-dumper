@@ -195,10 +195,6 @@ class MySql extends DbDumper
             $command[] = $extraOption;
         }
 
-        if (!empty($this->defaultCharacterSet)) {
-            $command[] = '--default-character-set=' . $this->defaultCharacterSet;
-        }
-
         if ($this->setGtidPurged != 'AUTO') {
             $command[] = '--set-gtid-purged='. $this->setGtidPurged;
         }
