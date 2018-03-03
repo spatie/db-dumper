@@ -196,7 +196,7 @@ class MySql extends DbDumper
         }
 
         if ($this->setGtidPurged != 'AUTO') {
-            $command[] = '--set-gtid-purged='. $this->setGtidPurged;
+            $command[] = '--set-gtid-purged=' . $this->setGtidPurged;
         }
 
         $command[] = "--result-file=\"{$dumpFile}\"";
