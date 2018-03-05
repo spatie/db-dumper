@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.9.0 - 2018-03-05
+
+- add support for setting `--set-gtid-purged`
+
 ## 2.8.2 - 2018-01-20
 
 - add support for Symfony 4
