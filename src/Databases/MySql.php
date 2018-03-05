@@ -23,6 +23,9 @@ class MySql extends DbDumper
     /** @var bool */
     protected $dbNameWasSetAsExtraOption = false;
 
+    /** @var string */
+    protected $setGtidPurged = 'AUTO';
+
     public function __construct()
     {
         $this->port = 3306;
@@ -96,6 +99,16 @@ class MySql extends DbDumper
     public function setDefaultCharacterSet(string $characterSet)
     {
         $this->defaultCharacterSet = $characterSet;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setGtidPurged(string $setGtidPurged)
+    {
+        $this->setGtidPurged = $setGtidPurged;
 
         return $this;
     }
@@ -180,6 +193,10 @@ class MySql extends DbDumper
 
         foreach ($this->extraOptions as $extraOption) {
             $command[] = $extraOption;
+        }
+
+        if ($this->setGtidPurged !== 'AUTO') {
+            $command[] = '--set-gtid-purged='.$this->setGtidPurged;
         }
 
         $command[] = "--result-file=\"{$dumpFile}\"";
