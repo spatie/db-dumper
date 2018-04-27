@@ -36,6 +36,19 @@ class PostgreSqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_compression_enabled()
+    {
+        $dumpCommand = PostgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->enableCompression()
+            ->getDumpCommand('dump.sql');
+
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > dump.sql', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_using_inserts()
     {
         $dumpCommand = PostgreSql::create()

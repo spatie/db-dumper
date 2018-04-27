@@ -26,6 +26,19 @@ class SqliteTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_compression_enabled()
+    {
+        $dumpCommand = Sqlite::create()
+            ->setDbName('dbname.sqlite')
+            ->enableCompression()
+            ->getDumpCommand('dump.sql');
+
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > dump.sql";
+
+        $this->assertEquals($expected, $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_paths()
     {
         $dumpCommand = Sqlite::create()

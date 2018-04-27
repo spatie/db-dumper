@@ -41,6 +41,9 @@ abstract class DbDumper
     /** @var array */
     protected $extraOptions = [];
 
+    /** @var bool */
+    protected $enableCompression = false;
+
     public static function create()
     {
         return new static();
@@ -214,6 +217,16 @@ abstract class DbDumper
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function enableCompression()
+    {
+        $this->enableCompression = true;
+
+        return $this;
+    }
+
     abstract public function dumpToFile(string $dumpFile);
 
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
@@ -238,6 +251,8 @@ abstract class DbDumper
      */
     protected function echoToFile(string $command, string $dumpFile)
     {
-        return $command . ' > ' . $dumpFile;
+        $compression = $this->enableCompression ? ' | gzip' : '';
+
+        return $command . $compression . ' > ' . $dumpFile;
     }
 }
