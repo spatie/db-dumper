@@ -253,6 +253,6 @@ abstract class DbDumper
     {
         $compression = $this->enableCompression ? ' | gzip' : '';
 
-        return $command . $compression . ' > ' . $dumpFile;
+        return $command.$compression.' > '.$dumpFile;
     }
 }
