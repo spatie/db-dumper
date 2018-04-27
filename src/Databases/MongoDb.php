@@ -105,7 +105,7 @@ class MongoDb extends DbDumper
         $command = [
             "'{$this->dumpBinaryPath}mongodump'",
             "--db {$this->dbName}",
-            "--archive=$filename",
+            "--archive",
         ];
 
         if ($this->userName) {
@@ -136,6 +136,6 @@ class MongoDb extends DbDumper
             $command[] = '--gzip';
         }
 
-        return implode(' ', $command);
+        return $this->echoToFile(implode(' ', $command), $filename);
     }
 }

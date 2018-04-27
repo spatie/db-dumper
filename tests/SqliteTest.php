@@ -20,7 +20,7 @@ class SqliteTest extends TestCase
             ->setDbName('dbname.sqlite')
             ->getDumpCommand('dump.sql');
 
-        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' >'dump.sql'";
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' > dump.sql";
 
         $this->assertEquals($expected, $dumpCommand);
     }
@@ -33,7 +33,7 @@ class SqliteTest extends TestCase
             ->setDumpBinaryPath('/usr/bin')
             ->getDumpCommand('/save/to/dump.sql');
 
-        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | '/usr/bin/sqlite3' --bail '/path/to/dbname.sqlite' >'/save/to/dump.sql'";
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | '/usr/bin/sqlite3' --bail '/path/to/dbname.sqlite' > /save/to/dump.sql";
 
         $this->assertEquals($expected, $dumpCommand);
     }

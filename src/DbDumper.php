@@ -230,4 +230,14 @@ abstract class DbDumper
             throw DumpFailed::dumpfileWasEmpty();
         }
     }
+
+    /**
+     * @param string $command
+     *
+     * @return string
+     */
+    protected function echoToFile(string $command, string $dumpFile)
+    {
+        return $command . ' > ' . $dumpFile;
+    }
 }

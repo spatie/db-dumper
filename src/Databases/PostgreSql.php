@@ -69,7 +69,6 @@ class PostgreSql extends DbDumper
             "-U {$this->userName}",
             '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
-            "--file=\"{$dumpFile}\"",
         ];
 
         if ($this->useInserts) {
@@ -88,7 +87,7 @@ class PostgreSql extends DbDumper
             $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 
-        return implode(' ', $command);
+        return $this->echoToFile(implode(' ', $command), $dumpFile);
     }
 
     public function getContentsOfCredentialsFile(): string
