@@ -92,7 +92,7 @@ class MongoDb extends DbDumper
         $command = [
             "'{$this->dumpBinaryPath}mongodump'",
             "--db {$this->dbName}",
-            "--archive",
+            '--archive',
         ];
 
         if ($this->userName) {
