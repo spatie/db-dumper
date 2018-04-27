@@ -4,7 +4,7 @@ All notable changes to `db-dumper` will be documented in this file
 
 ## 2.10.0 - 2018-04-27
 
-- add support for gzip to MySql, PostgreSql and Sqlite
+- add support for compressing dumps
 
 ## 2.9.0 - 2018-03-05
 
