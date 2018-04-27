@@ -199,8 +199,6 @@ class MySql extends DbDumper
             $command[] = '--set-gtid-purged='.$this->setGtidPurged;
         }
 
-        $command[] = "--result-file=\"{$dumpFile}\"";
-
         if (! $this->dbNameWasSetAsExtraOption) {
             $command[] = $this->dbName;
         }
@@ -210,7 +208,7 @@ class MySql extends DbDumper
             $command[] = "--tables {$includeTables}";
         }
 
-        return implode(' ', $command);
+        return $this->echoToFile(implode(' ', $command), $dumpFile);
     }
 
     public function getContentsOfCredentialsFile(): string

@@ -13,9 +13,6 @@ class MongoDb extends DbDumper
     /** @var null|string */
     protected $collection = null;
 
-    /** @var bool */
-    protected $enableCompression = false;
-
     /** @var null|string */
     protected $authenticationDatabase = null;
 
@@ -72,16 +69,6 @@ class MongoDb extends DbDumper
     }
 
     /**
-     * @return \Spatie\DbDumper\Databases\MongoDb
-     */
-    public function enableCompression()
-    {
-        $this->enableCompression = true;
-
-        return $this;
-    }
-
-    /**
      * @param string $authenticationDatabase
      *
      * @return \Spatie\DbDumper\Databases\MongoDb
@@ -105,7 +92,7 @@ class MongoDb extends DbDumper
         $command = [
             "'{$this->dumpBinaryPath}mongodump'",
             "--db {$this->dbName}",
-            "--archive=$filename",
+            "--archive",
         ];
 
         if ($this->userName) {
@@ -132,10 +119,6 @@ class MongoDb extends DbDumper
             $command[] = "--authenticationDatabase {$this->authenticationDatabase}";
         }
 
-        if ($this->enableCompression) {
-            $command[] = '--gzip';
-        }
-
-        return implode(' ', $command);
+        return $this->echoToFile(implode(' ', $command), $filename);
     }
 }

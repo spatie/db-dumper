@@ -38,11 +38,11 @@ class Sqlite extends DbDumper
      */
     public function getDumpCommand(string $dumpFile): string
     {
-        return sprintf(
-            "echo 'BEGIN IMMEDIATE;\n.dump' | '%ssqlite3' --bail '%s' >'%s'",
+        $command = sprintf(
+            "echo 'BEGIN IMMEDIATE;\n.dump' | '%ssqlite3' --bail '%s'",
             $this->dumpBinaryPath,
-            $this->dbName,
-            $dumpFile
+            $this->dbName
         );
+        return $this->echoToFile($command, $dumpFile);
     }
 }
