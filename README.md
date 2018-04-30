@@ -47,7 +47,6 @@ Spatie\DbDumper\Databases\MongoDb::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
-    ->enableCompression()
     ->dumpToFile('dump.gz');
 ```
 
@@ -61,6 +60,8 @@ For dumping PostgreSQL-db's `pg_dump` should be installed.
 For dumping SQLite-db's `sqlite3` should be installed.
 
 For dumping MongoDB-db's `mongodump` should be installed.
+
+For using compression on the dump-result `gzip` should be installed.
 
 ## Installation
 
@@ -175,6 +176,19 @@ $dumpCommand = MySql::create()
 
 Please note that using the `->addExtraOption('--databases dbname')` will override the database name set on a previous `->setDbName()` call.
 
+
+
+### Use compression
+If you want to compress the outputted file, you can use `enableCompression`. This will stream the output of the dump trough `gzip`. The resulted dump file is now compressed.
+
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->enableCompression()
+    ->dumpToFile('dump.sql.gz');
+```
 
 
 ## Changelog
