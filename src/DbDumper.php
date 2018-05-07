@@ -244,12 +244,7 @@ abstract class DbDumper
         }
     }
 
-    /**
-     * @param string $command
-     *
-     * @return string
-     */
-    protected function echoToFile(string $command, string $dumpFile)
+    protected function echoToFile(string $command, string $dumpFile): string
     {
         $compression = $this->enableCompression ? ' | gzip' : '';
 
