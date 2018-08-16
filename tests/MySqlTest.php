@@ -329,4 +329,16 @@ class MySqlTest extends TestCase
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > dump.sql', $dumpCommand);
     }
+
+
+    /** @test */
+    public function it_can_get_the_name_of_the_db_with_a_space()
+    {
+        $dbName = 'dumb test name';
+
+        $dbDumper = MySql::create()->setDbName($dbName);
+
+        $this->assertEquals($dbName, $dbDumper->getDbName());
+    }
+
 }

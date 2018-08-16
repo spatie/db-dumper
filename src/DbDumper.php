@@ -248,6 +248,8 @@ abstract class DbDumper
     {
         $compression = $this->enableCompression ? ' | gzip' : '';
 
-        return $command . $compression . ' > \'' . $dumpFile.'\'';
+        $dumpFile = str_replace(' ', '\ ', $dumpFile);
+
+        return $command . $compression . ' > '. $dumpFile;
     }
 }
