@@ -247,6 +247,7 @@ abstract class DbDumper
     protected function echoToFile(string $command, string $dumpFile): string
     {
         $compression = $this->enableCompression ? ' | gzip' : '';
+        $dumpFile    = '"' . addcslashes($dumpFile, '\\"') . '"';
 
         return $command.$compression.' > '.$dumpFile;
     }
