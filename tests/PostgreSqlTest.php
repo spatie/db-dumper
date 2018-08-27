@@ -49,6 +49,19 @@ class PostgreSqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
+    {
+        $dumpCommand = PostgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->enableCompression()
+            ->getDumpCommand('/save/to/new (directory)/dump.sql');
+
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+    }   
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_using_inserts()
     {
         $dumpCommand = PostgreSql::create()

@@ -49,6 +49,19 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->enableCompression()
+            ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_without_using_comments()
     {
         $dumpCommand = MySql::create()

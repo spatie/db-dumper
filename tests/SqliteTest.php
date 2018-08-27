@@ -52,7 +52,7 @@ class SqliteTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_absolute_paths_having_space_and_quotes()
+    public function it_can_generate_a_dump_command_with_absolute_paths_having_space_and_brackets()
     {
         $dumpCommand = Sqlite::create()
             ->setDbName('/path/to/dbname.sqlite')
@@ -62,7 +62,7 @@ class SqliteTest extends TestCase
         $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | '/usr/bin/sqlite3' --bail '/path/to/dbname.sqlite' > \"/save/to/new (directory)/dump.sql\"";
 
         $this->assertEquals($expected, $dumpCommand);
-    }    
+    }
 
     /** @test */
     public function it_successfully_creates_a_backup()
