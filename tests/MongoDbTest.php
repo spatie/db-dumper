@@ -55,7 +55,7 @@ class MongoDbTest extends TestCase
 
         $this->assertSame('\'mongodump\' --db dbname'
             .' --archive --host localhost --port 27017 | gzip > "/save/to/new (directory)/dbname.gz"', $dumpCommand);
-    }    
+    }
 
     /** @test */
     public function it_can_generate_a_dump_command_with_username_and_password()
