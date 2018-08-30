@@ -30,7 +30,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname'
-            .' --archive --host localhost --port 27017 > dbname.gz', $dumpCommand);
+            .' --archive --host localhost --port 27017 > "dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -42,7 +42,19 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname'
-            .' --archive --host localhost --port 27017 | gzip > dbname.gz', $dumpCommand);
+            .' --archive --host localhost --port 27017 | gzip > "dbname.gz"', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->enableCompression()
+            ->getDumpCommand('/save/to/new (directory)/dbname.gz');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive --host localhost --port 27017 | gzip > "/save/to/new (directory)/dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -55,7 +67,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname --archive'
-            .' --username \'username\' --password \'password\' --host localhost --port 27017 > dbname.gz', $dumpCommand);
+            .' --username \'username\' --password \'password\' --host localhost --port 27017 > "dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -68,7 +80,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname --archive'
-         .' --host mongodb.test.com --port 27018 > dbname.gz', $dumpCommand);
+         .' --host mongodb.test.com --port 27018 > "dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -80,7 +92,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname --archive'
-            .' --host localhost --port 27017 --collection mycollection > dbname.gz', $dumpCommand);
+            .' --host localhost --port 27017 --collection mycollection > "dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -92,7 +104,7 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'/custom/directory/mongodump\' --db dbname --archive'
-            .' --host localhost --port 27017 > dbname.gz', $dumpCommand);
+            .' --host localhost --port 27017 > "dbname.gz"', $dumpCommand);
     }
 
     /** @test */
@@ -104,6 +116,6 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname --archive'
-            .' --host localhost --port 27017 --authenticationDatabase admin > dbname.gz', $dumpCommand);
+            .' --host localhost --port 27017 --authenticationDatabase admin > "dbname.gz"', $dumpCommand);
     }
 }
