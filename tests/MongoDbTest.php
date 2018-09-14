@@ -4,7 +4,10 @@ namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\MongoDb;
+use Spatie\DbDumper\Compressors\GzipCompressor;
+use Spatie\DbDumper\Compressors\LzmaCompressor;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Compressors\Bzip2Compressor;
 
 class MongoDbTest extends TestCase
 {
@@ -46,11 +49,47 @@ class MongoDbTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->useCompression(new GzipCompressor)
+            ->getDumpCommand('dbname.gz');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive --host localhost --port 27017 | gzip > "dbname.gz"', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->useCompression(new Bzip2Compressor)
+            ->getDumpCommand('dbname.bz2');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive --host localhost --port 27017 | bzip2 -f9 > "dbname.bz2"', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_lzma_compressor_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->useCompression(new LzmaCompressor)
+            ->getDumpCommand('dbname.lzma');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive --host localhost --port 27017 | lzma -ze > "dbname.lzma"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
     {
         $dumpCommand = MongoDb::create()
             ->setDbName('dbname')
-            ->enableCompression()
+            ->useCompression(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname'

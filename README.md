@@ -61,7 +61,7 @@ For dumping SQLite-db's `sqlite3` should be installed.
 
 For dumping MongoDB-db's `mongodump` should be installed.
 
-For using compression on the dump-result `gzip` should be installed.
+For using compression on the dump-result the command line compressor desired should be installed, either `gzip`, `bzip2` or `lzma`.
 
 ## Installation
 
@@ -179,17 +179,22 @@ Please note that using the `->addExtraOption('--databases dbname')` will overrid
 
 
 ### Use compression
-If you want to compress the outputted file, you can use `enableCompression`. This will stream the output of the dump trough `gzip`. The resulted dump file is now compressed.
+If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
+
+There are three compressors `GzipCompressor`, `Bzip2Compressor` and `LzmaCompressor`, with `useCompressor` pass the desired compressor object.  This will stream the output of the dump trough `gzip`,  `bzip2` or `lzma`.
 
 ```php
 $dumpCommand = MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->enableCompression()
+    ->useCompression(new GzipCompressor())
     ->dumpToFile('dump.sql.gz');
 ```
 
+You can add you own compressor implementing the `Compressor` contract.
+
+The `enableCompression()` will be removed in the next mayor version.
 
 ## Changelog
 
@@ -228,7 +233,7 @@ Initial PostgreSQL support was contributed by [Adriano Machado](https://github.c
 
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
+Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie).
 All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License
