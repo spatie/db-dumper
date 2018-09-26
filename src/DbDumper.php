@@ -145,11 +145,6 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return $this
-     */
     public function setDumpBinaryPath(string $dumpBinaryPath)
     {
         if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
@@ -173,22 +168,12 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCompressorExtension()
+    public function getCompressorExtension(): string
     {
-        return $this->compressor->getExtension();
+        return $this->compressor->useExtension();
     }
 
-    /**
-     * Set the given compressor.
-     *
-     * @param Compressor $compressor
-     *
-     * @return $this
-     */
-    public function useCompression(Compressor $compressor)
+    public function useCompressor(Compressor $compressor)
     {
         $this->compressor = $compressor;
 
@@ -272,7 +257,7 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $compressor = $this->compressor ? ' | '.$this->compressor->getCommand() : '';
+        $compressor = $this->compressor ? ' | '.$this->compressor->useCommand() : '';
         $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
         return $command.$compressor.' > '.$dumpFile;

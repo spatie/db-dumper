@@ -4,13 +4,8 @@ namespace Spatie\DbDumper\Compressors;
 
 class GzipCompressor implements Compressor
 {
-    public function getCommand()
+    public function useCommand(): string
     {
         return 'gzip';
-    }
-
-    public function getExtension()
-    {
-        return '.gz';
     }
 }

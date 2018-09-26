@@ -14,6 +14,7 @@ the scenes `mysqldump`, `pg_dump`, `sqlite3` and `mongodump` are used.
 Here's are simple examples of how to create a database dump with different drivers:
 
 **MySQL**
+
 ```php
 Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
@@ -60,8 +61,6 @@ For dumping PostgreSQL-db's `pg_dump` should be installed.
 For dumping SQLite-db's `sqlite3` should be installed.
 
 For dumping MongoDB-db's `mongodump` should be installed.
-
-For using compression on the dump-result the command line compressor desired should be installed, either `gzip`, `bzip2` or `lzma`.
 
 ## Installation
 
@@ -178,23 +177,46 @@ Please note that using the `->addExtraOption('--databases dbname')` will overrid
 
 
 
-### Use compression
+### Using compression
 If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
 
-There are three compressors `GzipCompressor`, `Bzip2Compressor` and `LzmaCompressor`, with `useCompressor` pass the desired compressor object.  This will stream the output of the dump trough `gzip`,  `bzip2` or `lzma`.
+There is one compressor that comes out of the box: `GzipCompressor`. It will compress your db dump with `gzip`. Make sure `gzip` is installed on your system before using this.
 
 ```php
 $dumpCommand = MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->useCompression(new GzipCompressor())
+    ->useCompressor(new GzipCompressor())
     ->dumpToFile('dump.sql.gz');
 ```
 
-You can add you own compressor implementing the `Compressor` contract.
+### Creating your own compressor
 
-The `enableCompression()` will be removed in the next mayor version.
+You can create you own compressor implementing the `Compressor` interface. Here's how that interface looks like:
+
+```php
+namespace Spatie\DbDumper\Compressors;
+
+interface Compressor
+{
+    public function useCommand(): string;
+}
+```
+
+The `useCommand` should simply return the compression command the db dump will get pumped to. Here's the implementation of `GzipCompression`.
+
+```php
+namespace Spatie\DbDumper\Compressors;
+
+class GzipCompressor implements Compressor
+{
+    public function useCommand(): string
+    {
+        return 'gzip';
+    }
+}
+```
 
 ## Changelog
 

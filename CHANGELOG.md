@@ -4,7 +4,7 @@ All notable changes to `db-dumper` will be documented in this file
 
 ## 2.10.2 - 2018-08-30
 
-- add bzip2 and lzma compressor options
+- add compressors
 
 ## 2.10.1 - 2018-08-30
 

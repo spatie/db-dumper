@@ -5,9 +5,7 @@ namespace Spatie\DbDumper\Test;
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Compressors\LzmaCompressor;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
-use Spatie\DbDumper\Compressors\Bzip2Compressor;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
 class MySqlTest extends TestCase
@@ -58,36 +56,10 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompression(new GzipCompressor)
+            ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
-    }
-
-    /** @test */
-    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
-    {
-        $dumpCommand = MySql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->useCompression(new Bzip2Compressor)
-            ->getDumpCommand('dump.sql.bz2', 'credentials.txt');
-
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | bzip2 -f9 > "dump.sql.bz2"', $dumpCommand);
-    }
-
-    /** @test */
-    public function it_can_generate_a_dump_command_with_lzma_compressor_enabled()
-    {
-        $dumpCommand = MySql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->useCompression(new LzmaCompressor)
-            ->getDumpCommand('dump.sql.lzma', 'credentials.txt');
-
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | lzma -ze > "dump.sql.lzma"', $dumpCommand);
     }
 
     /** @test */
@@ -97,7 +69,7 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompression(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);

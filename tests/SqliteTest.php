@@ -5,8 +5,6 @@ namespace Spatie\DbDumper\Test;
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\Sqlite;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Compressors\LzmaCompressor;
-use Spatie\DbDumper\Compressors\Bzip2Compressor;
 
 class SqliteTest extends TestCase
 {
@@ -46,36 +44,10 @@ class SqliteTest extends TestCase
     {
         $dumpCommand = Sqlite::create()
             ->setDbName('dbname.sqlite')
-            ->useCompression(new GzipCompressor)
+            ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
         $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > \"dump.sql\"";
-
-        $this->assertEquals($expected, $dumpCommand);
-    }
-
-    /** @test */
-    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
-    {
-        $dumpCommand = Sqlite::create()
-            ->setDbName('dbname.sqlite')
-            ->useCompression(new Bzip2Compressor)
-            ->getDumpCommand('dump.sql.bz2');
-
-        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | bzip2 -f9 > \"dump.sql.bz2\"";
-
-        $this->assertEquals($expected, $dumpCommand);
-    }
-
-    /** @test */
-    public function it_can_generate_a_dump_command_with_lzma_compressor_enabled()
-    {
-        $dumpCommand = Sqlite::create()
-            ->setDbName('dbname.sqlite')
-            ->useCompression(new LzmaCompressor)
-            ->getDumpCommand('dump.sql.lzma');
-
-        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | lzma -ze > \"dump.sql.lzma\"";
 
         $this->assertEquals($expected, $dumpCommand);
     }
