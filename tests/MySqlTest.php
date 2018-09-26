@@ -4,6 +4,7 @@ namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\MySql;
+use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
@@ -49,13 +50,26 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->useCompressor(new GzipCompressor)
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
     {
         $dumpCommand = MySql::create()
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->enableCompression()
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);

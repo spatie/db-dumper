@@ -4,6 +4,7 @@ namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Databases\MongoDb;
+use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MongoDbTest extends TestCase
@@ -46,11 +47,23 @@ class MongoDbTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->useCompressor(new GzipCompressor)
+            ->getDumpCommand('dbname.gz');
+
+        $this->assertSame('\'mongodump\' --db dbname'
+            .' --archive --host localhost --port 27017 | gzip > "dbname.gz"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
     {
         $dumpCommand = MongoDb::create()
             ->setDbName('dbname')
-            ->enableCompression()
+            ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dbname.gz');
 
         $this->assertSame('\'mongodump\' --db dbname'

@@ -14,6 +14,7 @@ the scenes `mysqldump`, `pg_dump`, `sqlite3` and `mongodump` are used.
 Here's are simple examples of how to create a database dump with different drivers:
 
 **MySQL**
+
 ```php
 Spatie\DbDumper\Databases\MySql::create()
     ->setDbName($databaseName)
@@ -60,8 +61,6 @@ For dumping PostgreSQL-db's `pg_dump` should be installed.
 For dumping SQLite-db's `sqlite3` should be installed.
 
 For dumping MongoDB-db's `mongodump` should be installed.
-
-For using compression on the dump-result `gzip` should be installed.
 
 ## Installation
 
@@ -178,18 +177,46 @@ Please note that using the `->addExtraOption('--databases dbname')` will overrid
 
 
 
-### Use compression
-If you want to compress the outputted file, you can use `enableCompression`. This will stream the output of the dump trough `gzip`. The resulted dump file is now compressed.
+### Using compression
+If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
+
+There is one compressor that comes out of the box: `GzipCompressor`. It will compress your db dump with `gzip`. Make sure `gzip` is installed on your system before using this.
 
 ```php
 $dumpCommand = MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->enableCompression()
+    ->useCompressor(new GzipCompressor())
     ->dumpToFile('dump.sql.gz');
 ```
 
+### Creating your own compressor
+
+You can create you own compressor implementing the `Compressor` interface. Here's how that interface looks like:
+
+```php
+namespace Spatie\DbDumper\Compressors;
+
+interface Compressor
+{
+    public function useCommand(): string;
+}
+```
+
+The `useCommand` should simply return the compression command the db dump will get pumped to. Here's the implementation of `GzipCompression`.
+
+```php
+namespace Spatie\DbDumper\Compressors;
+
+class GzipCompressor implements Compressor
+{
+    public function useCommand(): string
+    {
+        return 'gzip';
+    }
+}
+```
 
 ## Changelog
 
@@ -228,7 +255,7 @@ Initial PostgreSQL support was contributed by [Adriano Machado](https://github.c
 
 Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
 
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie). 
+Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie).
 All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
 
 ## License

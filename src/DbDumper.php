@@ -4,6 +4,8 @@ namespace Spatie\DbDumper;
 
 use Symfony\Component\Process\Process;
 use Spatie\DbDumper\Exceptions\DumpFailed;
+use Spatie\DbDumper\Compressors\Compressor;
+use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
 abstract class DbDumper
@@ -41,8 +43,8 @@ abstract class DbDumper
     /** @var array */
     protected $extraOptions = [];
 
-    /** @var bool */
-    protected $enableCompression = false;
+    /** @var object */
+    protected $compressor = null;
 
     public static function create()
     {
@@ -143,11 +145,6 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @param string $dumpBinaryPath
-     *
-     * @return $this
-     */
     public function setDumpBinaryPath(string $dumpBinaryPath)
     {
         if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
@@ -155,6 +152,30 @@ abstract class DbDumper
         }
 
         $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    /**
+     * @deprecated
+     *
+     * @return $this
+     */
+    public function enableCompression()
+    {
+        $this->compressor = new GzipCompressor();
+
+        return $this;
+    }
+
+    public function getCompressorExtension(): string
+    {
+        return $this->compressor->useExtension();
+    }
+
+    public function useCompressor(Compressor $compressor)
+    {
+        $this->compressor = $compressor;
 
         return $this;
     }
@@ -217,16 +238,6 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function enableCompression()
-    {
-        $this->enableCompression = true;
-
-        return $this;
-    }
-
     abstract public function dumpToFile(string $dumpFile);
 
     protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
@@ -246,9 +257,9 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $compression = $this->enableCompression ? ' | gzip' : '';
+        $compressor = $this->compressor ? ' | '.$this->compressor->useCommand() : '';
         $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
-        return $command.$compression.' > '.$dumpFile;
+        return $command.$compressor.' > '.$dumpFile;
     }
 }
