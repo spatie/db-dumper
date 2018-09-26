@@ -2,7 +2,7 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
-## 2.10.2 - 2018-08-30
+## 2.11.0- 2018-08-30
 
 - add `Compressor`
 
