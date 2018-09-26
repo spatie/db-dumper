@@ -257,7 +257,10 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $compressor = $this->compressor ? ' | '.$this->compressor->useCommand() : '';
+        $compressor = $this->compressor
+            ? ' | '.$this->compressor->useCommand()
+            : '';
+
         $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
         return $command.$compressor.' > '.$dumpFile;
