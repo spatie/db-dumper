@@ -147,8 +147,6 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-
-
 ### Adding extra options
 If you want to add an arbitrary option to the dump command you can use `addExtraOption`
 
@@ -174,8 +172,6 @@ $dumpCommand = MySql::create()
 
 Please note that using the `->addExtraOption('--databases dbname')` will override the database name set on a previous `->setDbName()` call.
 
-
-
 ### Using compression
 If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
 
@@ -200,6 +196,8 @@ namespace Spatie\DbDumper\Compressors;
 interface Compressor
 {
     public function useCommand(): string;
+    
+    public function useExtension(): string;
 }
 ```
 
