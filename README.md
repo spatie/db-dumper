@@ -212,6 +212,11 @@ class GzipCompressor implements Compressor
     {
         return 'gzip';
     }
+    
+    public function useExtension(): string
+    {
+        return 'gz';
+    }
 }
 ```
 
