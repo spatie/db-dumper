@@ -10,6 +10,23 @@ use Spatie\DbDumper\Exceptions\CannotSetParameter;
 
 class MySqlTest extends TestCase
 {
+    public static function callMethod($obj, $name, array $args)
+    {
+        $class = new \ReflectionClass($obj);
+
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($obj, $args);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->quote = $this->callMethod(new MySql(), 'determineQuote', array());
+    }
+
     /** @test */
     public function it_provides_a_factory_method()
     {
@@ -33,7 +50,7 @@ class MySqlTest extends TestCase
             ->setPassword('password')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -46,7 +63,9 @@ class MySqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
+        $quote = $this->callMethod(new MySql(), 'determineQuote', array());
+
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname | gzip > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -59,7 +78,7 @@ class MySqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname | gzip > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -72,7 +91,7 @@ class MySqlTest extends TestCase
             ->useCompressor(new GzipCompressor())
             ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname | gzip > \"/save/to/new (directory)/dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -85,7 +104,7 @@ class MySqlTest extends TestCase
             ->dontSkipComments()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --extended-insert dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --extended-insert dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -98,7 +117,7 @@ class MySqlTest extends TestCase
             ->dontUseExtendedInserts()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --skip-extended-insert dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -111,7 +130,7 @@ class MySqlTest extends TestCase
             ->setDumpBinaryPath('/custom/directory')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'/custom/directory/mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}/custom/directory/mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -124,7 +143,7 @@ class MySqlTest extends TestCase
             ->dontUseExtendedInserts()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --skip-extended-insert dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -137,7 +156,7 @@ class MySqlTest extends TestCase
             ->useSingleTransaction()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --single-transaction dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert --single-transaction dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -150,7 +169,7 @@ class MySqlTest extends TestCase
             ->setSocket(1234)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --socket=1234 dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert --socket=1234 dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -163,7 +182,7 @@ class MySqlTest extends TestCase
             ->includeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -176,7 +195,7 @@ class MySqlTest extends TestCase
             ->includeTables('tb1 tb2 tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -202,8 +221,8 @@ class MySqlTest extends TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert ".
+                          "--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -216,8 +235,8 @@ class MySqlTest extends TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert ".
+                          "--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -270,7 +289,7 @@ class MySqlTest extends TestCase
             ->addExtraOption('--another-extra-option="value"')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert --extra-option --another-extra-option=\"value\" dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -292,7 +311,7 @@ class MySqlTest extends TestCase
             ->addExtraOption('--databases dbname')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" --databases dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert --extra-option --another-extra-option=\"value\" --databases dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -326,8 +345,8 @@ class MySqlTest extends TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert ".
+                          "--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -340,8 +359,8 @@ class MySqlTest extends TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert ".
+                          "--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > \"dump.sql\"", $dumpCommand);
     }
 
     /** @test */
@@ -354,6 +373,6 @@ class MySqlTest extends TestCase
             ->setGtidPurged('OFF')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > \"dump.sql\"", $dumpCommand);
     }
 }
