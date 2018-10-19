@@ -63,8 +63,6 @@ class MySqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $quote = $this->callMethod(new MySql(), 'determineQuote', array());
-
         $this->assertSame("{$this->quote}mysqldump{$this->quote} --defaults-extra-file=\"credentials.txt\" --skip-comments --extended-insert dbname | gzip > \"dump.sql\"", $dumpCommand);
     }
 
