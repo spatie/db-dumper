@@ -147,6 +147,16 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
+### Do not write CREATE TABLE statements that create each dumped table.
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->noCreateInfo()
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
 ### Adding extra options
 If you want to add an arbitrary option to the dump command you can use `addExtraOption`
 
