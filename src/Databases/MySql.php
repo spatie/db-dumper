@@ -26,7 +26,7 @@ class MySql extends DbDumper
     /** @var string */
     protected $setGtidPurged = 'AUTO';
 
-    /** @var bool  */
+    /** @var bool */
     protected $noCreateInfo = false;
 
     public function __construct()
@@ -183,7 +183,7 @@ class MySql extends DbDumper
         ];
 
         if ($this->noCreateInfo) {
-            $command[] = "--no-create-info";
+            $command[] = '--no-create-info';
         }
 
         if ($this->skipComments) {
