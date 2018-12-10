@@ -153,7 +153,7 @@ $dumpCommand = MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->noCreateInfo()
+    ->doNotCreateTables()
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
 

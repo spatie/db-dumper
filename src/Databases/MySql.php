@@ -27,7 +27,7 @@ class MySql extends DbDumper
     protected $setGtidPurged = 'AUTO';
 
     /** @var bool */
-    protected $noCreateInfo = false;
+    protected $createTables = true;
 
     public function __construct()
     {
@@ -158,9 +158,9 @@ class MySql extends DbDumper
     /**
      * @return $this
      */
-    public function noCreateInfo()
+    public function doNotCreateTables()
     {
-        $this->noCreateInfo = true;
+        $this->createTables = false;
 
         return $this;
     }
@@ -182,7 +182,7 @@ class MySql extends DbDumper
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
-        if ($this->noCreateInfo) {
+        if (! $this->createTables) {
             $command[] = '--no-create-info';
         }
 
