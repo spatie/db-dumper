@@ -26,6 +26,9 @@ class MySql extends DbDumper
     /** @var string */
     protected $setGtidPurged = 'AUTO';
 
+    /** @var bool */
+    protected $noCreateInfo = false;
+
     public function __construct()
     {
         $this->port = 3306;
@@ -153,6 +156,16 @@ class MySql extends DbDumper
     }
 
     /**
+     * @return $this
+     */
+    public function noCreateInfo()
+    {
+        $this->noCreateInfo = true;
+
+        return $this;
+    }
+
+    /**
      * Get the command that should be performed to dump the database.
      *
      * @param string $dumpFile
@@ -168,6 +181,10 @@ class MySql extends DbDumper
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
+
+        if ($this->noCreateInfo) {
+            $command[] = '--no-create-info';
+        }
 
         if ($this->skipComments) {
             $command[] = '--skip-comments';

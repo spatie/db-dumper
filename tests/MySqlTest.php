@@ -356,4 +356,17 @@ class MySqlTest extends TestCase
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > "dump.sql"', $dumpCommand);
     }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_no_create_info()
+    {
+        $dumpCommand = MySQL::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->noCreateInfo()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --no-create-info --skip-comments --extended-insert dbname > "dump.sql"', $dumpCommand);
+    }
 }
