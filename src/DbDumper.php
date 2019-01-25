@@ -257,14 +257,21 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $enablePipefail = 'set -euf -o pipefail && ';
+        $command = $this->compressor
+            ? $this->addCompressorToCommand($command)
+            : $command;
 
-        $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
+        $dumpFile = '"' . addcslashes($dumpFile, '\\"') . '"';
+
+        return $command.' > '.$dumpFile;
+    }
+
+    protected function addCompressorToCommand(string $command): string
+    {
+        $enablePipefail = 'set -o pipefail && ';
 
         $compressor = ' | '.$this->compressor->useCommand();
 
-        return $this->compressor
-            ? $enablePipefail.$command.$compressor.' > '.$dumpFile
-            : $command.' > '.$dumpFile;
+        return $enablePipefail.$command.$compressor;
     }
 }
