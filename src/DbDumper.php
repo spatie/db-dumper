@@ -261,7 +261,7 @@ abstract class DbDumper
             ? $this->addCompressorToCommand($command)
             : $command;
 
-        $dumpFile = '"' . addcslashes($dumpFile, '\\"') . '"';
+        $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
         return $command.' > '.$dumpFile;
     }
