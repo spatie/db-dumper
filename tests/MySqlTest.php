@@ -317,6 +317,18 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_get_the_name_of_the_db_when_all_databases_was_set_as_an_extra_option()
+    {
+        $dumpCommand = MySql::create()
+            ->setUserName('username')
+            ->setPassword('password')
+            ->addExtraOption('--all-databases')
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --all-databases > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_excluding_tables_as_array_when_dbname_was_set_as_an_extra_option()
     {
         $dumpCommand = MySql::create()
