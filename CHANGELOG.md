@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.13.0 - 2018-03-01
+
+- add ability to specify all databases as MySQL option
+
 ## 2.12.0 - 2018-12-10
 
 - add `doNotCreateTables`
