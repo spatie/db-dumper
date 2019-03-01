@@ -34,7 +34,7 @@ class SqliteTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql');
 
-        $expected = "set -o pipefail && echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > \"dump.sql\"";
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > \"dump.sql\"";
 
         $this->assertEquals($expected, $dumpCommand);
     }
@@ -47,7 +47,7 @@ class SqliteTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
-        $expected = "set -o pipefail && echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > \"dump.sql\"";
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' | gzip > \"dump.sql\"";
 
         $this->assertEquals($expected, $dumpCommand);
     }

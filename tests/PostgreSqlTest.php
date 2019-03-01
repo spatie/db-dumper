@@ -46,7 +46,7 @@ class PostgreSqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('set -o pipefail && \'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -59,7 +59,7 @@ class PostgreSqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('set -o pipefail && \'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -72,7 +72,7 @@ class PostgreSqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dump.sql');
 
-        $this->assertSame('set -o pipefail && \'pg_dump\' -U username -h localhost -p 5432 | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
     }
 
     /** @test */
