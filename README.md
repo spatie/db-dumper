@@ -180,7 +180,17 @@ $dumpCommand = MySql::create()
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
 
-Please note that using the `->addExtraOption('--databases dbname')` will override the database name set on a previous `->setDbName()` call.
+With MySql, you also have the option to use the `--all-databases` extra option. This is useful when you want to run a full backup of all the databases in the specified MySQL connection.
+
+```php
+$dumpCommand = MySql::create()
+    ->setUserName('username')
+    ->setPassword('password')
+    ->addExtraOption('--all-databases')
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
+Please note that using the `->addExtraOption('--databases dbname')` or `->addExtraOption('--all-databases')` will override the database name set on a previous `->setDbName()` call.
 
 ### Using compression
 If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
