@@ -137,11 +137,7 @@ class MySql extends DbDumper
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
-        $process = new Process($command);
-
-        if (! is_null($this->timeout)) {
-            $process->setTimeout($this->timeout);
-        }
+        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
 
         $process->run();
 
