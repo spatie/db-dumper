@@ -154,6 +154,19 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_using_quick()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->useQuick()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --quick dbname > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_a_custom_socket()
     {
         $dumpCommand = MySql::create()
