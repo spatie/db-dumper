@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.14.0 - 2019-04-17
+
+- add --skip-lock-tables and --quick option (#95)
+
 ## 2.13.2 - 2019-03-03
 
 - fix process warnings
