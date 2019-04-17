@@ -65,7 +65,7 @@ For dumping MongoDB-db's `mongodump` should be installed.
 
 You can install the package via composer:
 ``` bash
-$ composer require spatie/db-dumper
+composer require spatie/db-dumper
 ```
 
 ## Usage
@@ -216,7 +216,7 @@ namespace Spatie\DbDumper\Compressors;
 interface Compressor
 {
     public function useCommand(): string;
-    
+
     public function useExtension(): string;
 }
 ```
@@ -232,7 +232,7 @@ class GzipCompressor implements Compressor
     {
         return 'gzip';
     }
-    
+
     public function useExtension(): string
     {
         return 'gz';
@@ -247,7 +247,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 ## Testing
 
 ``` bash
-$ composer test
+composer test
 ```
 
 ## Contributing
