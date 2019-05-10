@@ -73,16 +73,9 @@ fi', $dumpCommand);
     {
         $dumpCommand = MongoDb::create()
             ->setDbName('dbname')
-            ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
-then
-  echo "$output" | gzip > "/save/to/new (directory)/dbname.gz"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $this->assertSame('\'mongodump\' --db dbname --archive --host localhost --port 27017 > "/save/to/new (directory)/dbname.gz"', $dumpCommand);
     }
 
     /** @test */

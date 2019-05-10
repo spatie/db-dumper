@@ -81,16 +81,9 @@ fi', $dumpCommand);
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dump.sql');
 
-        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432);
-then
-  echo "$output" | gzip > "/save/to/new (directory)/dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 > "/save/to/new (directory)/dump.sql"', $dumpCommand);
     }
 
     /** @test */
