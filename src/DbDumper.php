@@ -273,6 +273,6 @@ fi
 BASH;
         }
 
-        return $command . ' > ' . $dumpFile;
+        return $command.' > '.$dumpFile;
     }
 }
