@@ -257,12 +257,22 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $compressor = $this->compressor
-            ? ' | '.$this->compressor->useCommand()
-            : '';
-
         $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
-        return $command.$compressor.' > '.$dumpFile;
+        if ($this->compressor) {
+            $compressCommand = $this->compressor->useCommand();
+
+            return <<<BASH
+            if output=\$({$command});
+            then
+              echo "\$output" | $compressCommand > $dumpFile
+            else
+              echo "Dump was not succesful." >&2
+              exit 1
+            fi
+            BASH;
+        }
+
+        return $command.' > '.$dumpFile;
     }
 }
