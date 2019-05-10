@@ -46,7 +46,9 @@ class PostgreSqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432); then
+  echo "$output" | gzip > "dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -59,7 +61,9 @@ class PostgreSqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432); then
+  echo "$output" | gzip > "dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -72,7 +76,9 @@ class PostgreSqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432); then
+  echo "$output" | gzip > "/save/to/new (directory)/dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */

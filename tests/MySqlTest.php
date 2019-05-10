@@ -46,7 +46,9 @@ class MySqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname); then
+  echo "$output" | gzip > "dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -59,7 +61,9 @@ class MySqlTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname); then
+  echo "$output" | gzip > "dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -72,7 +76,9 @@ class MySqlTest extends TestCase
             ->useCompressor(new GzipCompressor())
             ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname | gzip > "/save/to/new (directory)/dump.sql"', $dumpCommand);
+        $this->assertSame('if output=$(\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname); then
+  echo "$output" | gzip > "/save/to/new (directory)/dump.sql"
+fi', $dumpCommand);
     }
 
     /** @test */

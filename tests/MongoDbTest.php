@@ -42,8 +42,9 @@ class MongoDbTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname'
-            .' --archive --host localhost --port 27017 | gzip > "dbname.gz"', $dumpCommand);
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+  echo "$output" | gzip > "dbname.gz"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -54,8 +55,9 @@ class MongoDbTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname'
-            .' --archive --host localhost --port 27017 | gzip > "dbname.gz"', $dumpCommand);
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+  echo "$output" | gzip > "dbname.gz"
+fi', $dumpCommand);
     }
 
     /** @test */
@@ -66,8 +68,9 @@ class MongoDbTest extends TestCase
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dbname.gz');
 
-        $this->assertSame('\'mongodump\' --db dbname'
-            .' --archive --host localhost --port 27017 | gzip > "/save/to/new (directory)/dbname.gz"', $dumpCommand);
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+  echo "$output" | gzip > "/save/to/new (directory)/dbname.gz"
+fi', $dumpCommand);
     }
 
     /** @test */
