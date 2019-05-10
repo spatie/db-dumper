@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.14.1 - 2019-05-10
+
+- wrap the dump command in an `if` statement when using compression (#100)
+
 ## 2.14.0 - 2019-04-17
 
 - add --skip-lock-tables and --quick option (#95)
