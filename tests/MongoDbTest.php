@@ -42,8 +42,12 @@ class MongoDbTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
+then
   echo "$output" | gzip > "dbname.gz"
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi', $dumpCommand);
     }
 
@@ -55,8 +59,12 @@ fi', $dumpCommand);
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
+then
   echo "$output" | gzip > "dbname.gz"
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi', $dumpCommand);
     }
 
@@ -68,8 +76,12 @@ fi', $dumpCommand);
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('/save/to/new (directory)/dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017); then
+        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
+then
   echo "$output" | gzip > "/save/to/new (directory)/dbname.gz"
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi', $dumpCommand);
     }
 

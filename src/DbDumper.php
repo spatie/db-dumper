@@ -263,8 +263,12 @@ abstract class DbDumper
             $compressCommand = $this->compressor->useCommand();
 
             return <<<BASH
-if output=\$({$command}); then
+if output=\$({$command});
+then
   echo "\$output" | $compressCommand > $dumpFile
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi
 BASH;
         }

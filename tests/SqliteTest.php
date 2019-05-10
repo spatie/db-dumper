@@ -35,8 +35,12 @@ class SqliteTest extends TestCase
             ->getDumpCommand('dump.sql');
 
         $expected = 'if output=$(echo \'BEGIN IMMEDIATE;
-.dump\' | \'sqlite3\' --bail \'dbname.sqlite\'); then
+.dump\' | \'sqlite3\' --bail \'dbname.sqlite\');
+then
   echo "$output" | gzip > "dump.sql"
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi';
 
         $this->assertEquals($expected, $dumpCommand);
@@ -51,8 +55,12 @@ fi';
             ->getDumpCommand('dump.sql');
 
         $expected = 'if output=$(echo \'BEGIN IMMEDIATE;
-.dump\' | \'sqlite3\' --bail \'dbname.sqlite\'); then
+.dump\' | \'sqlite3\' --bail \'dbname.sqlite\');
+then
   echo "$output" | gzip > "dump.sql"
+else
+  echo "Dump was not succesful." >&2
+  exit 1
 fi';
 
         $this->assertEquals($expected, $dumpCommand);
