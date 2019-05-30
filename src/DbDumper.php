@@ -270,7 +270,7 @@ abstract class DbDumper
               echo "Dump was not succesful." >&2
               exit 1
             fi
-            BASH;
+BASH;
         }
 
         return $command.' > '.$dumpFile;
