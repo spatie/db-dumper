@@ -85,8 +85,10 @@ class MongoDb extends DbDumper
      */
     public function getDumpCommand(string $filename) : string
     {
+        $quote = $this->determineQuote();
+
         $command = [
-            "'{$this->dumpBinaryPath}mongodump'",
+            "{$quote}{$this->dumpBinaryPath}mongodump{$quote}",
             "--db {$this->dbName}",
             '--archive',
         ];

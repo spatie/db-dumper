@@ -311,9 +311,4 @@ class MySql extends DbDumper
             throw CannotStartDump::emptyParameter($requiredProperty);
         }
     }
-
-    protected function determineQuote(): string
-    {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'";
-    }
 }
