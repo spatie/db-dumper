@@ -42,13 +42,9 @@ class MongoDbTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
-then
-  echo "$output" | gzip > "dbname.gz"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */
@@ -59,13 +55,9 @@ fi', $dumpCommand);
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dbname.gz');
 
-        $this->assertSame('if output=$(\'mongodump\' --db dbname --archive --host localhost --port 27017);
-then
-  echo "$output" | gzip > "dbname.gz"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */

@@ -46,13 +46,9 @@ class PostgreSqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432);
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */
@@ -65,13 +61,9 @@ fi', $dumpCommand);
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
-        $this->assertSame('if output=$(\'pg_dump\' -U username -h localhost -p 5432);
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */
