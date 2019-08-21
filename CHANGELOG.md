@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.14.3 - 2019-08-21
+
+- fix memory leak (issue #109)
+
 ## 2.14.2 - 2019-06-28
 
 - Determine quotes for windows for MongoDB and PostgreSql dumps (#107)
