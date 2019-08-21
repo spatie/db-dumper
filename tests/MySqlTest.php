@@ -46,13 +46,9 @@ class MySqlTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('if output=$(\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname);
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */
@@ -65,13 +61,9 @@ fi', $dumpCommand);
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('if output=$(\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname);
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi', $dumpCommand);
+        $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
     }
 
     /** @test */

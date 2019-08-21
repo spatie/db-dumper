@@ -34,14 +34,8 @@ class SqliteTest extends TestCase
             ->enableCompression()
             ->getDumpCommand('dump.sql');
 
-        $expected = 'if output=$(echo \'BEGIN IMMEDIATE;
-.dump\' | \'sqlite3\' --bail \'dbname.sqlite\');
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi';
+        $expected = '((((echo \'BEGIN IMMEDIATE;
+.dump\' | \'sqlite3\' --bail \'dbname.sqlite\'; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
 
         $this->assertEquals($expected, $dumpCommand);
     }
@@ -54,14 +48,8 @@ fi';
             ->useCompressor(new GzipCompressor)
             ->getDumpCommand('dump.sql');
 
-        $expected = 'if output=$(echo \'BEGIN IMMEDIATE;
-.dump\' | \'sqlite3\' --bail \'dbname.sqlite\');
-then
-  echo "$output" | gzip > "dump.sql"
-else
-  echo "Dump was not succesful." >&2
-  exit 1
-fi';
+        $expected = '((((echo \'BEGIN IMMEDIATE;
+.dump\' | \'sqlite3\' --bail \'dbname.sqlite\'; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
 
         $this->assertEquals($expected, $dumpCommand);
     }
@@ -100,6 +88,7 @@ fi';
 
         Sqlite::create()
             ->setDbName($dbPath)
+            ->useCompressor(new GzipCompressor)
             ->dumpToFile($dbBackupPath);
 
         $this->assertFileExists($dbBackupPath);
