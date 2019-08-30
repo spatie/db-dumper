@@ -114,9 +114,11 @@ class PostgreSql extends DbDumper
 
     protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
     {
-        return [
+        $filter = function ($key) { return in_array($key, ['Path', 'SystemRoot']); };
+        $systemVariables = array_filter($_ENV, $filter, ARRAY_FILTER_USE_KEY);
+        return array_merge($systemVariables, [
             'PGPASSFILE' => $temporaryCredentialsFile,
             'PGDATABASE' => $this->dbName,
-        ];
+        ]);
     }
 }
