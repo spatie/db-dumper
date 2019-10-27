@@ -275,6 +275,6 @@ abstract class DbDumper
 
     protected function isWindows(): string
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? true : false;
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }
