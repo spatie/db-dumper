@@ -3,13 +3,16 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Symfony\Component\Process\Process;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
 {
     /** @var bool */
     protected $useInserts = false;
+
+    /** @var bool */
+    protected $createTables = true;
 
     public function __construct()
     {
@@ -67,7 +70,7 @@ class PostgreSql extends DbDumper
         $command = [
             "{$quote}{$this->dumpBinaryPath}pg_dump{$quote}",
             "-U {$this->userName}",
-            '-h '.($this->socket === '' ? $this->host : $this->socket),
+            '-h ' . ($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
         ];
 
@@ -75,16 +78,20 @@ class PostgreSql extends DbDumper
             $command[] = '--inserts';
         }
 
+        if (!$this->createTables) {
+            $command[] = '--data-only';
+        }
+
         foreach ($this->extraOptions as $extraOption) {
             $command[] = $extraOption;
         }
 
-        if (! empty($this->includeTables)) {
-            $command[] = '-t '.implode(' -t ', $this->includeTables);
+        if (!empty($this->includeTables)) {
+            $command[] = '-t ' . implode(' -t ', $this->includeTables);
         }
 
-        if (! empty($this->excludeTables)) {
-            $command[] = '-T '.implode(' -T ', $this->excludeTables);
+        if (!empty($this->excludeTables)) {
+            $command[] = '-T ' . implode(' -T ', $this->excludeTables);
         }
 
         return $this->echoToFile(implode(' ', $command), $dumpFile);
@@ -118,5 +125,15 @@ class PostgreSql extends DbDumper
             'PGPASSFILE' => $temporaryCredentialsFile,
             'PGDATABASE' => $this->dbName,
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function doNotCreateTables()
+    {
+        $this->createTables = false;
+
+        return $this;
     }
 }
