@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Compressors\GzipCompressor;
+use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MongoDbTest extends TestCase
