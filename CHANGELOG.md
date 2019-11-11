@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.15.0 - 2019-11-11
+
+- add `doNotCreateTables` to Postgres driver (#116)
+
 ## 2.14.3 - 2019-08-21
 
 - fix memory leak (issue #109)
