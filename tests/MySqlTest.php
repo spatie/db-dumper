@@ -3,10 +3,10 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class MySqlTest extends TestCase
 {
