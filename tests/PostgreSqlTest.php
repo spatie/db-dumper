@@ -3,10 +3,10 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 class PostgreSqlTest extends TestCase
 {
@@ -251,5 +251,18 @@ class PostgreSqlTest extends TestCase
         $dumper = PostgreSql::create()->setHost('myHost');
 
         $this->assertEquals('myHost', $dumper->getHost());
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_no_create_info()
+    {
+        $dumpCommand = PostgreSql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->doNotCreateTables()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --data-only > "dump.sql"', $dumpCommand);
     }
 }
