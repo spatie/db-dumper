@@ -83,7 +83,7 @@ class MongoDb extends DbDumper
      *
      * @return string
      */
-    public function getDumpCommand(string $filename) : string
+    public function getDumpCommand(string $filename): string
     {
         $quote = $this->determineQuote();
 
