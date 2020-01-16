@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
-use Spatie\DbDumper\Databases\Sqlite;
 use Spatie\DbDumper\Compressors\GzipCompressor;
+use Spatie\DbDumper\Databases\Sqlite;
 
 class SqliteTest extends TestCase
 {

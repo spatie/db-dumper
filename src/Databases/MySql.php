@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Symfony\Component\Process\Process;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
