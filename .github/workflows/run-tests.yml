@@ -10,7 +10,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                php: [7.3, 7.4]
+                php: [7.2, 7.3, 7.4]
                 laravel: [6.*]
                 dependency-version: [prefer-lowest, prefer-stable]
                 os: [ubuntu-latest]
