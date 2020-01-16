@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.15.2 - 2020-01-16
+
+- Fix sqlite3 dump on Windows
+
 ## 2.15.1 - 2019-11-23
 
 - allow symfony 5 components
