@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.15.3 - 2020-01-26
+
+- Fix incomplete credential guard (#126)
+
 ## 2.15.2 - 2020-01-16
 
 - Fix sqlite3 dump on Windows
