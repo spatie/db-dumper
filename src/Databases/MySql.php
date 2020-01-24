@@ -307,7 +307,7 @@ class MySql extends DbDumper
             }
         }
 
-        if (strlen('dbName') === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
+        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
     }
