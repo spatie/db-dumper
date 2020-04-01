@@ -302,7 +302,7 @@ class MySqlTest extends TestCase
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"', $dumpCommand);
     }
 
-        /** @test */
+    /** @test */
     public function it_can_add_extra_options_after_db_name()
     {
         $dumpCommand = MySql::create()
