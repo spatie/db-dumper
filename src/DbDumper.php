@@ -43,6 +43,9 @@ abstract class DbDumper
     /** @var array */
     protected $extraOptions = [];
 
+    /** @var array */
+    protected $extraOptionsAtEnd = [];
+
     /** @var object */
     protected $compressor = null;
 
@@ -233,6 +236,20 @@ abstract class DbDumper
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $extraOptionAtEnd
+     *
+     * @return $this
+     */
+    public function addExtraOptionAtEnd(string $extraOptionAtEnd)
+    {
+        if (! empty($extraOptionAtEnd)) {
+            $this->extraOptionsAtEnd[] = $extraOptionAtEnd;
         }
 
         return $this;
