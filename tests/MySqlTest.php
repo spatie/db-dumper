@@ -310,7 +310,7 @@ class MySqlTest extends TestCase
             ->setUserName('username')
             ->setPassword('password')
             ->addExtraOption('--extra-option')
-            ->addExtraOptionAtEnd('--another-extra-option="value"')
+            ->addExtraOptionAfterDbName('--another-extra-option="value"')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option dbname --another-extra-option="value" > "dump.sql"', $dumpCommand);

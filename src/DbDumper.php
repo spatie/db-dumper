@@ -44,7 +44,7 @@ abstract class DbDumper
     protected $extraOptions = [];
 
     /** @var array */
-    protected $extraOptionsAtEnd = [];
+    protected $extraOptionsAfterDbName = [];
 
     /** @var object */
     protected $compressor = null;
@@ -246,10 +246,10 @@ abstract class DbDumper
      *
      * @return $this
      */
-    public function addExtraOptionAtEnd(string $extraOptionAtEnd)
+    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName)
     {
-        if (! empty($extraOptionAtEnd)) {
-            $this->extraOptionsAtEnd[] = $extraOptionAtEnd;
+        if (! empty($extraOptionAfterDbName)) {
+            $this->extraOptionsAfterDbName[] = $extraOptionAfterDbName;
         }
 
         return $this;

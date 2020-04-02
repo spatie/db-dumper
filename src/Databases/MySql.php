@@ -283,8 +283,8 @@ class MySql extends DbDumper
             $command[] = "--tables {$includeTables}";
         }
 
-        foreach ($this->extraOptionsAtEnd as $extraOptionAtEnd) {
-            $command[] = $extraOptionAtEnd;
+        foreach ($this->extraOptionsAfterDbName as $extraOptionAfterDbName) {
+            $command[] = $extraOptionAfterDbName;
         }
 
         return $this->echoToFile(implode(' ', $command), $dumpFile);
