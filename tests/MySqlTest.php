@@ -92,7 +92,7 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_without_using_extended_insterts()
+    public function it_can_generate_a_dump_command_without_using_extended_inserts()
     {
         $dumpCommand = MySql::create()
             ->setDbName('dbname')
@@ -300,6 +300,20 @@ class MySqlTest extends TestCase
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"', $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_add_extra_options_after_db_name()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->addExtraOption('--extra-option')
+            ->addExtraOptionAfterDbName('--another-extra-option="value"')
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option dbname --another-extra-option="value" > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
