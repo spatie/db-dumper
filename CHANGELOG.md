@@ -2,6 +2,11 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.16.0 - 2020-04-15
+
+- allow for adding options after the db name (#129)
+
+
 ## 2.15.3 - 2020-01-26
 
 - Fix incomplete credential guard (#126)
