@@ -279,7 +279,11 @@ abstract class DbDumper
         if ($this->compressor) {
             $compressCommand = $this->compressor->useCommand();
 
-            return "(((({$command}; echo \$? >&3) | {$compressCommand} > {$dumpFile}) 3>&1) | (read x; exit \$x))";
+            if ($this->isWindows()) {
+                return "{$command} | {$compressCommand} > {$dumpFile}";
+            } else {
+                return "(((({$command}; echo \$? >&3) | {$compressCommand} > {$dumpFile}) 3>&1) | (read x; exit \$x))";
+            }
         }
 
         return $command.' > '.$dumpFile;
