@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.16.1 - 2020-05-15
+
+- fix using gzip compression on windows (#130)
+
 ## 2.16.0 - 2020-04-15
 
 - allow for adding options after the db name (#129)
