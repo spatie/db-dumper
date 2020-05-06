@@ -272,14 +272,23 @@ abstract class DbDumper
         }
     }
 
+    protected function getCompressCommand(string $command, string $dumpFile): string
+    {
+        $compressCommand = $this->compressor->useCommand();
+
+        if ($this->isWindows()) {
+            return "{$command} | {$compressCommand} > {$dumpFile}";
+        }
+
+        return "(((({$command}; echo \$? >&3) | {$compressCommand} > {$dumpFile}) 3>&1) | (read x; exit \$x))";
+    }
+
     protected function echoToFile(string $command, string $dumpFile): string
     {
         $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
 
         if ($this->compressor) {
-            $compressCommand = $this->compressor->useCommand();
-
-            return "(((({$command}; echo \$? >&3) | {$compressCommand} > {$dumpFile}) 3>&1) | (read x; exit \$x))";
+            return $this->getCompressCommand($command, $dumpFile);
         }
 
         return $command.' > '.$dumpFile;
