@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.17.0 - 2020-09-10
+
+- add `doNotUseColumnStatistics`
+
 ## 2.16.1 - 2020-05-15
 
 - fix using gzip compression on windows (#130)
