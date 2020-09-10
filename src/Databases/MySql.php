@@ -21,6 +21,9 @@ class MySql extends DbDumper
     protected $skipLockTables = false;
 
     /** @var bool */
+    protected $doNotUseColumnStatistics = false;
+
+    /** @var bool */
     protected $useQuick = false;
 
     /** @var string */
@@ -109,6 +112,16 @@ class MySql extends DbDumper
     public function skipLockTables()
     {
         $this->skipLockTables = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function doNotUseColumnStatistics()
+    {
+        $this->doNotUseColumnStatistics = true;
 
         return $this;
     }
@@ -248,6 +261,10 @@ class MySql extends DbDumper
 
         if ($this->skipLockTables) {
             $command[] = '--skip-lock-tables';
+        }
+
+        if ($this->doNotUseColumnStatistics) {
+            $command[] = '--column-statistics=0';
         }
 
         if ($this->useQuick) {

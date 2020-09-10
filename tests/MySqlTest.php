@@ -52,6 +52,21 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_columnstatistics()
+    {
+        $dumpCommand = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->doNotUseColumnStatistics()
+            ->getDumpCommand('dump.sql', 'credentials.txt');
+
+        $expected = '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --column-statistics=0 dbname > "dump.sql"';
+
+        $this->assertSame($expected, $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
     {
         $dumpCommand = MySql::create()
