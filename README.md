@@ -287,13 +287,6 @@ If you discover any security related issues, please email freek@spatie.be instea
 
 Initial PostgreSQL support was contributed by [Adriano Machado](https://github.com/ammachado). SQlite support was contributed by [Peter Matseykanets](https://twitter.com/pmatseykanets).
 
-## Support us
-
-Spatie is a webdesign agency based in Antwerp, Belgium. You'll find an overview of all our open source projects [on our website](https://spatie.be/opensource).
-
-Does your business depend on our contributions? Reach out and support us on [Patreon](https://www.patreon.com/spatie).
-All pledges will be dedicated to allocating workforce on maintenance and new awesome stuff.
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
