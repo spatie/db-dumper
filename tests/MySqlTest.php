@@ -290,7 +290,8 @@ class MySqlTest extends TestCase
 
         $this->assertSame(
             '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."host = 'hostname'".PHP_EOL."port = '3306'",
-            $credentialsFileContent);
+            $credentialsFileContent
+        );
     }
 
     /** @test */
