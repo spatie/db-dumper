@@ -73,7 +73,7 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
@@ -290,7 +290,8 @@ class MySqlTest extends TestCase
 
         $this->assertSame(
             '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."host = 'hostname'".PHP_EOL."port = '3306'",
-            $credentialsFileContent);
+            $credentialsFileContent
+        );
     }
 
     /** @test */
