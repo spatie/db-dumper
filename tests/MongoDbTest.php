@@ -52,7 +52,7 @@ class MongoDbTest extends TestCase
     {
         $dumpCommand = MongoDb::create()
             ->setDbName('dbname')
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('dbname.gz');
 
         $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';

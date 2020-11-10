@@ -41,6 +41,7 @@ class MongoDb extends DbDumper
      * Verifies if the dbname and host options are set.
      *
      * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
+     *
      * @return void
      */
     protected function guardAgainstIncompleteCredentials()
