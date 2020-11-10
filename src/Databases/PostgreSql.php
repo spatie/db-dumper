@@ -78,7 +78,7 @@ class PostgreSql extends DbDumper
             $command[] = '--inserts';
         }
 
-        if (!$this->createTables) {
+        if (! $this->createTables) {
             $command[] = '--data-only';
         }
 
@@ -86,11 +86,11 @@ class PostgreSql extends DbDumper
             $command[] = $extraOption;
         }
 
-        if (!empty($this->includeTables)) {
+        if (! empty($this->includeTables)) {
             $command[] = '-t '.implode(' -t ', $this->includeTables);
         }
 
-        if (!empty($this->excludeTables)) {
+        if (! empty($this->excludeTables)) {
             $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 

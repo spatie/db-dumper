@@ -245,7 +245,7 @@ class MySql extends DbDumper
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
-        if (!$this->createTables) {
+        if (! $this->createTables) {
             $command[] = '--no-create-info';
         }
 
@@ -279,7 +279,7 @@ class MySql extends DbDumper
             $command[] = "--ignore-table={$this->dbName}.{$tableName}";
         }
 
-        if (!empty($this->defaultCharacterSet)) {
+        if (! empty($this->defaultCharacterSet)) {
             $command[] = '--default-character-set='.$this->defaultCharacterSet;
         }
 
@@ -291,11 +291,11 @@ class MySql extends DbDumper
             $command[] = '--set-gtid-purged='.$this->setGtidPurged;
         }
 
-        if (!$this->dbNameWasSetAsExtraOption) {
+        if (! $this->dbNameWasSetAsExtraOption) {
             $command[] = $this->dbName;
         }
 
-        if (!empty($this->includeTables)) {
+        if (! empty($this->includeTables)) {
             $includeTables = implode(' ', $this->includeTables);
             $command[] = "--tables {$includeTables}";
         }
@@ -328,7 +328,7 @@ class MySql extends DbDumper
             }
         }
 
-        if (strlen($this->dbName) === 0 && !$this->allDatabasesWasSetAsExtraOption) {
+        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
     }
