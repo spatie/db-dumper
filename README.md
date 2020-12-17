@@ -105,6 +105,17 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
+If your application is deployed and you need to change the host (default is 127.0.0.1), you can add the `setHost()`-function:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->setHost($host)
+    ->dumpToFile('dump.sql');
+```
+
 ### Dump specific tables
 
 Using an array:
