@@ -28,9 +28,7 @@ class MongoDb extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $command = $this->getDumpCommand($dumpFile);
-
-        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
@@ -118,5 +116,17 @@ class MongoDb extends DbDumper
         }
 
         return $this->echoToFile(implode(' ', $command), $filename);
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        $command = $this->getDumpCommand($dumpFile);
+
+        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        return $process;
     }
 }

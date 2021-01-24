@@ -190,20 +190,14 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
-
-        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
-
-        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
-    public function addExtraOption(string $extraOption)
+    public function addExtraOption(string $extraOption): MySql
     {
         if (strpos($extraOption, '--all-databases') !== false) {
             $this->dbNameWasSetAsExtraOption = true;
@@ -221,7 +215,7 @@ class MySql extends DbDumper
     /**
      * @return $this
      */
-    public function doNotCreateTables()
+    public function doNotCreateTables(): self
     {
         $this->createTables = false;
 
@@ -331,5 +325,20 @@ class MySql extends DbDumper
         if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        $tempFileHandle = tmpfile();
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+
+        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
+
+        return Process::fromShellCommandline($command, null, null, null, $this->timeout);
     }
 }

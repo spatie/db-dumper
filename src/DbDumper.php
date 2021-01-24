@@ -257,13 +257,13 @@ abstract class DbDumper
 
     abstract public function dumpToFile(string $dumpFile);
 
-    protected function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
+    public function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
     {
-        if (! $process->isSuccessful()) {
+        if ($process->isSuccessful() === false) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
         }
 
-        if (! file_exists($outputFile)) {
+        if (file_exists($outputFile) === false) {
             throw DumpFailed::dumpfileWasNotCreated();
         }
 
