@@ -56,6 +56,7 @@ class Sqlite extends DbDumper
         $command = $this->getDumpCommand($dumpFile);
 
         $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+
         return $process;
     }
 }

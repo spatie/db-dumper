@@ -144,6 +144,7 @@ class PostgreSql extends DbDumper
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
         $process = Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
+
         return $process;
     }
 }
