@@ -41,15 +41,7 @@ class PostgreSql extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $command = $this->getDumpCommand($dumpFile);
-
-        $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
-
-        $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
-
-        $process = Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
@@ -110,7 +102,7 @@ class PostgreSql extends DbDumper
         return implode(':', $contents);
     }
 
-    protected function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
             if (empty($this->$requiredProperty)) {
@@ -135,5 +127,22 @@ class PostgreSql extends DbDumper
         $this->createTables = false;
 
         return $this;
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        $command = $this->getDumpCommand($dumpFile);
+
+        $tempFileHandle = tmpfile();
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+
+        $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
+
+        return Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
     }
 }

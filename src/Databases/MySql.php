@@ -190,13 +190,7 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
-
-        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
-
-        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
@@ -320,7 +314,7 @@ class MySql extends DbDumper
         return implode(PHP_EOL, $contents);
     }
 
-    protected function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'host'] as $requiredProperty) {
             if (strlen($this->$requiredProperty) === 0) {
@@ -331,5 +325,20 @@ class MySql extends DbDumper
         if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        $tempFileHandle = tmpfile();
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+
+        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
+
+        return Process::fromShellCommandline($command, null, null, null, $this->timeout);
     }
 }
