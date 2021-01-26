@@ -14,6 +14,9 @@ class PostgreSql extends DbDumper
     /** @var bool */
     protected $createTables = true;
 
+    /** @var false|resource */
+    private $tempFileHandle;
+
     public function __construct()
     {
         $this->port = 5432;
@@ -40,6 +43,9 @@ class PostgreSql extends DbDumper
     public function dumpToFile(string $dumpFile)
     {
         $this->guardAgainstIncompleteCredentials();
+
+        $tempFileHandle = tmpfile();
+        $this->setTempFileHandle($tempFileHandle);
 
         $process = $this->getProcess($dumpFile);
 
@@ -137,12 +143,27 @@ class PostgreSql extends DbDumper
     {
         $command = $this->getDumpCommand($dumpFile);
 
-        $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
 
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
         return Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
+    }
+
+    /**
+     * @return false|resource
+     */
+    public function getTempFileHandle()
+    {
+        return $this->tempFileHandle;
+    }
+
+    /**
+     * @param false|resource $tempFileHandle
+     */
+    public function setTempFileHandle($tempFileHandle)
+    {
+        $this->tempFileHandle = $tempFileHandle;
     }
 }

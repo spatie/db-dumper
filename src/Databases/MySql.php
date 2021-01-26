@@ -41,6 +41,9 @@ class MySql extends DbDumper
     /** @var bool */
     protected $createTables = true;
 
+    /** @var false|resource */
+    private $tempFileHandle;
+
     public function __construct()
     {
         $this->port = 3306;
@@ -190,6 +193,9 @@ class MySql extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
+        $tempFileHandle = tmpfile();
+        $this->setTempFileHandle($tempFileHandle);
+
         $process = $this->getProcess($dumpFile);
 
         $process->run();
@@ -333,12 +339,27 @@ class MySql extends DbDumper
      */
     public function getProcess(string $dumpFile): Process
     {
-        $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
         return Process::fromShellCommandline($command, null, null, null, $this->timeout);
+    }
+
+    /**
+     * @return false|resource
+     */
+    public function getTempFileHandle()
+    {
+        return $this->tempFileHandle;
+    }
+
+    /**
+     * @param false|resource $tempFileHandle
+     */
+    public function setTempFileHandle($tempFileHandle)
+    {
+        $this->tempFileHandle = $tempFileHandle;
     }
 }
