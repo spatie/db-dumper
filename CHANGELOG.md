@@ -2,6 +2,10 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.21.0 - 2020-01-27
+
+- fix: make the process more extensible, avoid touching anything (#141)
+
 ## 2.20.0 - 2020-01-26
 
 - revert changes in 2.19.0
