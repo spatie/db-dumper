@@ -28,9 +28,7 @@ class MongoDb extends DbDumper
     {
         $this->guardAgainstIncompleteCredentials();
 
-        $command = $this->getDumpCommand($dumpFile);
-
-        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
@@ -43,7 +41,7 @@ class MongoDb extends DbDumper
      * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
      * @return void
      */
-    protected function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials()
     {
         foreach (['dbName', 'host'] as $requiredProperty) {
             if (strlen($this->$requiredProperty) === 0) {
@@ -118,5 +116,16 @@ class MongoDb extends DbDumper
         }
 
         return $this->echoToFile(implode(' ', $command), $filename);
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        $command = $this->getDumpCommand($dumpFile);
+
+        return Process::fromShellCommandline($command, null, null, null, $this->timeout);
     }
 }

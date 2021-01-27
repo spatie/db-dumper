@@ -41,6 +41,9 @@ class MySql extends DbDumper
     /** @var bool */
     protected $createTables = true;
 
+    /** @var false|resource */
+    private $tempFileHandle;
+
     public function __construct()
     {
         $this->port = 3306;
@@ -191,12 +194,9 @@ class MySql extends DbDumper
         $this->guardAgainstIncompleteCredentials();
 
         $tempFileHandle = tmpfile();
-        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
+        $this->setTempFileHandle($tempFileHandle);
 
-        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
-
-        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
+        $process = $this->getProcess($dumpFile);
 
         $process->run();
 
@@ -320,7 +320,7 @@ class MySql extends DbDumper
         return implode(PHP_EOL, $contents);
     }
 
-    protected function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials()
     {
         foreach (['userName', 'host'] as $requiredProperty) {
             if (strlen($this->$requiredProperty) === 0) {
@@ -331,5 +331,35 @@ class MySql extends DbDumper
         if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
+    }
+
+    /**
+     * @param string $dumpFile
+     * @return Process
+     */
+    public function getProcess(string $dumpFile): Process
+    {
+        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
+
+        $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
+
+        return Process::fromShellCommandline($command, null, null, null, $this->timeout);
+    }
+
+    /**
+     * @return false|resource
+     */
+    public function getTempFileHandle()
+    {
+        return $this->tempFileHandle;
+    }
+
+    /**
+     * @param false|resource $tempFileHandle
+     */
+    public function setTempFileHandle($tempFileHandle)
+    {
+        $this->tempFileHandle = $tempFileHandle;
     }
 }
