@@ -313,9 +313,12 @@ class MySql extends DbDumper
             '[client]',
             "user = '{$this->userName}'",
             "password = '{$this->password}'",
-            "host = '{$this->host}'",
             "port = '{$this->port}'",
         ];
+
+        if ($this->socket === '') {
+            $contents[] = "host = '{$this->host}'";
+        }
 
         return implode(PHP_EOL, $contents);
     }
