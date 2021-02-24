@@ -193,7 +193,7 @@ class MySqlTest extends TestCase
             ->setPassword('password')
             ->setSocket(1234)
             ->getDumpCommand('dump.sql', 'credentials.txt');
-
+        
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --socket=1234 dbname > "dump.sql"', $dumpCommand);
     }
 
@@ -278,7 +278,7 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_the_contents_of_a_credentials_file()
+    public function it_can_generate_the_contents_of_a_credentials_file_with_a_socket_connetion()
     {
         $credentialsFileContent = MySql::create()
             ->setDbName('dbname')
@@ -289,7 +289,23 @@ class MySqlTest extends TestCase
             ->getContentsOfCredentialsFile();
 
         $this->assertSame(
-            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."host = 'hostname'".PHP_EOL."port = '3306'",
+            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."port = '3306'",
+            $credentialsFileContent
+        );
+    }
+
+    /** @test */
+    public function it_can_generate_the_contents_of_a_credentials_file_with_a_http_connetion()
+    {
+        $credentialsFileContent = MySql::create()
+            ->setDbName('dbname')
+            ->setUserName('username')
+            ->setPassword('password')
+            ->setHost('hostname')
+            ->getContentsOfCredentialsFile();
+
+        $this->assertSame(
+            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."port = '3306'".PHP_EOL."host = 'hostname'",
             $credentialsFileContent
         );
     }
