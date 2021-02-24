@@ -2,15 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
-## 2.21.0 - 2020-01-27
+## 2.21.1 - 2021-02-24
+
+- fix attempt to generate dump over http connection when using socket (#145)
+
+## 2.21.0 - 2021-01-27
 
 - fix: make the process more extensible, avoid touching anything (#141)
 
-## 2.20.0 - 2020-01-26
+## 2.20.0 - 2021-01-26
 
 - revert changes in 2.19.0
 
-## 2.19.0 - 2020-01-25
+## 2.19.0 - 2021-01-25
 
 - fix: add some public functions that allow extensibility (#139)
 
