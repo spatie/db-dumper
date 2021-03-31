@@ -57,6 +57,7 @@ We invest a lot of resources into creating [best in class open source packages](
 We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Requirements
+
 For dumping MySQL-db's `mysqldump` should be installed.
 
 For dumping PostgreSQL-db's `pg_dump` should be installed.
@@ -64,6 +65,8 @@ For dumping PostgreSQL-db's `pg_dump` should be installed.
 For dumping SQLite-db's `sqlite3` should be installed.
 
 For dumping MongoDB-db's `mongodump` should be installed.
+
+For compressing dump files, `gzip` and/or `bzip2` should be installed.
 
 ## Installation
 
@@ -224,16 +227,20 @@ $dumpCommand = MySql::create()
 Please note that using the `->addExtraOption('--databases dbname')` or `->addExtraOption('--all-databases')` will override the database name set on a previous `->setDbName()` call.
 
 ### Using compression
-If you want to compress the outputted file, you can use one of the compressors and the resulted dump file will be compressed.
 
-There is one compressor that comes out of the box: `GzipCompressor`. It will compress your db dump with `gzip`. Make sure `gzip` is installed on your system before using this.
+If you want the output file to be compressed, you can use a compressor class.
+
+There are two compressors that come out of the box:
+
+- `GzipCompressor` - This will compress your db dump with `gzip`. Make sure `gzip` is installed on your system before using this.
+- `Bzip2Compressor` - This will compress your db dump with `bzip2`. Make sure `bzip2` is installed on your system before using this.
 
 ```php
 $dumpCommand = MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->useCompressor(new GzipCompressor())
+    ->useCompressor(new GzipCompressor()) // or `new Bzip2Compressor()`
     ->dumpToFile('dump.sql.gz');
 ```
 
@@ -271,23 +278,23 @@ class GzipCompressor implements Compressor
 }
 ```
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
 ## Testing
 
 ``` bash
-composer test
+$ composer test
 ```
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Security
+## Security Vulnerabilities
 
-If you discover any security related issues, please email freek@spatie.be instead of using the issue tracker.
+Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
 

@@ -8,11 +8,9 @@ use Symfony\Component\Process\Process;
 
 class PostgreSql extends DbDumper
 {
-    /** @var bool */
-    protected $useInserts = false;
+    protected bool $useInserts = false;
 
-    /** @var bool */
-    protected $createTables = true;
+    protected bool $createTables = true;
 
     /** @var false|resource */
     private $tempFileHandle;
@@ -22,25 +20,14 @@ class PostgreSql extends DbDumper
         $this->port = 5432;
     }
 
-    /**
-     * @return $this
-     */
-    public function useInserts()
+    public function useInserts(): self
     {
         $this->useInserts = true;
 
         return $this;
     }
 
-    /**
-     * Dump the contents of the database to the given file.
-     *
-     * @param string $dumpFile
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
-     * @throws \Spatie\DbDumper\Exceptions\DumpFailed
-     */
-    public function dumpToFile(string $dumpFile)
+    public function dumpToFile(string $dumpFile): void
     {
         $this->guardAgainstIncompleteCredentials();
 
@@ -54,13 +41,6 @@ class PostgreSql extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
-    /**
-     * Get the command that should be performed to dump the database.
-     *
-     * @param string $dumpFile
-     *
-     * @return string
-     */
     public function getDumpCommand(string $dumpFile): string
     {
         $quote = $this->determineQuote();
@@ -125,20 +105,13 @@ class PostgreSql extends DbDumper
         ];
     }
 
-    /**
-     * @return $this
-     */
-    public function doNotCreateTables()
+    public function doNotCreateTables(): self
     {
         $this->createTables = false;
 
         return $this;
     }
 
-    /**
-     * @param string $dumpFile
-     * @return Process
-     */
     public function getProcess(string $dumpFile): Process
     {
         $command = $this->getDumpCommand($dumpFile);
@@ -162,7 +135,7 @@ class PostgreSql extends DbDumper
     /**
      * @param false|resource $tempFileHandle
      */
-    public function setTempFileHandle($tempFileHandle)
+    public function setTempFileHandle($tempFileHandle): void
     {
         $this->tempFileHandle = $tempFileHandle;
     }

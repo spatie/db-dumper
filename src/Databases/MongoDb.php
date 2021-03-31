@@ -8,23 +8,13 @@ use Symfony\Component\Process\Process;
 
 class MongoDb extends DbDumper
 {
-    protected $port = 27017;
+    protected int $port = 27017;
 
-    /** @var null|string */
-    protected $collection = null;
+    protected ?string $collection = null;
 
-    /** @var null|string */
-    protected $authenticationDatabase = null;
+    protected ?string $authenticationDatabase = null;
 
-    /**
-     * Dump the contents of the database to the given file.
-     *
-     * @param string $dumpFile
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
-     * @throws \Spatie\DbDumper\Exceptions\DumpFailed
-     */
-    public function dumpToFile(string $dumpFile)
+    public function dumpToFile(string $dumpFile): void
     {
         $this->guardAgainstIncompleteCredentials();
 
@@ -39,9 +29,10 @@ class MongoDb extends DbDumper
      * Verifies if the dbname and host options are set.
      *
      * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
+     *
      * @return void
      */
-    public function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['dbName', 'host'] as $requiredProperty) {
             if (strlen($this->$requiredProperty) === 0) {
@@ -50,37 +41,20 @@ class MongoDb extends DbDumper
         }
     }
 
-    /**
-     * @param string $collection
-     *
-     * @return \Spatie\DbDumper\Databases\MongoDb
-     */
-    public function setCollection(string $collection)
+    public function setCollection(string $collection): self
     {
         $this->collection = $collection;
 
         return $this;
     }
 
-    /**
-     * @param string $authenticationDatabase
-     *
-     * @return \Spatie\DbDumper\Databases\MongoDb
-     */
-    public function setAuthenticationDatabase(string $authenticationDatabase)
+    public function setAuthenticationDatabase(string $authenticationDatabase): self
     {
         $this->authenticationDatabase = $authenticationDatabase;
 
         return $this;
     }
 
-    /**
-     * Generate the dump command for MongoDb.
-     *
-     * @param string $filename
-     *
-     * @return string
-     */
     public function getDumpCommand(string $filename): string
     {
         $quote = $this->determineQuote();
@@ -118,10 +92,6 @@ class MongoDb extends DbDumper
         return $this->echoToFile(implode(' ', $command), $filename);
     }
 
-    /**
-     * @param string $dumpFile
-     * @return Process
-     */
     public function getProcess(string $dumpFile): Process
     {
         $command = $this->getDumpCommand($dumpFile);

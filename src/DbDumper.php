@@ -3,53 +3,39 @@
 namespace Spatie\DbDumper;
 
 use Spatie\DbDumper\Compressors\Compressor;
-use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\DumpFailed;
 use Symfony\Component\Process\Process;
 
 abstract class DbDumper
 {
-    /** @var string */
-    protected $dbName;
+    protected string $dbName = '';
 
-    /** @var string */
-    protected $userName;
+    protected string $userName = '';
 
-    /** @var string */
-    protected $password;
+    protected string $password = '';
 
-    /** @var string */
-    protected $host = 'localhost';
+    protected string $host = 'localhost';
 
-    /** @var int */
-    protected $port = 5432;
+    protected int $port = 5432;
 
-    /** @var string */
-    protected $socket = '';
+    protected string $socket = '';
 
-    /** @var int */
-    protected $timeout = 0;
+    protected int $timeout = 0;
 
-    /** @var string */
-    protected $dumpBinaryPath = '';
+    protected string $dumpBinaryPath = '';
 
-    /** @var array */
-    protected $includeTables = [];
+    protected array $includeTables = [];
 
-    /** @var array */
-    protected $excludeTables = [];
+    protected array $excludeTables = [];
 
-    /** @var array */
-    protected $extraOptions = [];
+    protected array $extraOptions = [];
 
-    /** @var array */
-    protected $extraOptionsAfterDbName = [];
+    protected array $extraOptionsAfterDbName = [];
 
-    /** @var object */
-    protected $compressor = null;
+    protected ?object $compressor = null;
 
-    public static function create()
+    public static function create(): static
     {
         return new static();
     }
@@ -59,48 +45,28 @@ abstract class DbDumper
         return $this->dbName;
     }
 
-    /**
-     * @param string $dbName
-     *
-     * @return $this
-     */
-    public function setDbName(string $dbName)
+    public function setDbName(string $dbName): self
     {
         $this->dbName = $dbName;
 
         return $this;
     }
 
-    /**
-     * @param string $userName
-     *
-     * @return $this
-     */
-    public function setUserName(string $userName)
+    public function setUserName(string $userName): self
     {
         $this->userName = $userName;
 
         return $this;
     }
 
-    /**
-     * @param string $password
-     *
-     * @return $this
-     */
-    public function setPassword(string $password)
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    /**
-     * @param string $host
-     *
-     * @return $this
-     */
-    public function setHost(string $host)
+    public function setHost(string $host): self
     {
         $this->host = $host;
 
@@ -112,61 +78,34 @@ abstract class DbDumper
         return $this->host;
     }
 
-    /**
-     * @param int $port
-     *
-     * @return $this
-     */
-    public function setPort(int $port)
+    public function setPort(int $port): self
     {
         $this->port = $port;
 
         return $this;
     }
 
-    /**
-     * @param string $socket
-     *
-     * @return $this
-     */
-    public function setSocket(string $socket)
+    public function setSocket(string $socket): self
     {
         $this->socket = $socket;
 
         return $this;
     }
 
-    /**
-     * @param int $timeout
-     *
-     * @return $this
-     */
-    public function setTimeout(int $timeout)
+    public function setTimeout(int $timeout): self
     {
         $this->timeout = $timeout;
 
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath)
+    public function setDumpBinaryPath(string $dumpBinaryPath): self
     {
-        if ($dumpBinaryPath !== '' && substr($dumpBinaryPath, -1) !== '/') {
+        if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, '/')) {
             $dumpBinaryPath .= '/';
         }
 
         $this->dumpBinaryPath = $dumpBinaryPath;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @return $this
-     */
-    public function enableCompression()
-    {
-        $this->compressor = new GzipCompressor();
 
         return $this;
     }
@@ -176,21 +115,14 @@ abstract class DbDumper
         return $this->compressor->useExtension();
     }
 
-    public function useCompressor(Compressor $compressor)
+    public function useCompressor(Compressor $compressor): self
     {
         $this->compressor = $compressor;
 
         return $this;
     }
 
-    /**
-     * @param string|array $includeTables
-     *
-     * @return $this
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function includeTables($includeTables)
+    public function includeTables(string | array $includeTables): self
     {
         if (! empty($this->excludeTables)) {
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
@@ -205,14 +137,7 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @param string|array $excludeTables
-     *
-     * @return $this
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotSetParameter
-     */
-    public function excludeTables($excludeTables)
+    public function excludeTables(string | array $excludeTables): self
     {
         if (! empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
@@ -227,12 +152,7 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @param string $extraOption
-     *
-     * @return $this
-     */
-    public function addExtraOption(string $extraOption)
+    public function addExtraOption(string $extraOption): self
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
@@ -241,12 +161,7 @@ abstract class DbDumper
         return $this;
     }
 
-    /**
-     * @param string $extraOptionAtEnd
-     *
-     * @return $this
-     */
-    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName)
+    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): self
     {
         if (! empty($extraOptionAfterDbName)) {
             $this->extraOptionsAfterDbName[] = $extraOptionAfterDbName;
@@ -255,9 +170,9 @@ abstract class DbDumper
         return $this;
     }
 
-    abstract public function dumpToFile(string $dumpFile);
+    abstract public function dumpToFile(string $dumpFile): void;
 
-    public function checkIfDumpWasSuccessFul(Process $process, string $outputFile)
+    public function checkIfDumpWasSuccessFul(Process $process, string $outputFile): void
     {
         if (! $process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
@@ -301,6 +216,6 @@ abstract class DbDumper
 
     protected function isWindows(): bool
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        return str_starts_with(strtoupper(PHP_OS), 'WIN');
     }
 }

@@ -3,6 +3,7 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
+use Spatie\DbDumper\Compressors\Bzip2Compressor;
 use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Databases\MongoDb;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
@@ -35,19 +36,6 @@ class MongoDbTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_compression_enabled()
-    {
-        $dumpCommand = MongoDb::create()
-            ->setDbName('dbname')
-            ->enableCompression()
-            ->getDumpCommand('dbname.gz');
-
-        $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';
-
-        $this->assertSame($expected, $dumpCommand);
-    }
-
-    /** @test */
     public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
     {
         $dumpCommand = MongoDb::create()
@@ -56,6 +44,19 @@ class MongoDbTest extends TestCase
             ->getDumpCommand('dbname.gz');
 
         $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';
+
+        $this->assertSame($expected, $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
+    {
+        $dumpCommand = MongoDb::create()
+            ->setDbName('dbname')
+            ->useCompressor(new Bzip2Compressor)
+            ->getDumpCommand('dbname.bz2');
+
+        $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | bzip2 > "dbname.bz2") 3>&1) | (read x; exit $x))';
 
         $this->assertSame($expected, $dumpCommand);
     }

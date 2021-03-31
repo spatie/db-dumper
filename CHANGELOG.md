@@ -2,6 +2,13 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.0.0 - unreleased
+
+- require PHP 8+
+- drop all PHP 7.x support
+- use PHP 8 syntax
+- add `Bzip2Compressor` to allow use of the bzip2 compression utility
+
 ## 2.21.1 - 2021-02-24
 
 - fix attempt to generate dump over http connection when using socket (#145)
