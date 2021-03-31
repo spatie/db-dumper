@@ -110,18 +110,6 @@ abstract class DbDumper
 
         return $this;
     }
-//
-//    /**
-//     * @deprecated
-//     *
-//     * @return $this
-//     */
-//    public function enableCompression()
-//    {
-//        $this->compressor = new GzipCompressor();
-//
-//        return $this;
-//    }
 
     public function getCompressorExtension(): string
     {
