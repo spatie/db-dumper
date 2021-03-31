@@ -3,6 +3,7 @@
 namespace Spatie\DbDumper\Test;
 
 use PHPUnit\Framework\TestCase;
+use Spatie\DbDumper\Compressors\Bzip2Compressor;
 use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Databases\Sqlite;
 
@@ -36,6 +37,20 @@ class SqliteTest extends TestCase
 
         $expected = '((((echo \'BEGIN IMMEDIATE;
 .dump\' | \'sqlite3\' --bail \'dbname.sqlite\'; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+
+        $this->assertEquals($expected, $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
+    {
+        $dumpCommand = Sqlite::create()
+            ->setDbName('dbname.sqlite')
+            ->useCompressor(new Bzip2Compressor)
+            ->getDumpCommand('dump.sql');
+
+        $expected = '((((echo \'BEGIN IMMEDIATE;
+.dump\' | \'sqlite3\' --bail \'dbname.sqlite\'; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
 
         $this->assertEquals($expected, $dumpCommand);
     }
