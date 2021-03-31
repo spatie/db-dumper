@@ -35,19 +35,6 @@ class MongoDbTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_compression_enabled()
-    {
-        $dumpCommand = MongoDb::create()
-            ->setDbName('dbname')
-            ->enableCompression()
-            ->getDumpCommand('dbname.gz');
-
-        $expected = '((((\'mongodump\' --db dbname --archive --host localhost --port 27017; echo $? >&3) | gzip > "dbname.gz") 3>&1) | (read x; exit $x))';
-
-        $this->assertSame($expected, $dumpCommand);
-    }
-
-    /** @test */
     public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
     {
         $dumpCommand = MongoDb::create()

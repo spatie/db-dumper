@@ -37,21 +37,6 @@ class MySqlTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_dump_command_with_compression_enabled()
-    {
-        $dumpCommand = MySql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->enableCompression()
-            ->getDumpCommand('dump.sql', 'credentials.txt');
-
-        $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
-
-        $this->assertSame($expected, $dumpCommand);
-    }
-
-    /** @test */
     public function it_can_generate_a_dump_command_with_columnstatistics()
     {
         $dumpCommand = MySql::create()
@@ -193,7 +178,7 @@ class MySqlTest extends TestCase
             ->setPassword('password')
             ->setSocket(1234)
             ->getDumpCommand('dump.sql', 'credentials.txt');
-        
+
         $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --socket=1234 dbname > "dump.sql"', $dumpCommand);
     }
 
