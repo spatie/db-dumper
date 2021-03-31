@@ -3,7 +3,6 @@
 namespace Spatie\DbDumper;
 
 use Spatie\DbDumper\Compressors\Compressor;
-use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\DumpFailed;
 use Symfony\Component\Process\Process;

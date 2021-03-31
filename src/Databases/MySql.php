@@ -2,7 +2,6 @@
 
 namespace Spatie\DbDumper\Databases;
 
-use phpDocumentor\Reflection\Types\Resource_;
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
