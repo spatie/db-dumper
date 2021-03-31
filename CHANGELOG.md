@@ -2,7 +2,7 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
-## 3.0.0 - unreleased
+## 3.0.0 - 2021-03-31
 
 - require PHP 8+
 - drop all PHP 7.x support
