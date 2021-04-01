@@ -290,7 +290,7 @@ class MySql extends DbDumper
     /**
      * @param false|resource $tempFileHandle
      */
-    public function setTempFileHandle($tempFileHandle): mixed
+    public function setTempFileHandle($tempFileHandle)
     {
         $this->tempFileHandle = $tempFileHandle;
     }
