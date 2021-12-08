@@ -44,7 +44,7 @@ class PostgreSqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('dump.sql');
 
         $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
@@ -59,7 +59,7 @@ class PostgreSqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new Bzip2Compressor)
+            ->useCompressor(new Bzip2Compressor())
             ->getDumpCommand('dump.sql');
 
         $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';

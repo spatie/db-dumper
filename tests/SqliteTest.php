@@ -32,7 +32,7 @@ class SqliteTest extends TestCase
     {
         $dumpCommand = Sqlite::create()
             ->setDbName('dbname.sqlite')
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('dump.sql');
 
         $expected = '((((echo \'BEGIN IMMEDIATE;
@@ -46,7 +46,7 @@ class SqliteTest extends TestCase
     {
         $dumpCommand = Sqlite::create()
             ->setDbName('dbname.sqlite')
-            ->useCompressor(new Bzip2Compressor)
+            ->useCompressor(new Bzip2Compressor())
             ->getDumpCommand('dump.sql');
 
         $expected = '((((echo \'BEGIN IMMEDIATE;
@@ -102,7 +102,7 @@ class SqliteTest extends TestCase
 
         Sqlite::create()
             ->setDbName($dbPath)
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->dumpToFile($dbBackupPath);
 
         $this->assertFileExists($dbBackupPath);

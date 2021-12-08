@@ -59,7 +59,7 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new GzipCompressor)
+            ->useCompressor(new GzipCompressor())
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
@@ -74,7 +74,7 @@ class MySqlTest extends TestCase
             ->setDbName('dbname')
             ->setUserName('username')
             ->setPassword('password')
-            ->useCompressor(new Bzip2Compressor)
+            ->useCompressor(new Bzip2Compressor())
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
         $expected = '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
