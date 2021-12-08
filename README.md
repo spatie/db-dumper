@@ -38,6 +38,8 @@ Spatie\DbDumper\Databases\Sqlite::create()
     ->dumpToFile('dump.sql');
 ```
 
+⚠️ Sqlite version 3.32.0 is required when using the `includeTables` option.
+
 **MongoDB**
 
 ```php
