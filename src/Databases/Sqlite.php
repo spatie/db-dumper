@@ -18,9 +18,11 @@ class Sqlite extends DbDumper
 
     public function getDumpCommand(string $dumpFile): string
     {
-        $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump'";
+        $includeTables = rtrim(' '.implode(' ', $this->includeTables));
+
+        $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump{$includeTables}'";
         if ($this->isWindows()) {
-            $dumpInSqlite = '(echo BEGIN IMMEDIATE; & echo .dump)';
+            $dumpInSqlite = "(echo BEGIN IMMEDIATE; & echo .dump{$includeTables})";
         }
         $quote = $this->determineQuote();
 

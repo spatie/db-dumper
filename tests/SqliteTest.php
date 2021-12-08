@@ -56,6 +56,19 @@ class SqliteTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_with_only_specific_tables_included()
+    {
+        $dumpCommand = Sqlite::create()
+            ->setDbName('dbname.sqlite')
+            ->includeTables(['users', 'posts'])
+            ->getDumpCommand('dump.sql');
+
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump users posts' | 'sqlite3' --bail 'dbname.sqlite' > \"dump.sql\"";
+
+        $this->assertEquals($expected, $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_paths()
     {
         $dumpCommand = Sqlite::create()
