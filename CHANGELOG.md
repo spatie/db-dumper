@@ -2,6 +2,12 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.1.0 - 2021-12-08
+
+- Add `includeTables` support for Sqlite
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.0.1...3.1.0
+
 ## 3.0.1 - 2021-04-01
 
 - remove type declaration that causes errors (#151)
@@ -44,7 +50,6 @@ All notable changes to `db-dumper` will be documented in this file
 ## 2.16.0 - 2020-04-15
 
 - allow for adding options after the db name (#129)
-
 
 ## 2.15.3 - 2020-01-26
 
@@ -196,9 +201,10 @@ All notable changes to `db-dumper` will be documented in this file
 
 ## 1.5.1 - 2016-06-14
 
--  Removed -d flag from pg_dump for compability with pgsql 7.3+
+- Removed -d flag from pg_dump for compability with pgsql 7.3+
 
 ## 1.5.0 - 2016-06-01
+
 - Added `includeTables` and `excludeTables`
 
 ## 1.4.0 - 2016-04-27
