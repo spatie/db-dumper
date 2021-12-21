@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.1.1 - 2021-12-21
+
+## What's Changed
+
+- Fixes for vendor by @erikn69 in https://github.com/spatie/db-dumper/pull/159
+- Allow symfony v6 by @Nielsvanpach
+
+## New Contributors
+
+- @erikn69 made their first contribution in https://github.com/spatie/db-dumper/pull/159
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.1.0...3.1.1
+
 ## 3.1.0 - 2021-12-08
 
 - Add `includeTables` support for Sqlite
