@@ -88,10 +88,11 @@ class PostgreSql extends DbDumper
         return implode(':', $contents);
     }
 
-    private function escapeCredentialEntry($entry)
+    protected function escapeCredentialEntry($entry): string
     {
         $entry = str_replace('\\', '\\\\', $entry);
         $entry = str_replace(':', '\\:', $entry);
+        
         return $entry;
     }
 
