@@ -74,7 +74,7 @@ class PostgreSql extends DbDumper
 
         return $this->echoToFile(implode(' ', $command), $dumpFile);
     }
-    
+
     public function getContentsOfCredentialsFile(): string
     {
         $contents = [
@@ -92,7 +92,7 @@ class PostgreSql extends DbDumper
     {
         $entry = str_replace('\\', '\\\\', $entry);
         $entry = str_replace(':', '\\:', $entry);
-        
+
         return $entry;
     }
 
