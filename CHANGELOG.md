@@ -2,6 +2,18 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.1.2 - 2022-01-04
+
+## What's Changed
+
+- Escape special characters in PostgreSQL credential entries by @superDuperCyberTechno in https://github.com/spatie/db-dumper/pull/162
+
+## New Contributors
+
+- @superDuperCyberTechno made their first contribution in https://github.com/spatie/db-dumper/pull/162
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.1.1...3.1.2
+
 ## 3.1.1 - 2021-12-21
 
 ## What's Changed
