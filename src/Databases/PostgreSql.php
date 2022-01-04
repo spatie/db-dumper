@@ -74,18 +74,26 @@ class PostgreSql extends DbDumper
 
         return $this->echoToFile(implode(' ', $command), $dumpFile);
     }
-
+    
     public function getContentsOfCredentialsFile(): string
     {
         $contents = [
-            $this->host,
-            $this->port,
-            $this->dbName,
-            $this->userName,
-            $this->password,
+            $this->escapeCredentialEntry($this->host),
+            $this->escapeCredentialEntry($this->port),
+            $this->escapeCredentialEntry($this->dbName),
+            $this->escapeCredentialEntry($this->userName),
+            $this->escapeCredentialEntry($this->password),
         ];
 
         return implode(':', $contents);
+    }
+
+    protected function escapeCredentialEntry($entry): string
+    {
+        $entry = str_replace('\\', '\\\\', $entry);
+        $entry = str_replace(':', '\\:', $entry);
+        
+        return $entry;
     }
 
     public function guardAgainstIncompleteCredentials()
