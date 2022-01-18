@@ -280,6 +280,19 @@ class GzipCompressor implements Compressor
 }
 ```
 
+### Optional
+
+If you want to change dump path, just add path after file name end with `/`. This option will dump to selected location.
+
+Example
+```php 
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql', '/opt/');
+```
+
 ## Testing
 
 ``` bash
