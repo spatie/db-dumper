@@ -14,9 +14,13 @@ class MongoDb extends DbDumper
 
     protected ?string $authenticationDatabase = null;
 
-    public function dumpToFile(string $dumpFile): void
+    public function dumpToFile(string $dumpFile, string $pathName = null): void
     {
         $this->guardAgainstIncompleteCredentials();
+
+        if ($pathName != null) {
+            $dumpFile = $pathName . '/' . $dumpFile;
+        }
 
         $process = $this->getProcess($dumpFile);
 

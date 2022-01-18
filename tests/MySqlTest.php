@@ -247,8 +247,8 @@ class MySqlTest extends TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -261,8 +261,8 @@ class MySqlTest extends TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -290,7 +290,7 @@ class MySqlTest extends TestCase
             ->getContentsOfCredentialsFile();
 
         $this->assertSame(
-            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."port = '3306'",
+            '[client]' . PHP_EOL . "user = 'username'" . PHP_EOL . "password = 'password'" . PHP_EOL . "port = '3306'",
             $credentialsFileContent
         );
     }
@@ -306,7 +306,7 @@ class MySqlTest extends TestCase
             ->getContentsOfCredentialsFile();
 
         $this->assertSame(
-            '[client]'.PHP_EOL."user = 'username'".PHP_EOL."password = 'password'".PHP_EOL."port = '3306'".PHP_EOL."host = 'hostname'",
+            '[client]' . PHP_EOL . "user = 'username'" . PHP_EOL . "password = 'password'" . PHP_EOL . "port = '3306'" . PHP_EOL . "host = 'hostname'",
             $credentialsFileContent
         );
     }
@@ -414,8 +414,8 @@ class MySqlTest extends TestCase
             ->excludeTables(['tb1', 'tb2', 'tb3'])
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
     }
 
     /** @test */
@@ -428,8 +428,8 @@ class MySqlTest extends TestCase
             ->excludeTables('tb1, tb2, tb3')
             ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert '.
-                          '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
+        $this->assertSame('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"', $dumpCommand);
     }
 
     /** @test */

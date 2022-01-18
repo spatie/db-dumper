@@ -27,12 +27,16 @@ class PostgreSql extends DbDumper
         return $this;
     }
 
-    public function dumpToFile(string $dumpFile): void
+    public function dumpToFile(string $dumpFile, string $pathName = null): void
     {
         $this->guardAgainstIncompleteCredentials();
 
         $tempFileHandle = tmpfile();
         $this->setTempFileHandle($tempFileHandle);
+
+        if ($pathName != null) {
+            $dumpFile = $pathName . '/' . $dumpFile;
+        }
 
         $process = $this->getProcess($dumpFile);
 

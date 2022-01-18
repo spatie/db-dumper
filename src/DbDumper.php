@@ -170,7 +170,7 @@ abstract class DbDumper
         return $this;
     }
 
-    abstract public function dumpToFile(string $dumpFile): void;
+    abstract public function dumpToFile(string $dumpFile, string $pathName): void;
 
     public function checkIfDumpWasSuccessFul(Process $process, string $outputFile): void
     {

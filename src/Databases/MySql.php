@@ -129,12 +129,16 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dumpToFile(string $dumpFile): void
+    public function dumpToFile(string $dumpFile, string $pathName = null): void
     {
         $this->guardAgainstIncompleteCredentials();
 
         $tempFileHandle = tmpfile();
         $this->setTempFileHandle($tempFileHandle);
+
+        if ($pathName != null) {
+            $dumpFile = $pathName . '/' . $dumpFile;
+        }
 
         $process = $this->getProcess($dumpFile);
 
@@ -174,7 +178,7 @@ class MySql extends DbDumper
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
-        if (! $this->createTables) {
+        if (!$this->createTables) {
             $command[] = '--no-create-info';
         }
 
@@ -208,8 +212,8 @@ class MySql extends DbDumper
             $command[] = "--ignore-table={$this->dbName}.{$tableName}";
         }
 
-        if (! empty($this->defaultCharacterSet)) {
-            $command[] = '--default-character-set='.$this->defaultCharacterSet;
+        if (!empty($this->defaultCharacterSet)) {
+            $command[] = '--default-character-set=' . $this->defaultCharacterSet;
         }
 
         foreach ($this->extraOptions as $extraOption) {
@@ -217,14 +221,14 @@ class MySql extends DbDumper
         }
 
         if ($this->setGtidPurged !== 'AUTO') {
-            $command[] = '--set-gtid-purged='.$this->setGtidPurged;
+            $command[] = '--set-gtid-purged=' . $this->setGtidPurged;
         }
 
-        if (! $this->dbNameWasSetAsExtraOption) {
+        if (!$this->dbNameWasSetAsExtraOption) {
             $command[] = $this->dbName;
         }
 
-        if (! empty($this->includeTables)) {
+        if (!empty($this->includeTables)) {
             $includeTables = implode(' ', $this->includeTables);
             $command[] = "--tables {$includeTables}";
         }
@@ -260,7 +264,7 @@ class MySql extends DbDumper
             }
         }
 
-        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
+        if (strlen($this->dbName) === 0 && !$this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
     }

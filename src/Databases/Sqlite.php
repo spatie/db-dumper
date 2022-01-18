@@ -7,9 +7,13 @@ use Symfony\Component\Process\Process;
 
 class Sqlite extends DbDumper
 {
-    public function dumpToFile(string $dumpFile): void
+    public function dumpToFile(string $dumpFile, string $pathName = null): void
     {
         $process = $this->getProcess($dumpFile);
+
+        if ($pathName != null) {
+            $dumpFile = $pathName . '/' . $dumpFile;
+        }
 
         $process->run();
 
