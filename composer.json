@@ -1,5 +1,5 @@
 {
-    "name": "spatie/db-dumper",
+    "name": "sdon2/db-dumper",
     "description": "Dump databases",
     "keywords": [
         "spatie",
@@ -8,7 +8,7 @@
         "mysqldump",
         "db-dumper"
     ],
-    "homepage": "https://github.com/spatie/db-dumper",
+    "homepage": "https://github.com/sdon2/db-dumper",
     "license": "MIT",
     "authors": [
         {
@@ -16,11 +16,18 @@
             "email": "freek@spatie.be",
             "homepage": "https://spatie.be",
             "role": "Developer"
+        },
+        {
+            "name": "Saravanakumar Arumugam",
+            "email": "saravanakumar.a.o@gmail.com",
+            "homepage": "https://g.dev/saravanakumar-arumugam",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php" : "^8.0",
-        "symfony/process": "^5.0|^6.0"
+        "php" : "^7.4|^8.0",
+        "symfony/process": "^5.0|^6.0",
+        "symfony/polyfill-php80": "^1.16"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"

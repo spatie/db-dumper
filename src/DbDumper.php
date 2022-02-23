@@ -35,7 +35,7 @@ abstract class DbDumper
 
     protected ?object $compressor = null;
 
-    public static function create(): static
+    public static function create()
     {
         return new static();
     }
@@ -122,7 +122,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function includeTables(string | array $includeTables): self
+    public function includeTables($includeTables): self
     {
         if (! empty($this->excludeTables)) {
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
@@ -137,7 +137,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function excludeTables(string | array $excludeTables): self
+    public function excludeTables($excludeTables): self
     {
         if (! empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
