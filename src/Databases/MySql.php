@@ -282,7 +282,7 @@ class MySql extends DbDumper
     /**
      * @return false|resource
      */
-    public function getTempFileHandle(): mixed
+    public function getTempFileHandle()
     {
         return $this->tempFileHandle;
     }
