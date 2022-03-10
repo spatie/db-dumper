@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.2.0 - 2022-03-10
+
+## What's Changed
+
+- Update .gitattributes by @PaolaRuby in https://github.com/spatie/db-dumper/pull/166
+- Improve error output for failed dumps
+
+## New Contributors
+
+- @PaolaRuby made their first contribution in https://github.com/spatie/db-dumper/pull/166
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.1.2...3.2.0
+
 ## 3.1.2 - 2022-01-04
 
 ## What's Changed
