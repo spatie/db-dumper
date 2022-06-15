@@ -2,6 +2,20 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.2.1 - 2022-06-15
+
+### What's Changed
+
+- Update .gitattributes by @angeljqv in https://github.com/spatie/db-dumper/pull/167
+- Fix: Replaced single quotes in mongodb dump command in windows env by @malconvsilva in https://github.com/spatie/db-dumper/pull/172
+
+### New Contributors
+
+- @angeljqv made their first contribution in https://github.com/spatie/db-dumper/pull/167
+- @malconvsilva made their first contribution in https://github.com/spatie/db-dumper/pull/172
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.2.0...3.2.1
+
 ## 3.2.0 - 2022-03-10
 
 ## What's Changed
