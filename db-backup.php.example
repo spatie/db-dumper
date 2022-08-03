@@ -2,7 +2,9 @@
 
 <?php
 
-require __DIR__ . "/vendor/autoload.php";
+// Move this file to runners/{db-name} folder
+
+require __DIR__ . "/../../vendor/autoload.php";
 
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
@@ -19,7 +21,7 @@ $db = $_ENV['DB_NAME'];
 $username = $_ENV['DB_USERNAME'];
 $password = $_ENV['DB_PASSWORD'];
 
-$dump_file_path = __DIR__ . '/backups/' . $db . '.sql.gz';
+$dump_file_path = __DIR__ . '/../../backups/' . $db . '.sql.gz';
 $dropbox_client_id = $_ENV['DROPBOX_CLIENT_ID'];
 $dropbox_client_secret = $_ENV['DROPBOX_CLIENT_SECRET'];
 $dropbox_token = $_ENV['DROPBOX_CLIENT_TOKEN'];
