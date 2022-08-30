@@ -18,8 +18,16 @@ class Sqlite extends DbDumper
 
     public function getDumpCommand(string $dumpFile): string
     {
-        $includeTables = rtrim(' '.implode(' ', $this->includeTables));
-
+        $includeTables = rtrim(' ' . implode(' ', $this->includeTables));
+        if (empty($includeTables) && ! empty($this->excludeTables)) {
+            $db = new \SQLite3($this->dbName);
+            $query = $db->query("SELECT name FROM sqlite_schema WHERE type='table' AND name NOT LIKE 'sqlite_%';");
+            $tables = [];
+            while ($table = $query->fetchArray(SQLITE3_ASSOC)) {
+                $tables[] = $table['name'];
+            }
+            $includeTables = rtrim(' ' . implode(' ', array_diff($tables,$this->excludeTables)));
+        }
         $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump{$includeTables}'";
         if ($this->isWindows()) {
             $dumpInSqlite = "(echo BEGIN IMMEDIATE; & echo .dump{$includeTables})";
