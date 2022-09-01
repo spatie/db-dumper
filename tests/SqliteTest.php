@@ -69,6 +69,33 @@ class SqliteTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_a_dump_command_without_excluded_tables_included()
+    {
+        $dbPath = __DIR__ . '/stubs/testDB.sqlite';
+        $dumpCommand = Sqlite::create()
+            ->setDbName($dbPath)
+            ->excludeTables(['tb2', 'tb3'])
+            ->getDumpCommand('dump.sql');
+
+        $expected = "echo 'BEGIN IMMEDIATE;\n.dump tb1 tb4' | 'sqlite3' --bail '{$dbPath}' > \"dump.sql\"";
+
+        $this->assertEquals($expected, $dumpCommand);
+    }
+
+    /** @test */
+    public function it_can_return_current_db_table_list()
+    {
+        $dbPath = __DIR__ . '/stubs/testDB.sqlite';
+        $dumpCommand = Sqlite::create()
+            ->setDbName($dbPath)
+            ->getDbTables();
+
+        $expected = ['tb1', 'tb2', 'tb3', 'tb4'];
+
+        $this->assertEquals($expected, $dumpCommand);
+    }
+
+    /** @test */
     public function it_can_generate_a_dump_command_with_absolute_paths()
     {
         $dumpCommand = Sqlite::create()
@@ -97,8 +124,8 @@ class SqliteTest extends TestCase
     /** @test */
     public function it_successfully_creates_a_backup()
     {
-        $dbPath = __DIR__.'/stubs/database.sqlite';
-        $dbBackupPath = __DIR__.'/temp/backup.sql';
+        $dbPath = __DIR__ . '/stubs/database.sqlite';
+        $dbBackupPath = __DIR__ . '/temp/backup.sql';
 
         Sqlite::create()
             ->setDbName($dbPath)
