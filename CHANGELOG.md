@@ -2,6 +2,20 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.3.0 - 2022-09-01
+
+### What's Changed
+
+- Docs: typo in README.md in column_statics by @Ayoub-Mabrouk in https://github.com/spatie/db-dumper/pull/175
+- add excludeTables support for sqlite by @ariaieboy in https://github.com/spatie/db-dumper/pull/177
+
+### New Contributors
+
+- @Ayoub-Mabrouk made their first contribution in https://github.com/spatie/db-dumper/pull/175
+- @ariaieboy made their first contribution in https://github.com/spatie/db-dumper/pull/177
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.2.1...3.3.0
+
 ## 3.2.1 - 2022-06-15
 
 ### What's Changed
