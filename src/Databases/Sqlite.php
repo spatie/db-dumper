@@ -26,6 +26,7 @@ class Sqlite extends DbDumper
             $tables[] = $table['name'];
         }
         $db->close();
+
         return $tables;
     }
 
