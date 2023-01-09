@@ -171,7 +171,7 @@ class MySql extends DbDumper
 
         $command = [
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
-            "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
+            "--defaults-file=\"{$temporaryCredentialsFile}\"",
         ];
 
         if (! $this->createTables) {
