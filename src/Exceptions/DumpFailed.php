@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 
 class DumpFailed extends Exception
 {
-    public static function processDidNotEndSuccessfully(Process $process)
+    public static function processDidNotEndSuccessfully(Process $process): static
     {
         $processOutput = static::formatProcessOutput($process);
 

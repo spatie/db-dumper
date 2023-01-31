@@ -35,7 +35,7 @@ abstract class DbDumper
 
     protected ?object $compressor = null;
 
-    public static function create()
+    public static function create(): static
     {
         return new static();
     }
@@ -45,28 +45,28 @@ abstract class DbDumper
         return $this->dbName;
     }
 
-    public function setDbName(string $dbName): self
+    public function setDbName(string $dbName): static
     {
         $this->dbName = $dbName;
 
         return $this;
     }
 
-    public function setUserName(string $userName): self
+    public function setUserName(string $userName): static
     {
         $this->userName = $userName;
 
         return $this;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
 
@@ -78,28 +78,28 @@ abstract class DbDumper
         return $this->host;
     }
 
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
 
         return $this;
     }
 
-    public function setSocket(string $socket): self
+    public function setSocket(string $socket): static
     {
         $this->socket = $socket;
 
         return $this;
     }
 
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
 
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath): self
+    public function setDumpBinaryPath(string $dumpBinaryPath): static
     {
         if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, '/')) {
             $dumpBinaryPath .= '/';
@@ -115,14 +115,14 @@ abstract class DbDumper
         return $this->compressor->useExtension();
     }
 
-    public function useCompressor(Compressor $compressor): self
+    public function useCompressor(Compressor $compressor): static
     {
         $this->compressor = $compressor;
 
         return $this;
     }
 
-    public function includeTables($includeTables): self
+    public function includeTables($includeTables): static
     {
         if (! empty($this->excludeTables)) {
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
@@ -137,7 +137,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function excludeTables($excludeTables): self
+    public function excludeTables($excludeTables): static
     {
         if (! empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
@@ -152,7 +152,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOption(string $extraOption): self
+    public function addExtraOption(string $extraOption): static
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
@@ -161,7 +161,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): self
+    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): static
     {
         if (! empty($extraOptionAfterDbName)) {
             $this->extraOptionsAfterDbName[] = $extraOptionAfterDbName;
