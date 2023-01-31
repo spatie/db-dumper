@@ -9,16 +9,44 @@ class DumpFailed extends Exception
 {
     public static function processDidNotEndSuccessfully(Process $process)
     {
-        return new static("The dump process failed with exitcode {$process->getExitCode()} : {$process->getExitCodeText()} : {$process->getErrorOutput()}");
+        $processOutput = static::formatProcessOutput($process);
+
+        return new static("The dump process failed with a none successful exitcode.{$processOutput}");
     }
 
-    public static function dumpfileWasNotCreated()
+    public static function dumpfileWasNotCreated(Process $process): static
     {
-        return new static('The dumpfile could not be created');
+        $processOutput = static::formatProcessOutput($process);
+
+        return new static("The dumpfile could not be created.{$processOutput}");
     }
 
-    public static function dumpfileWasEmpty()
+    public static function dumpfileWasEmpty(Process $process): static
     {
-        return new static('The created dumpfile is empty');
+        $processOutput = static::formatProcessOutput($process);
+
+        return new static("The created dumpfile is empty.{$processOutput}");
+    }
+
+    protected static function formatProcessOutput(Process $process): string
+    {
+        $output = $process->getOutput() ?: '<no output>';
+        $errorOutput = $process->getErrorOutput() ?: '<no output>';
+        $exitCodeText = $process->getExitCodeText() ?: '<no exit text>';
+
+        return <<<CONSOLE
+
+            Exitcode
+            ========
+            {$process->getExitCode()}: {$exitCodeText}
+
+            Output
+            ======
+            {$output}
+
+            Error Output
+            ============
+            {$errorOutput}
+            CONSOLE;
     }
 }

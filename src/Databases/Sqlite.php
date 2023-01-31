@@ -3,6 +3,7 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
+use SQLite3;
 use Symfony\Component\Process\Process;
 
 class Sqlite extends DbDumper
@@ -16,10 +17,26 @@ class Sqlite extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
+    public function getDbTables(): array
+    {
+        $db = new SQLite3($this->dbName);
+        $query = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
+        $tables = [];
+        while ($table = $query->fetchArray(SQLITE3_ASSOC)) {
+            $tables[] = $table['name'];
+        }
+        $db->close();
+
+        return $tables;
+    }
+
     public function getDumpCommand(string $dumpFile): string
     {
-        $includeTables = rtrim(' '.implode(' ', $this->includeTables));
-
+        $includeTables = rtrim(' ' . implode(' ', $this->includeTables));
+        if (empty($includeTables) && ! empty($this->excludeTables)) {
+            $tables = $this->getDbTables();
+            $includeTables = rtrim(' ' . implode(' ', array_diff($tables, $this->excludeTables)));
+        }
         $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump{$includeTables}'";
         if ($this->isWindows()) {
             $dumpInSqlite = "(echo BEGIN IMMEDIATE; & echo .dump{$includeTables})";

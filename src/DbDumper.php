@@ -179,11 +179,11 @@ abstract class DbDumper
         }
 
         if (! file_exists($outputFile)) {
-            throw DumpFailed::dumpfileWasNotCreated();
+            throw DumpFailed::dumpfileWasNotCreated($process);
         }
 
         if (filesize($outputFile) === 0) {
-            throw DumpFailed::dumpfileWasEmpty();
+            throw DumpFailed::dumpfileWasEmpty($process);
         }
     }
 

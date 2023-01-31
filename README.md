@@ -1,3 +1,6 @@
+
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 # Dump the contents of a database
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
@@ -149,7 +152,7 @@ Spatie\DbDumper\Databases\MySql::create()
 In order to use "_--column-statistics=0_" as option in mysqldump command you can use _doNotUseColumnStatistics()_ method.
 
 If you have installed _mysqldump 8_, it queries by default _column_statics_ table in _information_schema_ database.
-In some old version of MySql (service) like 5.7, this table it not exists. So you could have an exception during the execution of mysqldump. To avoid this, you could use _doNotUseColumnStatistics()_ method.
+In some old version of MySql (service) like 5.7, this table doesn't exist. So you could have an exception during the execution of mysqldump. To avoid this, you could use _doNotUseColumnStatistics()_ method.
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -292,7 +295,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Contributing
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
