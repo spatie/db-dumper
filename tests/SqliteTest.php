@@ -1,11 +1,12 @@
 <?php
 
-use Spatie\DbDumper\Compressors\Bzip2Compressor;
-use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Databases\Sqlite;
-
 use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertNotEquals;
+
+use Spatie\DbDumper\Compressors\Bzip2Compressor;
+
+use Spatie\DbDumper\Compressors\GzipCompressor;
+use Spatie\DbDumper\Databases\Sqlite;
 
 it('provides a factory method')
     ->expect(Sqlite::create())

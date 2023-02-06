@@ -11,7 +11,7 @@ it('provides a factory method')
     ->toBeInstanceOf(MySql::class);
 
 it('will throw an exception when no credentials are set')
-    ->tap(fn () =>  MySql::create()->dumpToFile('test.sql'))
+    ->tap(fn () => MySql::create()->dumpToFile('test.sql'))
     ->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
