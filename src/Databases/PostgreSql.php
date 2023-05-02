@@ -47,7 +47,7 @@ class PostgreSql extends DbDumper
 
         $command = [
             "{$quote}{$this->dumpBinaryPath}pg_dump{$quote}",
-            "-U {$this->userName}",
+            "-U \"{$this->userName}\"",
             '-h '.($this->socket === '' ? $this->host : $this->socket),
             "-p {$this->port}",
         ];
