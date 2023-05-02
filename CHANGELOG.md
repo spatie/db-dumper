@@ -2,6 +2,26 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.3.1 - 2023-05-02
+
+### What's Changed
+
+- PHP 8.2 Build by @erikn69 in https://github.com/spatie/db-dumper/pull/180
+- Add Dependabot Automation by @patinthehat in https://github.com/spatie/db-dumper/pull/182
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/spatie/db-dumper/pull/186
+- Convert all tests to Pest by @alexmanase in https://github.com/spatie/db-dumper/pull/188
+- Bump actions/checkout from 2 to 3 by @dependabot in https://github.com/spatie/db-dumper/pull/183
+- Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot in https://github.com/spatie/db-dumper/pull/191
+- Update command to use doublequotes for username by @applyACS in https://github.com/spatie/db-dumper/pull/192
+
+### New Contributors
+
+- @dependabot made their first contribution in https://github.com/spatie/db-dumper/pull/186
+- @alexmanase made their first contribution in https://github.com/spatie/db-dumper/pull/188
+- @applyACS made their first contribution in https://github.com/spatie/db-dumper/pull/192
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.3.0...3.3.1
+
 ## 3.3.0 - 2022-09-01
 
 ### What's Changed
