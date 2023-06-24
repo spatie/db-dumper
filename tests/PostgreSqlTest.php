@@ -21,7 +21,15 @@ it('can generate a dump command', function () {
         ->setPassword('password')
         ->getDumpCommand('dump.sql');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h localhost -p 5432 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 > "dump.sql"');
+});
+
+it('can generate a dump command using a database url', function () {
+    $dumpCommand = Postgresql::create()
+        ->setDatabaseUrl('postgres://username:password@hostname:5432/dbname')
+        ->getDumpCommand('dump.sql');
+
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h hostname -p 5432 > "dump.sql"');
 });
 
 it('can generate a dump command with gzip compressor enabled', function () {
@@ -33,7 +41,7 @@ it('can generate a dump command with gzip compressor enabled', function () {
         ->getDumpCommand('dump.sql');
 
     expect($dumpCommand)->toEqual(
-        '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))'
+        '((((\'pg_dump\' -U "username" -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))'
     );
 });
 
@@ -45,7 +53,7 @@ it('can generate a dump command with bzip2 compressor enabled', function () {
         ->useCompressor(new Bzip2Compressor())
         ->getDumpCommand('dump.sql');
 
-    $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
+    $expected = '((((\'pg_dump\' -U "username" -h localhost -p 5432; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
 
     expect($dumpCommand)->toEqual($expected);
 });
@@ -58,7 +66,7 @@ it('can generate a dump command with absolute path having space and brackets', f
         ->getDumpCommand('/save/to/new (directory)/dump.sql');
 
     expect($dumpCommand)->toEqual(
-        '\'pg_dump\' -U username -h localhost -p 5432 > "/save/to/new (directory)/dump.sql"'
+        '\'pg_dump\' -U "username" -h localhost -p 5432 > "/save/to/new (directory)/dump.sql"'
     );
 });
 
@@ -71,7 +79,7 @@ it('can generate a dump command with using inserts', function () {
         ->getDumpCommand('dump.sql');
 
     expect($dumpCommand)->toEqual(
-        '\'pg_dump\' -U username -h localhost -p 5432 --inserts > "dump.sql"'
+        '\'pg_dump\' -U "username" -h localhost -p 5432 --inserts > "dump.sql"'
     );
 });
 
@@ -83,7 +91,7 @@ it('can generate a dump command with a custom port', function () {
         ->setPort(1234)
         ->getDumpCommand('dump.sql');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h localhost -p 1234 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 1234 > "dump.sql"');
 });
 
 it('can generate a dump command with custom binary path', function () {
@@ -94,7 +102,7 @@ it('can generate a dump command with custom binary path', function () {
         ->setDumpBinaryPath('/custom/directory')
         ->getDumpCommand('dump.sql');
 
-    expect($dumpCommand)->toEqual('\'/custom/directory/pg_dump\' -U username -h localhost -p 5432 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'/custom/directory/pg_dump\' -U "username" -h localhost -p 5432 > "dump.sql"');
 });
 
 it('can generate a dump command with a custom socket', function () {
@@ -105,7 +113,7 @@ it('can generate a dump command with a custom socket', function () {
         ->setSocket('/var/socket.1234')
         ->getDumpCommand('dump.sql');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h /var/socket.1234 -p 5432 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h /var/socket.1234 -p 5432 > "dump.sql"');
 });
 
 it('can generate a dump command for specific tables as array', function () {
@@ -116,7 +124,7 @@ it('can generate a dump command for specific tables as array', function () {
         ->includeTables(['tb1', 'tb2', 'tb3'])
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
 });
 
 it('can generate a dump command for specific tables as string', function () {
@@ -127,7 +135,7 @@ it('can generate a dump command for specific tables as string', function () {
         ->includeTables('tb1, tb2, tb3')
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
 });
 
 it('will throw an exception when setting exclude tables after setting tables', function () {
@@ -148,7 +156,7 @@ it('can generate a dump command excluding tables as array', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'pg_dump\' -U username -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
     );
 });
 
@@ -161,7 +169,7 @@ it('can generate a dump command excluding tables as string', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'pg_dump\' -U username -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
     );
 });
 
@@ -203,7 +211,7 @@ it('can add an extra option', function () {
         ->getDumpCommand('dump.sql');
 
     expect($dumpCommand)->toEqual(
-        '\'pg_dump\' -U username -h localhost -p 5432 -something-else > "dump.sql"'
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -something-else > "dump.sql"'
     );
 });
 
@@ -219,7 +227,7 @@ it('can generate a dump command with no create info', function () {
         ->setUserName('username')
         ->setPassword('password')
         ->doNotCreateTables()
-        ->getDumpCommand('dump.sql', 'credentials.txt');
+        ->getDumpCommand('dump.sql');
 
-    expect($dumpCommand)->toEqual('\'pg_dump\' -U username -h localhost -p 5432 --data-only > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 --data-only > "dump.sql"');
 });

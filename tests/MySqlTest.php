@@ -26,6 +26,16 @@ it('can generate a dump command', function () {
     );
 });
 
+it('can generate a dump command using a database url', function () {
+    $dumpCommand = Mysql::create()
+        ->setDatabaseUrl('mysql://username:password@hostname:3306/dbname')
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
+    );
+});
+
 it('can generate a dump command with columnstatistics', function () {
     $dumpCommand = MySql::create()
         ->setDbName('dbname')
