@@ -79,7 +79,7 @@ class DsnParser
         $parsedUrl = parse_url($url);
 
         if ($parsedUrl === false) {
-            throw new InvalidDatabaseUrl($url);
+            throw InvalidDatabaseUrl::invalidUrl($url);
         }
 
         return $parsedUrl;
