@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.4.0 - 2023-06-27
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot in https://github.com/spatie/db-dumper/pull/194
+- Add support for database URLs by @mikerockett in https://github.com/spatie/db-dumper/pull/196
+
+### New Contributors
+
+- @mikerockett made their first contribution in https://github.com/spatie/db-dumper/pull/196
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.3.1...3.4.0
+
 ## 3.3.1 - 2023-05-02
 
 ### What's Changed
