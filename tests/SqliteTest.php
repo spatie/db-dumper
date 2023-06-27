@@ -22,6 +22,26 @@ it('can generate a dump command', function () {
     expect($dumpCommand)->toEqual($expected);
 });
 
+it('can generate a dump command using a database url containing an absolute path', function () {
+    $dumpCommand = Sqlite::create()
+        ->setDatabaseUrl('sqlite:///path/to/dbname.sqlite')
+        ->getDumpCommand('dump.sql');
+
+    expect($dumpCommand)->toEqual(
+        "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail '/path/to/dbname.sqlite' > \"dump.sql\""
+    );
+});
+
+it('can generate a dump command using a database url containing a relative path', function () {
+    $dumpCommand = Sqlite::create()
+        ->setDatabaseUrl('sqlite:dbname.sqlite')
+        ->getDumpCommand('dump.sql');
+
+    expect($dumpCommand)->toEqual(
+        "echo 'BEGIN IMMEDIATE;\n.dump' | 'sqlite3' --bail 'dbname.sqlite' > \"dump.sql\""
+    );
+});
+
 it('can generate a dump command with gzip compressor enabled', function () {
     $dumpCommand = Sqlite::create()
         ->setDbName('dbname.sqlite')

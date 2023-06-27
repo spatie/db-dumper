@@ -22,6 +22,17 @@ it('can generate a dump command', function () {
         . ' --archive --host localhost --port 27017 > "dbname.gz"');
 });
 
+it('can generate a dump command using a database url', function () {
+    $dumpCommand = MongoDb::create()
+        ->setDatabaseUrl('monogodb://username:password@localhost:27017/dbname')
+        ->getDumpCommand('dbname.gz');
+
+    expect($dumpCommand)->toEqual(
+        '\'mongodump\' --db dbname'
+            . ' --archive --username \'username\' --password \'password\' --host localhost --port 27017 > "dbname.gz"'
+    );
+});
+
 it('can generate a dump command with gzip compressor enabled', function () {
     $dumpCommand = MongoDb::create()
         ->setDbName('dbname')

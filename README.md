@@ -8,10 +8,9 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This repo contains an easy to use class to dump a database using PHP. Currently MySQL, PostgreSQL, SQLite and MongoDB are supported. Behind
-the scenes `mysqldump`, `pg_dump`, `sqlite3` and `mongodump` are used.
+This repo contains an easy to use class to dump a database using PHP. Currently MySQL, PostgreSQL, SQLite and MongoDB are supported. Behind the scenes `mysqldump`, `pg_dump`, `sqlite3` and `mongodump` are used.
 
-Here's are simple examples of how to create a database dump with different drivers:
+Here are simple examples of how to create a database dump with different drivers:
 
 **MySQL**
 
@@ -123,6 +122,20 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setHost($host)
     ->dumpToFile('dump.sql');
 ```
+
+### Use a Database URL
+
+In some applications or environments, database credentials are provided as URLs instead of individual components. In this case, you can use the `setDatabaseUrl` method instead of the individual methods.
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDatabaseUrl($databaseUrl)
+    ->dumpToFile('dump.sql');
+```
+
+When providing a URL, the package will automatically parse it and provide the individual components to the applicable dumper.
+
+For example, if you provide the URL `mysql://username:password@hostname:3306/dbname`, the dumper will use the `hostname` host, running on port `3306`, and will connect to `dbname` with `username` and `password`.
 
 ### Dump specific tables
 
