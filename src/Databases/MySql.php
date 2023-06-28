@@ -143,7 +143,7 @@ class MySql extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
-    public function addExtraOption(string $extraOption): self
+    public function addExtraOption(string $extraOption): static
     {
         if (str_contains($extraOption, '--all-databases')) {
             $this->dbNameWasSetAsExtraOption = true;
