@@ -26,7 +26,7 @@ class MySql extends DbDumper
 
     protected bool $allDatabasesWasSetAsExtraOption = false;
 
-    protected string $setGtidPurged = 'AUTO';
+    protected string $setGtidPurged = 'OFF';
 
     protected bool $createTables = true;
 
