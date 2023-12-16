@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.4.1 - 2023-12-16
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot in https://github.com/spatie/db-dumper/pull/198
+* Allow symfony/process 7.x by @thecaliskan in https://github.com/spatie/db-dumper/pull/202
+
+### New Contributors
+
+* @thecaliskan made their first contribution in https://github.com/spatie/db-dumper/pull/202
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.0...3.4.1
+
 ## 3.4.0 - 2023-06-27
 
 ### What's Changed
