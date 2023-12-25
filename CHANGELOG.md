@@ -2,6 +2,20 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.4.2 - 2023-12-25
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/db-dumper/pull/201
+* Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/db-dumper/pull/200
+* [3.x] Ensure port is a string when creating credentials file for Postgres by @RVxLab in https://github.com/spatie/db-dumper/pull/203
+
+### New Contributors
+
+* @RVxLab made their first contribution in https://github.com/spatie/db-dumper/pull/203
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.1...3.4.2
+
 ## 3.4.1 - 2023-12-16
 
 ### What's Changed
