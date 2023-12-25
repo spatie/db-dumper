@@ -79,7 +79,7 @@ class PostgreSql extends DbDumper
     {
         $contents = [
             $this->escapeCredentialEntry($this->host),
-            $this->escapeCredentialEntry($this->port),
+            $this->escapeCredentialEntry((string) $this->port),
             $this->escapeCredentialEntry($this->dbName),
             $this->escapeCredentialEntry($this->userName),
             $this->escapeCredentialEntry($this->password),
