@@ -28,6 +28,8 @@ class MySql extends DbDumper
 
     protected string $setGtidPurged = 'AUTO';
 
+    protected bool $skipAutoIncrement = false;
+
     protected bool $createTables = true;
 
     /** @var false|resource */
@@ -126,6 +128,18 @@ class MySql extends DbDumper
     {
         $this->setGtidPurged = $setGtidPurged;
 
+        return $this;
+    }
+
+    public function skipAutoIncrement(): self
+    {
+        $this->skipAutoIncrement = true;
+        return $this;
+    }
+
+    public function dontSkipAutoIncrement(): self
+    {
+        $this->skipAutoIncrement = false;
         return $this;
     }
 
@@ -233,7 +247,15 @@ class MySql extends DbDumper
             $command[] = $extraOptionAfterDbName;
         }
 
-        return $this->echoToFile(implode(' ', $command), $dumpFile);
+        $finalDumpCommand = implode(' ', $command);
+
+        if ($this->skipAutoIncrement) {
+            $sedCommand = "sed 's/ AUTO_INCREMENT=[0-9]*\b//'";
+            $finalDumpCommand .= " | {$sedCommand}";
+        }
+
+        return $this->echoToFile($finalDumpCommand, $dumpFile);
+
     }
 
     public function getContentsOfCredentialsFile(): string
