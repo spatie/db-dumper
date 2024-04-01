@@ -115,7 +115,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath): self
+    public function setDumpBinaryPath(string $dumpBinaryPath = ''): self
     {
         if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, '/')) {
             $dumpBinaryPath .= '/';
