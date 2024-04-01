@@ -2,6 +2,18 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.4.3 - 2024-04-01
+
+### What's Changed
+
+* Allow set dump binary path with empty value by @mokhosh in https://github.com/spatie/db-dumper/pull/206
+
+### New Contributors
+
+* @mokhosh made their first contribution in https://github.com/spatie/db-dumper/pull/206
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.2...3.4.3
+
 ## 3.4.2 - 2023-12-25
 
 ### What's Changed
