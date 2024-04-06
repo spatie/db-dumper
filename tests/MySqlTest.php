@@ -204,6 +204,28 @@ it('can generate a dump command for specific tables as array', function () {
     );
 });
 
+it('can generate a dump command skipping auto increment values', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->skipAutoIncrement()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toContain("sed 's/ AUTO_INCREMENT=[0-9]*\\b//'");
+});
+
+it('can generate a dump command not skipping auto increment values', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->dontSkipAutoIncrement()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->not->toContain("sed 's/ AUTO_INCREMENT=[0-9]*\\b//'");
+});
+
 it('can generate a dump command for specific tables as string', function () {
     $dumpCommand = MySql::create()
         ->setDbName('dbname')
