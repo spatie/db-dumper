@@ -134,12 +134,14 @@ class MySql extends DbDumper
     public function skipAutoIncrement(): self
     {
         $this->skipAutoIncrement = true;
+
         return $this;
     }
 
     public function dontSkipAutoIncrement(): self
     {
         $this->skipAutoIncrement = false;
+
         return $this;
     }
 
