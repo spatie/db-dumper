@@ -2,6 +2,18 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.5.0 - 2024-04-08
+
+### What's Changed
+
+* feat: :tada: Add Feature to Skip AUTO_INCREMENT Values in MySQL Dumps by @jhonymiler in https://github.com/spatie/db-dumper/pull/207
+
+### New Contributors
+
+* @jhonymiler made their first contribution in https://github.com/spatie/db-dumper/pull/207
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.3...3.5.0
+
 ## 3.4.3 - 2024-04-01
 
 ### What's Changed
