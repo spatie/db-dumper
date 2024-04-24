@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.6.0 - 2024-04-24
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/spatie/db-dumper/pull/205
+* add doNotDumpData() for MySQL and Postgres by @jbraband in https://github.com/spatie/db-dumper/pull/208
+
+### New Contributors
+
+* @jbraband made their first contribution in https://github.com/spatie/db-dumper/pull/208
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.5.0...3.6.0
+
 ## 3.5.0 - 2024-04-08
 
 ### What's Changed
