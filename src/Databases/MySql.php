@@ -32,6 +32,8 @@ class MySql extends DbDumper
 
     protected bool $createTables = true;
 
+    protected bool $includeData = true;
+
     /** @var false|resource */
     private $tempFileHandle;
 
@@ -181,6 +183,13 @@ class MySql extends DbDumper
         return $this;
     }
 
+    public function doNotDumpData(): self
+    {
+        $this->includeData = false;
+
+        return $this;
+    }
+
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $quote = $this->determineQuote();
@@ -192,6 +201,10 @@ class MySql extends DbDumper
 
         if (! $this->createTables) {
             $command[] = '--no-create-info';
+        }
+
+        if (!$this->includeData) {
+            $command[] = '--no-data';
         }
 
         if ($this->skipComments) {

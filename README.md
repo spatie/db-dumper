@@ -207,7 +207,7 @@ Spatie\DbDumper\Databases\MySql::create()
 
 ### Excluding tables from the dump
 
-Using an array:
+You can exclude tables from the dump by using an array:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -218,7 +218,7 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-Using a string:
+Or by using a string:
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
@@ -229,7 +229,9 @@ Spatie\DbDumper\Databases\MySql::create()
     ->dumpToFile('dump.sql');
 ```
 
-### Do not write CREATE TABLE statements that create each dumped table.
+### Do not write CREATE TABLE statements that create each dumped table
+
+You can use `doNotCreateTables` to prevent writing create statements.
 
 ```php
 $dumpCommand = MySql::create()
@@ -237,6 +239,20 @@ $dumpCommand = MySql::create()
     ->setUserName('username')
     ->setPassword('password')
     ->doNotCreateTables()
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
+### Do not write row data
+
+You can use `doNotDumpData` to prevent writing row data.
+
+
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->doNotDumpData()
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
 
