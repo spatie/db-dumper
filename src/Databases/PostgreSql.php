@@ -62,7 +62,7 @@ class PostgreSql extends DbDumper
             $command[] = '--data-only';
         }
 
-        if (!$this->includeData) {
+        if (! $this->includeData) {
             $command[] = '--schema-only';
         }
 

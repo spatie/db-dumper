@@ -203,7 +203,7 @@ class MySql extends DbDumper
             $command[] = '--no-create-info';
         }
 
-        if (!$this->includeData) {
+        if (! $this->includeData) {
             $command[] = '--no-data';
         }
 
