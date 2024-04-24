@@ -231,3 +231,14 @@ it('can generate a dump command with no create info', function () {
 
     expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 --data-only > "dump.sql"');
 });
+
+it('can generate a dump command with no data', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->doNotDumpData()
+        ->getDumpCommand('dump.sql');
+
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 --schema-only > "dump.sql"');
+});

@@ -240,6 +240,17 @@ $dumpCommand = MySql::create()
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
 
+### Do not write row data.
+
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->doNotDumpData()
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
 ### Adding extra options
 
 If you want to add an arbitrary option to the dump command you can use `addExtraOption`

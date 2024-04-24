@@ -448,3 +448,17 @@ it('can generate a dump command with no create info', function () {
         '\'mysqldump\' --defaults-extra-file="credentials.txt" --no-create-info --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
+
+
+it('can generate a dump command with no data', function () {
+    $dumpCommand = MySQL::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->doNotDumpData()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
+    );
+});
