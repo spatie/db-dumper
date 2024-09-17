@@ -8,6 +8,8 @@ use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
+    protected bool $skipSsl = false;
+
     protected bool $skipComments = true;
 
     protected bool $useExtendedInserts = true;
@@ -40,6 +42,13 @@ class MySql extends DbDumper
     public function __construct()
     {
         $this->port = 3306;
+    }
+
+    public function setSkipSsl(bool $skipSsl): self
+    {
+        $this->skipSsl = $skipSsl;
+
+        return $this;
     }
 
     public function skipComments(): self
@@ -118,6 +127,8 @@ class MySql extends DbDumper
 
         return $this;
     }
+
+
 
     public function setDefaultCharacterSet(string $characterSet): self
     {
@@ -238,7 +249,7 @@ class MySql extends DbDumper
         }
 
         if (! empty($this->defaultCharacterSet)) {
-            $command[] = '--default-character-set='.$this->defaultCharacterSet;
+            $command[] = '--default-character-set=' . $this->defaultCharacterSet;
         }
 
         foreach ($this->extraOptions as $extraOption) {
@@ -246,7 +257,7 @@ class MySql extends DbDumper
         }
 
         if ($this->setGtidPurged !== 'AUTO') {
-            $command[] = '--set-gtid-purged='.$this->setGtidPurged;
+            $command[] = '--set-gtid-purged=' . $this->setGtidPurged;
         }
 
         if (! $this->dbNameWasSetAsExtraOption) {
@@ -270,7 +281,6 @@ class MySql extends DbDumper
         }
 
         return $this->echoToFile($finalDumpCommand, $dumpFile);
-
     }
 
     public function getContentsOfCredentialsFile(): string
@@ -284,6 +294,10 @@ class MySql extends DbDumper
 
         if ($this->socket === '') {
             $contents[] = "host = '{$this->host}'";
+        }
+
+        if ($this->skipSsl) {
+            $contents[] = "skip-ssl";
         }
 
         return implode(PHP_EOL, $contents);
