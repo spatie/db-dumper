@@ -2,6 +2,20 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.7.0 - 2024-09-23
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/spatie/db-dumper/pull/209
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/spatie/db-dumper/pull/211
+* Update MySql.php by @diadal in https://github.com/spatie/db-dumper/pull/213
+
+### New Contributors
+
+* @diadal made their first contribution in https://github.com/spatie/db-dumper/pull/213
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.6.0...3.7.0
+
 ## 3.6.0 - 2024-04-24
 
 ### What's Changed
