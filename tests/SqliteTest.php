@@ -4,7 +4,6 @@ use function PHPUnit\Framework\assertFileExists;
 use function PHPUnit\Framework\assertNotEquals;
 
 use Spatie\DbDumper\Compressors\Bzip2Compressor;
-
 use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Databases\Sqlite;
 

@@ -128,8 +128,6 @@ class MySql extends DbDumper
         return $this;
     }
 
-
-
     public function setDefaultCharacterSet(string $characterSet): self
     {
         $this->defaultCharacterSet = $characterSet;
