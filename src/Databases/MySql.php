@@ -44,7 +44,7 @@ class MySql extends DbDumper
         $this->port = 3306;
     }
 
-    public function setSkipSsl(bool $skipSsl): self
+    public function setSkipSsl(bool $skipSsl = false): self
     {
         $this->skipSsl = $skipSsl;
 
