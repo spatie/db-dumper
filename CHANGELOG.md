@@ -2,6 +2,15 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.7.1 - 2024-11-18
+
+### What's Changed
+
+* Run tests against PHP 8.3, 8.4 too by @erikn69 in https://github.com/spatie/db-dumper/pull/215
+* Update MySql.php by @diadal in https://github.com/spatie/db-dumper/pull/216
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.7.0...3.7.1
+
 ## 3.7.0 - 2024-09-23
 
 ### What's Changed
