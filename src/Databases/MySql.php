@@ -207,7 +207,12 @@ class MySql extends DbDumper
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
+        $finalDumpCommand = $this->getCommonDumpCommand($command);
+        return $this->echoToFile($finalDumpCommand, $dumpFile);
+    }
 
+    public function getCommonDumpCommand(array $command): string
+    {
         if (! $this->createTables) {
             $command[] = '--no-create-info';
         }
@@ -278,7 +283,7 @@ class MySql extends DbDumper
             $finalDumpCommand .= " | {$sedCommand}";
         }
 
-        return $this->echoToFile($finalDumpCommand, $dumpFile);
+        return $finalDumpCommand;
     }
 
     public function getContentsOfCredentialsFile(): string
