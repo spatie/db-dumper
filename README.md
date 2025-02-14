@@ -256,6 +256,21 @@ $dumpCommand = MySql::create()
     ->getDumpCommand('dump.sql', 'credentials.txt');
 ```
 
+### Append instead of overwriting a dump file
+
+You can use `useAppendMode` with MySQL to append to the file instead of overwriting it. 
+This is useful for two-step dumps when you want to dump the whole schema but only some of the data 
+(for example: only migrations, or only product but not customer data).
+
+```php
+$dumpCommand = MySql::create()
+    ->setDbName('dbname')
+    ->setUserName('username')
+    ->setPassword('password')
+    ->useAppendMode()
+    ->getDumpCommand('dump.sql', 'credentials.txt');
+```
+
 ### Adding extra options
 
 If you want to add an arbitrary option to the dump command you can use `addExtraOption`

@@ -462,3 +462,53 @@ it('can generate a dump command with no data', function () {
         '\'mysqldump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
+
+// We already implicitly test that by default append mode is off, with the expected command strings in the other tests
+it('can be set to use append mode', function(){
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useAppendMode()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname >> "dump.sql"'
+    );
+});
+
+it('will throw an exception when using Bzip2Compressor-mode while GzipCompressor is already used.', function () {
+    MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useCompressor(new Bzip2Compressor())
+        ->useAppendMode();
+})->throws(CannotSetParameter::class);
+
+it('will throw an exception when using Bzip2Compressor while append-mode is already used.', function () {
+    MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useAppendMode()
+        ->useCompressor(new Bzip2Compressor());
+})->throws(CannotSetParameter::class);
+
+it('will throw an exception when using append-mode while GzipCompressor is already used.', function () {
+    MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useCompressor(new GzipCompressor())
+        ->useAppendMode();
+})->throws(CannotSetParameter::class);
+
+it('will throw an exception when using GzipCompressor while append-mode is already used.', function () {
+    MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useAppendMode()
+        ->useCompressor(new GzipCompressor());
+})->throws(CannotSetParameter::class);

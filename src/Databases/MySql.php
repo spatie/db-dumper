@@ -3,6 +3,7 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
 
@@ -195,6 +196,17 @@ class MySql extends DbDumper
     public function doNotDumpData(): self
     {
         $this->includeData = false;
+
+        return $this;
+    }
+
+    public function useAppendMode(): self
+    {
+        if($this->compressor) {
+            throw CannotSetParameter::conflictingParameters('append mode', 'compress');
+        }
+
+        $this->appendMode = true;
 
         return $this;
     }
