@@ -2,6 +2,19 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.7.2 - 2025-02-14
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/spatie/db-dumper/pull/217
+* Add append mode by @LBannenberg in https://github.com/spatie/db-dumper/pull/219
+
+### New Contributors
+
+* @LBannenberg made their first contribution in https://github.com/spatie/db-dumper/pull/219
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.7.1...3.7.2
+
 ## 3.7.1 - 2024-11-18
 
 ### What's Changed
