@@ -220,6 +220,7 @@ class MySql extends DbDumper
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
         $finalDumpCommand = $this->getCommonDumpCommand($command);
+
         return $this->echoToFile($finalDumpCommand, $dumpFile);
     }
 

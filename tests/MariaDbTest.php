@@ -475,4 +475,3 @@ it('can generate a dump command with no data', function () {
         '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
-

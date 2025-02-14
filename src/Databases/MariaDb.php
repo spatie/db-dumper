@@ -23,6 +23,7 @@ class MariaDb extends MySql
     public function withoutSandboxMode(): self
     {
         $this->withSandboxMode = false;
+
         return $this;
     }
 
