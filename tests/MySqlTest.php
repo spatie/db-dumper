@@ -464,7 +464,7 @@ it('can generate a dump command with no data', function () {
 });
 
 // We already implicitly test that by default append mode is off, with the expected command strings in the other tests
-it('can be set to use append mode', function(){
+it('can be set to use append mode', function () {
     $dumpCommand = MySql::create()
         ->setDbName('dbname')
         ->setUserName('username')

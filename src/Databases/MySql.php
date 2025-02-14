@@ -202,7 +202,7 @@ class MySql extends DbDumper
 
     public function useAppendMode(): self
     {
-        if($this->compressor) {
+        if ($this->compressor) {
             throw CannotSetParameter::conflictingParameters('append mode', 'compress');
         }
 

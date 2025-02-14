@@ -135,7 +135,7 @@ abstract class DbDumper
 
     public function useCompressor(Compressor $compressor): self
     {
-        if($this->appendMode) {
+        if ($this->appendMode) {
             throw CannotSetParameter::conflictingParameters('compressor', 'append mode');
         }
 
@@ -253,7 +253,7 @@ abstract class DbDumper
             return $this->getCompressCommand($command, $dumpFile);
         }
 
-        if($this->appendMode) {
+        if ($this->appendMode) {
             return $command . ' >> ' . $dumpFile;
         }
 
