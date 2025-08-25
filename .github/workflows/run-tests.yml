@@ -16,7 +16,7 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Install sqlite3
               run: sudo apt-get install sqlite3 libsqlite3-dev
