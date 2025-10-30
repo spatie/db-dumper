@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "symfony/process": "^5.0|^6.0"
+        "symfony/process": "^5.0|^6.0 || ^7.0 || ^8.0"
     },
     "require-dev": {
         "pestphp/pest": "^1.22"
