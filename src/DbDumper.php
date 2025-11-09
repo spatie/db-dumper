@@ -267,6 +267,6 @@ abstract class DbDumper
 
     protected function isWindows(): bool
     {
-        return str_starts_with(strtoupper(PHP_OS), 'WIN');
+        return PHP_OS_FAMILY === 'Windows';
     }
 }
