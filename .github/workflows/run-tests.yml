@@ -8,7 +8,7 @@ jobs:
         strategy:
             fail-fast: true
             matrix:
-                php: [8.0, 8.1]
+                php: [8.0, 8.1, 8.2, 8.3, 8.4]
                 dependency-version: [prefer-lowest, prefer-stable]
                 os: [ubuntu-latest]
 
@@ -16,7 +16,7 @@ jobs:
 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Install sqlite3
               run: sudo apt-get install sqlite3 libsqlite3-dev
@@ -32,4 +32,4 @@ jobs:
               run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
             - name: Execute tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/pest

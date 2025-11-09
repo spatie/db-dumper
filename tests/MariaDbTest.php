@@ -2,42 +2,55 @@
 
 use Spatie\DbDumper\Compressors\Bzip2Compressor;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use Spatie\DbDumper\Databases\MySql;
+use Spatie\DbDumper\Databases\MariaDb;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 
 it('provides a factory method')
-    ->expect(MySql::create())
-    ->toBeInstanceOf(MySql::class);
+    ->expect(MariaDb::create())
+    ->toBeInstanceOf(MariaDb::class);
 
 it('will throw an exception when no credentials are set')
-    ->tap(fn () => MySql::create()->dumpToFile('test.sql'))
+    ->tap(fn () => MariaDb::create()->dumpToFile('test.sql'))
     ->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
+    );
+});
+
+it('can generate a dump command excluding sandbox mode', function () {
+    $dumpCommand = MariaDb::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->withoutSandboxMode()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname|tail +2 > "dump.sql"'
     );
 });
 
 it('can generate a dump command using a database url', function () {
-    $dumpCommand = Mysql::create()
-        ->setDatabaseUrl('mysql://username:password@hostname:3306/dbname')
+    $dumpCommand = MariaDb::create()
+        ->setDatabaseUrl('MariaDb://username:password@hostname:3306/dbname')
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with columnstatistics', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -45,12 +58,12 @@ it('can generate a dump command with columnstatistics', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --column-statistics=0 dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --column-statistics=0 dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with gzip compressor enabled', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -58,12 +71,12 @@ it('can generate a dump command with gzip compressor enabled', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))'
+        '((((\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))'
     );
 });
 
 it('can generate a dump command with bzip2 compressor enabled', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -71,24 +84,24 @@ it('can generate a dump command with bzip2 compressor enabled', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '((((\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))'
+        '((((\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))'
     );
 });
 
 it('can generate a dump command with absolute path having space and brackets', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
         ->getDumpCommand('/save/to/new (directory)/dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "/save/to/new (directory)/dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "/save/to/new (directory)/dump.sql"'
     );
 });
 
 it('can generate a dump command without using comments', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -96,12 +109,12 @@ it('can generate a dump command without using comments', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --extended-insert dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command without using extended inserts', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -109,12 +122,12 @@ it('can generate a dump command without using extended inserts', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with custom binary path', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -122,12 +135,12 @@ it('can generate a dump command with custom binary path', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'/custom/directory/mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
+        '\'/custom/directory/mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command without using extending inserts', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -135,12 +148,12 @@ it('can generate a dump command without using extending inserts', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --skip-extended-insert dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command using single transaction', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -148,12 +161,12 @@ it('can generate a dump command using single transaction', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --single-transaction dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --single-transaction dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command using skip lock tables', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -161,12 +174,12 @@ it('can generate a dump command using skip lock tables', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --skip-lock-tables dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --skip-lock-tables dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command using quick', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -174,12 +187,12 @@ it('can generate a dump command using quick', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --quick dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --quick dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with a custom socket', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -187,12 +200,12 @@ it('can generate a dump command with a custom socket', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --socket=1234 dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --socket=1234 dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command for specific tables as array', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -200,12 +213,12 @@ it('can generate a dump command for specific tables as array', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"'
     );
 });
 
 it('can generate a dump command skipping auto increment values', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -216,7 +229,7 @@ it('can generate a dump command skipping auto increment values', function () {
 });
 
 it('can generate a dump command not skipping auto increment values', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -227,7 +240,7 @@ it('can generate a dump command not skipping auto increment values', function ()
 });
 
 it('can generate a dump command for specific tables as string', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -235,12 +248,12 @@ it('can generate a dump command for specific tables as string', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname --tables tb1 tb2 tb3 > "dump.sql"'
     );
 });
 
 it('will throw an exception when setting exclude tables after setting tables', function () {
-    MySql::create()
+    MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -249,7 +262,7 @@ it('will throw an exception when setting exclude tables after setting tables', f
 })->throws(CannotSetParameter::class);
 
 it('can generate a dump command excluding tables as array', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -257,13 +270,13 @@ it('can generate a dump command excluding tables as array', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
-            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command excluding tables as string', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -271,13 +284,13 @@ it('can generate a dump command excluding tables as string', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
-            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 dbname > "dump.sql"'
     );
 });
 
 it('will throw an exception when setting tables after setting exclude tables', function () {
-    MySql::create()
+    MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -286,7 +299,7 @@ it('will throw an exception when setting tables after setting exclude tables', f
 })->throws(CannotSetParameter::class);
 
 it('can generate the contents of a credentials file with a socket connetion', function () {
-    $credentialsFileContent = MySql::create()
+    $credentialsFileContent = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -300,7 +313,7 @@ it('can generate the contents of a credentials file with a socket connetion', fu
 });
 
 it('can generate the contents of a credentials file with a http connection', function () {
-    $credentialsFileContent = MySql::create()
+    $credentialsFileContent = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -315,13 +328,13 @@ it('can generate the contents of a credentials file with a http connection', fun
 it('can get the name of the db', function () {
     $dbName = 'testName';
 
-    $dbDumper = MySql::create()->setDbName($dbName);
+    $dbDumper = MariaDb::create()->setDbName($dbName);
 
     expect($dbDumper->getDbName())->toEqual($dbName);
 });
 
 it('can add extra options', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -330,12 +343,12 @@ it('can add extra options', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" dbname > "dump.sql"'
     );
 });
 
 it('can add extra options after db name', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -344,18 +357,18 @@ it('can add extra options after db name', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option dbname --another-extra-option="value" > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option dbname --another-extra-option="value" > "dump.sql"'
     );
 });
 
 it('can get the host', function () {
-    $dumper = MySql::create()->setHost('myHost');
+    $dumper = MariaDb::create()->setHost('myHost');
 
     expect($dumper->getHost())->toEqual('myHost');
 });
 
 it('can set db name as an extra options', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setUserName('username')
         ->setPassword('password')
         ->addExtraOption('--extra-option')
@@ -363,13 +376,13 @@ it('can set db name as an extra options', function () {
         ->addExtraOption('--databases dbname')
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
-    expect($dumpCommand)->toEqual('\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" --databases dbname > "dump.sql"');
+    expect($dumpCommand)->toEqual('\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --extra-option --another-extra-option="value" --databases dbname > "dump.sql"');
 });
 
 it('can get the name of the db when dbname was set as an extra option', function () {
     $dbName = 'testName';
 
-    $dbDumper = MySql::create()->addExtraOption("--databases {$dbName}");
+    $dbDumper = MariaDb::create()->addExtraOption("--databases {$dbName}");
 
     expect($dbDumper->getDbName())->toEqual($dbName);
 });
@@ -378,25 +391,25 @@ it('can get the name of the db when dbname was overriden as an extra option', fu
     $dbName = 'testName';
     $overridenDbName = 'otherName';
 
-    $dbDumper = MySql::create()->setDbName($dbName)->addExtraOption("--databases {$overridenDbName}");
+    $dbDumper = MariaDb::create()->setDbName($dbName)->addExtraOption("--databases {$overridenDbName}");
 
     expect($dbDumper->getDbName())->toEqual($overridenDbName);
 });
 
 it('can get the name of the db when all databases was set as an extra option', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setUserName('username')
         ->setPassword('password')
         ->addExtraOption('--all-databases')
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --all-databases > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --all-databases > "dump.sql"'
     );
 });
 
 it('can generate a dump command excluding tables as array when dbname was set as an extra option', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setUserName('username')
         ->setPassword('password')
         ->addExtraOption('--databases dbname')
@@ -404,13 +417,13 @@ it('can generate a dump command excluding tables as array when dbname was set as
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
-            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command excluding tables as string when dbname was set as an extra option', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setUserName('username')
         ->setPassword('password')
         ->addExtraOption('--databases dbname')
@@ -418,13 +431,13 @@ it('can generate a dump command excluding tables as string when dbname was set a
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
-            '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        '--ignore-table=dbname.tb1 --ignore-table=dbname.tb2 --ignore-table=dbname.tb3 --databases dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with set gtid purged', function () {
-    $dumpCommand = MySql::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -432,12 +445,12 @@ it('can generate a dump command with set gtid purged', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --set-gtid-purged=OFF dbname > "dump.sql"'
     );
 });
 
 it('can generate a dump command with no create info', function () {
-    $dumpCommand = MySQL::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -445,13 +458,13 @@ it('can generate a dump command with no create info', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --no-create-info --skip-comments --extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --no-create-info --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
 
 
 it('can generate a dump command with no data', function () {
-    $dumpCommand = MySQL::create()
+    $dumpCommand = MariaDb::create()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
@@ -459,56 +472,6 @@ it('can generate a dump command with no data', function () {
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
-
-// We already implicitly test that by default append mode is off, with the expected command strings in the other tests
-it('can be set to use append mode', function () {
-    $dumpCommand = MySql::create()
-        ->setDbName('dbname')
-        ->setUserName('username')
-        ->setPassword('password')
-        ->useAppendMode()
-        ->getDumpCommand('dump.sql', 'credentials.txt');
-
-    expect($dumpCommand)->toEqual(
-        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert dbname >> "dump.sql"'
-    );
-});
-
-it('will throw an exception when using Bzip2Compressor-mode while GzipCompressor is already used.', function () {
-    MySql::create()
-        ->setDbName('dbname')
-        ->setUserName('username')
-        ->setPassword('password')
-        ->useCompressor(new Bzip2Compressor())
-        ->useAppendMode();
-})->throws(CannotSetParameter::class);
-
-it('will throw an exception when using Bzip2Compressor while append-mode is already used.', function () {
-    MySql::create()
-        ->setDbName('dbname')
-        ->setUserName('username')
-        ->setPassword('password')
-        ->useAppendMode()
-        ->useCompressor(new Bzip2Compressor());
-})->throws(CannotSetParameter::class);
-
-it('will throw an exception when using append-mode while GzipCompressor is already used.', function () {
-    MySql::create()
-        ->setDbName('dbname')
-        ->setUserName('username')
-        ->setPassword('password')
-        ->useCompressor(new GzipCompressor())
-        ->useAppendMode();
-})->throws(CannotSetParameter::class);
-
-it('will throw an exception when using GzipCompressor while append-mode is already used.', function () {
-    MySql::create()
-        ->setDbName('dbname')
-        ->setUserName('username')
-        ->setPassword('password')
-        ->useAppendMode()
-        ->useCompressor(new GzipCompressor());
-})->throws(CannotSetParameter::class);

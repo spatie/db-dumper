@@ -1,269 +1,244 @@
 <?php
 
-namespace Spatie\DbDumper\Test;
-
-use PHPUnit\Framework\TestCase;
 use Spatie\DbDumper\Compressors\Bzip2Compressor;
 use Spatie\DbDumper\Compressors\GzipCompressor;
 use Spatie\DbDumper\Databases\PostgreSql;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 
-class PostgreSqlTest extends TestCase
-{
-    /** @test */
-    public function it_provides_a_factory_method()
-    {
-        $this->assertInstanceOf(PostgreSql::class, PostgreSql::create());
-    }
+it('provides a factory method')
+    ->expect(PostgreSql::create())
+    ->toBeInstanceOf(PostgreSql::class);
 
-    /** @test */
-    public function it_will_throw_an_exception_when_no_credentials_are_set()
-    {
-        $this->expectException(CannotStartDump::class);
+it('will throw an exception when no credentials are set')
+    ->tap(fn () => PostgreSql::create()->dumpToFile('test.sql'))
+    ->throws(CannotStartDump::class);
 
-        PostgreSql::create()->dumpToFile('test.sql');
-    }
+it('can generate a dump command', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->getDumpCommand('dump.sql');
 
-    /** @test */
-    public function it_can_generate_a_dump_command()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->getDumpCommand('dump.sql');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 > "dump.sql"');
+});
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 > "dump.sql"', $dumpCommand);
-    }
+it('can generate a dump command using a database url', function () {
+    $dumpCommand = Postgresql::create()
+        ->setDatabaseUrl('postgres://username:password@hostname:5432/dbname')
+        ->getDumpCommand('dump.sql');
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_gzip_compressor_enabled()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->useCompressor(new GzipCompressor())
-            ->getDumpCommand('dump.sql');
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h hostname -p 5432 > "dump.sql"');
+});
 
-        $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))';
+it('can generate a dump command with gzip compressor enabled', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useCompressor(new GzipCompressor())
+        ->getDumpCommand('dump.sql');
 
-        $this->assertSame($expected, $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual(
+        '((((\'pg_dump\' -U "username" -h localhost -p 5432; echo $? >&3) | gzip > "dump.sql") 3>&1) | (read x; exit $x))'
+    );
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_bzip2_compressor_enabled()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->useCompressor(new Bzip2Compressor())
-            ->getDumpCommand('dump.sql');
+it('can generate a dump command with bzip2 compressor enabled', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useCompressor(new Bzip2Compressor())
+        ->getDumpCommand('dump.sql');
 
-        $expected = '((((\'pg_dump\' -U username -h localhost -p 5432; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
+    $expected = '((((\'pg_dump\' -U "username" -h localhost -p 5432; echo $? >&3) | bzip2 > "dump.sql") 3>&1) | (read x; exit $x))';
 
-        $this->assertSame($expected, $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual($expected);
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_absolute_path_having_space_and_brackets()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->getDumpCommand('/save/to/new (directory)/dump.sql');
+it('can generate a dump command with absolute path having space and brackets', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->getDumpCommand('/save/to/new (directory)/dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 > "/save/to/new (directory)/dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual(
+        '\'pg_dump\' -U "username" -h localhost -p 5432 > "/save/to/new (directory)/dump.sql"'
+    );
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_using_inserts()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->useInserts()
-            ->getDumpCommand('dump.sql');
+it('can generate a dump command with using inserts', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->useInserts()
+        ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --inserts > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual(
+        '\'pg_dump\' -U "username" -h localhost -p 5432 --inserts > "dump.sql"'
+    );
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_a_custom_port()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->setPort(1234)
-            ->getDumpCommand('dump.sql');
+it('can generate a dump command with a custom port', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->setPort(1234)
+        ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 1234 > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 1234 > "dump.sql"');
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_custom_binary_path()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->setDumpBinaryPath('/custom/directory')
-            ->getDumpCommand('dump.sql');
+it('can generate a dump command with custom binary path', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->setDumpBinaryPath('/custom/directory')
+        ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'/custom/directory/pg_dump\' -U username -h localhost -p 5432 > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual('\'/custom/directory/pg_dump\' -U "username" -h localhost -p 5432 > "dump.sql"');
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_a_custom_socket()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->setSocket('/var/socket.1234')
-            ->getDumpCommand('dump.sql');
+it('can generate a dump command with a custom socket', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->setSocket('/var/socket.1234')
+        ->getDumpCommand('dump.sql');
 
-        $this->assertEquals('\'pg_dump\' -U username -h /var/socket.1234 -p 5432 > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h /var/socket.1234 -p 5432 > "dump.sql"');
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_for_specific_tables_as_array()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->includeTables(['tb1', 'tb2', 'tb3'])
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+it('can generate a dump command for specific tables as array', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->includeTables(['tb1', 'tb2', 'tb3'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_for_specific_tables_as_string()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->includeTables('tb1, tb2, tb3')
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+it('can generate a dump command for specific tables as string', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->includeTables('tb1, tb2, tb3')
+        ->getDumpCommand('dump.sql', 'credentials.txt');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"', $dumpCommand);
-    }
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 -t tb1 -t tb2 -t tb3 > "dump.sql"');
+});
 
-    /** @test */
-    public function it_will_throw_an_exception_when_setting_exclude_tables_after_setting_tables()
-    {
-        $this->expectException(CannotSetParameter::class);
+it('will throw an exception when setting exclude tables after setting tables', function () {
+    PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->includeTables('tb1, tb2, tb3')
+        ->excludeTables('tb4, tb5, tb6');
+})->throws(CannotSetParameter::class);
 
-        PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->includeTables('tb1, tb2, tb3')
-            ->excludeTables('tb4, tb5, tb6');
-    }
+it('can generate a dump command excluding tables as array', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTables(['tb1', 'tb2', 'tb3'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
 
-    /** @test */
-    public function it_can_generate_a_dump_command_excluding_tables_as_array()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->excludeTables(['tb1', 'tb2', 'tb3'])
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+    expect($dumpCommand)->toEqual(
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
+    );
+});
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"', $dumpCommand);
-    }
+it('can generate a dump command excluding tables as string', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTables('tb1, tb2, tb3')
+        ->getDumpCommand('dump.sql', 'credentials.txt');
 
-    /** @test */
-    public function it_can_generate_a_dump_command_excluding_tables_as_string()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->excludeTables('tb1, tb2, tb3')
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+    expect($dumpCommand)->toEqual(
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"'
+    );
+});
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 -T tb1 -T tb2 -T tb3 > "dump.sql"', $dumpCommand);
-    }
+it('will throw an exception when setting tables after setting exclude tables', function () {
+    PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTables('tb1, tb2, tb3')
+        ->includeTables('tb4, tb5, tb6');
+})->throws(CannotSetParameter::class);
 
-    /** @test */
-    public function it_will_throw_an_exception_when_setting_tables_after_setting_exclude_tables()
-    {
-        $this->expectException(CannotSetParameter::class);
+it('can generate the contents of a credentials file', function () {
+    $credentialsFileContent = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->setHost('hostname')
+        ->setPort(5432)
+        ->getContentsOfCredentialsFile();
 
-        PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->excludeTables('tb1, tb2, tb3')
-            ->includeTables('tb4, tb5, tb6');
-    }
+    expect($credentialsFileContent)->toEqual('hostname:5432:dbname:username:password');
+});
 
-    /** @test */
-    public function it_can_generate_the_contents_of_a_credentials_file()
-    {
-        $credentialsFileContent = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->setHost('hostname')
-            ->setPort(5432)
-            ->getContentsOfCredentialsFile();
+it('can get the name of the db', function () {
+    $dbName = 'testName';
 
-        $this->assertSame('hostname:5432:dbname:username:password', $credentialsFileContent);
-    }
+    $dbDumper = PostgreSql::create()->setDbName($dbName);
 
-    /** @test */
-    public function it_can_get_the_name_of_the_db()
-    {
-        $dbName = 'testName';
+    expect($dbDumper->getDbName())->toEqual($dbName);
+});
 
-        $dbDumper = PostgreSql::create()->setDbName($dbName);
+it('can add an extra option', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->addExtraOption('-something-else')
+        ->getDumpCommand('dump.sql');
 
-        $this->assertEquals($dbName, $dbDumper->getDbName());
-    }
+    expect($dumpCommand)->toEqual(
+        '\'pg_dump\' -U "username" -h localhost -p 5432 -something-else > "dump.sql"'
+    );
+});
 
-    /** @test */
-    public function it_can_add_an_extra_option()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->addExtraOption('-something-else')
-            ->getDumpCommand('dump.sql');
+it('can get the host', function () {
+    $dumper = PostgreSql::create()->setHost('myHost');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 -something-else > "dump.sql"', $dumpCommand);
-    }
+    expect($dumper->getHost())->toEqual('myHost');
+});
 
-    /** @test */
-    public function it_can_get_the_host()
-    {
-        $dumper = PostgreSql::create()->setHost('myHost');
+it('can generate a dump command with no create info', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->doNotCreateTables()
+        ->getDumpCommand('dump.sql');
 
-        $this->assertEquals('myHost', $dumper->getHost());
-    }
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 --data-only > "dump.sql"');
+});
 
-    /** @test */
-    public function it_can_generate_a_dump_command_with_no_create_info()
-    {
-        $dumpCommand = PostgreSql::create()
-            ->setDbName('dbname')
-            ->setUserName('username')
-            ->setPassword('password')
-            ->doNotCreateTables()
-            ->getDumpCommand('dump.sql', 'credentials.txt');
+it('can generate a dump command with no data', function () {
+    $dumpCommand = PostgreSql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->doNotDumpData()
+        ->getDumpCommand('dump.sql');
 
-        $this->assertSame('\'pg_dump\' -U username -h localhost -p 5432 --data-only > "dump.sql"', $dumpCommand);
-    }
-}
+    expect($dumpCommand)->toEqual('\'pg_dump\' -U "username" -h localhost -p 5432 --schema-only > "dump.sql"');
+});

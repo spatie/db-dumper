@@ -2,6 +2,165 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.8.0 - 2025-02-14
+
+### What's Changed
+
+* Adds simple MariaDB class by @nbyloff in https://github.com/spatie/db-dumper/pull/220
+
+### New Contributors
+
+* @nbyloff made their first contribution in https://github.com/spatie/db-dumper/pull/220
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.7.2...3.8.0
+
+## 3.7.2 - 2025-02-14
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/spatie/db-dumper/pull/217
+* Add append mode by @LBannenberg in https://github.com/spatie/db-dumper/pull/219
+
+### New Contributors
+
+* @LBannenberg made their first contribution in https://github.com/spatie/db-dumper/pull/219
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.7.1...3.7.2
+
+## 3.7.1 - 2024-11-18
+
+### What's Changed
+
+* Run tests against PHP 8.3, 8.4 too by @erikn69 in https://github.com/spatie/db-dumper/pull/215
+* Update MySql.php by @diadal in https://github.com/spatie/db-dumper/pull/216
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.7.0...3.7.1
+
+## 3.7.0 - 2024-09-23
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/spatie/db-dumper/pull/209
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/spatie/db-dumper/pull/211
+* Update MySql.php by @diadal in https://github.com/spatie/db-dumper/pull/213
+
+### New Contributors
+
+* @diadal made their first contribution in https://github.com/spatie/db-dumper/pull/213
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.6.0...3.7.0
+
+## 3.6.0 - 2024-04-24
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.0.0 by @dependabot in https://github.com/spatie/db-dumper/pull/205
+* add doNotDumpData() for MySQL and Postgres by @jbraband in https://github.com/spatie/db-dumper/pull/208
+
+### New Contributors
+
+* @jbraband made their first contribution in https://github.com/spatie/db-dumper/pull/208
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.5.0...3.6.0
+
+## 3.5.0 - 2024-04-08
+
+### What's Changed
+
+* feat: :tada: Add Feature to Skip AUTO_INCREMENT Values in MySQL Dumps by @jhonymiler in https://github.com/spatie/db-dumper/pull/207
+
+### New Contributors
+
+* @jhonymiler made their first contribution in https://github.com/spatie/db-dumper/pull/207
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.3...3.5.0
+
+## 3.4.3 - 2024-04-01
+
+### What's Changed
+
+* Allow set dump binary path with empty value by @mokhosh in https://github.com/spatie/db-dumper/pull/206
+
+### New Contributors
+
+* @mokhosh made their first contribution in https://github.com/spatie/db-dumper/pull/206
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.2...3.4.3
+
+## 3.4.2 - 2023-12-25
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/db-dumper/pull/201
+* Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/db-dumper/pull/200
+* [3.x] Ensure port is a string when creating credentials file for Postgres by @RVxLab in https://github.com/spatie/db-dumper/pull/203
+
+### New Contributors
+
+* @RVxLab made their first contribution in https://github.com/spatie/db-dumper/pull/203
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.1...3.4.2
+
+## 3.4.1 - 2023-12-16
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot in https://github.com/spatie/db-dumper/pull/198
+* Allow symfony/process 7.x by @thecaliskan in https://github.com/spatie/db-dumper/pull/202
+
+### New Contributors
+
+* @thecaliskan made their first contribution in https://github.com/spatie/db-dumper/pull/202
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.4.0...3.4.1
+
+## 3.4.0 - 2023-06-27
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot in https://github.com/spatie/db-dumper/pull/194
+- Add support for database URLs by @mikerockett in https://github.com/spatie/db-dumper/pull/196
+
+### New Contributors
+
+- @mikerockett made their first contribution in https://github.com/spatie/db-dumper/pull/196
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.3.1...3.4.0
+
+## 3.3.1 - 2023-05-02
+
+### What's Changed
+
+- PHP 8.2 Build by @erikn69 in https://github.com/spatie/db-dumper/pull/180
+- Add Dependabot Automation by @patinthehat in https://github.com/spatie/db-dumper/pull/182
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/spatie/db-dumper/pull/186
+- Convert all tests to Pest by @alexmanase in https://github.com/spatie/db-dumper/pull/188
+- Bump actions/checkout from 2 to 3 by @dependabot in https://github.com/spatie/db-dumper/pull/183
+- Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot in https://github.com/spatie/db-dumper/pull/191
+- Update command to use doublequotes for username by @applyACS in https://github.com/spatie/db-dumper/pull/192
+
+### New Contributors
+
+- @dependabot made their first contribution in https://github.com/spatie/db-dumper/pull/186
+- @alexmanase made their first contribution in https://github.com/spatie/db-dumper/pull/188
+- @applyACS made their first contribution in https://github.com/spatie/db-dumper/pull/192
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.3.0...3.3.1
+
+## 3.3.0 - 2022-09-01
+
+### What's Changed
+
+- Docs: typo in README.md in column_statics by @Ayoub-Mabrouk in https://github.com/spatie/db-dumper/pull/175
+- add excludeTables support for sqlite by @ariaieboy in https://github.com/spatie/db-dumper/pull/177
+
+### New Contributors
+
+- @Ayoub-Mabrouk made their first contribution in https://github.com/spatie/db-dumper/pull/175
+- @ariaieboy made their first contribution in https://github.com/spatie/db-dumper/pull/177
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.2.1...3.3.0
+
 ## 3.2.1 - 2022-06-15
 
 ### What's Changed

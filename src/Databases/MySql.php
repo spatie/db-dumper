@@ -3,11 +3,14 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
+use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
+    protected bool $skipSsl = false;
+
     protected bool $skipComments = true;
 
     protected bool $useExtendedInserts = true;
@@ -28,7 +31,11 @@ class MySql extends DbDumper
 
     protected string $setGtidPurged = 'AUTO';
 
+    protected bool $skipAutoIncrement = false;
+
     protected bool $createTables = true;
+
+    protected bool $includeData = true;
 
     /** @var false|resource */
     private $tempFileHandle;
@@ -36,6 +43,13 @@ class MySql extends DbDumper
     public function __construct()
     {
         $this->port = 3306;
+    }
+
+    public function setSkipSsl(bool $skipSsl = true): self
+    {
+        $this->skipSsl = $skipSsl;
+
+        return $this;
     }
 
     public function skipComments(): self
@@ -129,6 +143,20 @@ class MySql extends DbDumper
         return $this;
     }
 
+    public function skipAutoIncrement(): self
+    {
+        $this->skipAutoIncrement = true;
+
+        return $this;
+    }
+
+    public function dontSkipAutoIncrement(): self
+    {
+        $this->skipAutoIncrement = false;
+
+        return $this;
+    }
+
     public function dumpToFile(string $dumpFile): void
     {
         $this->guardAgainstIncompleteCredentials();
@@ -165,6 +193,24 @@ class MySql extends DbDumper
         return $this;
     }
 
+    public function doNotDumpData(): self
+    {
+        $this->includeData = false;
+
+        return $this;
+    }
+
+    public function useAppendMode(): self
+    {
+        if ($this->compressor) {
+            throw CannotSetParameter::conflictingParameters('append mode', 'compress');
+        }
+
+        $this->appendMode = true;
+
+        return $this;
+    }
+
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
     {
         $quote = $this->determineQuote();
@@ -173,9 +219,19 @@ class MySql extends DbDumper
             "{$quote}{$this->dumpBinaryPath}mysqldump{$quote}",
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
+        $finalDumpCommand = $this->getCommonDumpCommand($command);
 
+        return $this->echoToFile($finalDumpCommand, $dumpFile);
+    }
+
+    public function getCommonDumpCommand(array $command): string
+    {
         if (! $this->createTables) {
             $command[] = '--no-create-info';
+        }
+
+        if (! $this->includeData) {
+            $command[] = '--no-data';
         }
 
         if ($this->skipComments) {
@@ -209,7 +265,7 @@ class MySql extends DbDumper
         }
 
         if (! empty($this->defaultCharacterSet)) {
-            $command[] = '--default-character-set='.$this->defaultCharacterSet;
+            $command[] = '--default-character-set=' . $this->defaultCharacterSet;
         }
 
         foreach ($this->extraOptions as $extraOption) {
@@ -217,7 +273,7 @@ class MySql extends DbDumper
         }
 
         if ($this->setGtidPurged !== 'AUTO') {
-            $command[] = '--set-gtid-purged='.$this->setGtidPurged;
+            $command[] = '--set-gtid-purged=' . $this->setGtidPurged;
         }
 
         if (! $this->dbNameWasSetAsExtraOption) {
@@ -233,7 +289,14 @@ class MySql extends DbDumper
             $command[] = $extraOptionAfterDbName;
         }
 
-        return $this->echoToFile(implode(' ', $command), $dumpFile);
+        $finalDumpCommand = implode(' ', $command);
+
+        if ($this->skipAutoIncrement) {
+            $sedCommand = "sed 's/ AUTO_INCREMENT=[0-9]*\b//'";
+            $finalDumpCommand .= " | {$sedCommand}";
+        }
+
+        return $finalDumpCommand;
     }
 
     public function getContentsOfCredentialsFile(): string
@@ -247,6 +310,10 @@ class MySql extends DbDumper
 
         if ($this->socket === '') {
             $contents[] = "host = '{$this->host}'";
+        }
+
+        if ($this->skipSsl) {
+            $contents[] = "skip-ssl";
         }
 
         return implode(PHP_EOL, $contents);

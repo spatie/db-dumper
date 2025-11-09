@@ -9,6 +9,8 @@ use Symfony\Component\Process\Process;
 
 abstract class DbDumper
 {
+    protected string $databaseUrl = '';
+
     protected string $dbName = '';
 
     protected string $userName = '';
@@ -33,6 +35,8 @@ abstract class DbDumper
 
     protected array $extraOptionsAfterDbName = [];
 
+    protected bool $appendMode = false;
+
     protected ?object $compressor = null;
 
     public static function create(): static
@@ -48,6 +52,20 @@ abstract class DbDumper
     public function setDbName(string $dbName): self
     {
         $this->dbName = $dbName;
+
+        return $this;
+    }
+
+    public function getDatabaseUrl(): string
+    {
+        return $this->databaseUrl;
+    }
+
+    public function setDatabaseUrl(string $databaseUrl): self
+    {
+        $this->databaseUrl = $databaseUrl;
+
+        $this->configureFromDatabaseUrl();
 
         return $this;
     }
@@ -99,7 +117,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath): self
+    public function setDumpBinaryPath(string $dumpBinaryPath = ''): self
     {
         if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, '/')) {
             $dumpBinaryPath .= '/';
@@ -117,6 +135,10 @@ abstract class DbDumper
 
     public function useCompressor(Compressor $compressor): self
     {
+        if ($this->appendMode) {
+            throw CannotSetParameter::conflictingParameters('compressor', 'append mode');
+        }
+
         $this->compressor = $compressor;
 
         return $this;
@@ -187,6 +209,31 @@ abstract class DbDumper
         }
     }
 
+    protected function configureFromDatabaseUrl(): void
+    {
+        $parsed = (new DsnParser($this->databaseUrl))->parse();
+
+        $componentMap = [
+            'host' => 'setHost',
+            'port' => 'setPort',
+            'database' => 'setDbName',
+            'username' => 'setUserName',
+            'password' => 'setPassword',
+        ];
+
+        foreach ($parsed as $component => $value) {
+            if (isset($componentMap[$component])) {
+                $setterMethod = $componentMap[$component];
+
+                if (! $value || in_array($value, ['', 'null'])) {
+                    continue;
+                }
+
+                $this->$setterMethod($value);
+            }
+        }
+    }
+
     protected function getCompressCommand(string $command, string $dumpFile): string
     {
         $compressCommand = $this->compressor->useCommand();
@@ -200,13 +247,17 @@ abstract class DbDumper
 
     protected function echoToFile(string $command, string $dumpFile): string
     {
-        $dumpFile = '"'.addcslashes($dumpFile, '\\"').'"';
+        $dumpFile = '"' . addcslashes($dumpFile, '\\"') . '"';
 
         if ($this->compressor) {
             return $this->getCompressCommand($command, $dumpFile);
         }
 
-        return $command.' > '.$dumpFile;
+        if ($this->appendMode) {
+            return $command . ' >> ' . $dumpFile;
+        }
+
+        return $command . ' > ' . $dumpFile;
     }
 
     protected function determineQuote(): string
