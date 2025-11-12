@@ -96,10 +96,7 @@ class PostgreSql extends DbDumper
 
     protected function escapeCredentialEntry($entry): string
     {
-        $entry = str_replace('\\', '\\\\', $entry);
-        $entry = str_replace(':', '\\:', $entry);
-
-        return $entry;
+        return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
     }
 
     public function guardAgainstIncompleteCredentials()
