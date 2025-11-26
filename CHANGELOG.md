@@ -2,6 +2,21 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.8.1 - 2025-11-26
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot[bot] in https://github.com/spatie/db-dumper/pull/221
+* Update issue template by @AlexVanderbist in https://github.com/spatie/db-dumper/pull/224
+* refactor: combine string replacements in PostgreSQL escape method by @Ayoub-Mabrouk in https://github.com/spatie/db-dumper/pull/229
+* refactor: optimize empty value check in configureFromDatabaseUrl by @Ayoub-Mabrouk in https://github.com/spatie/db-dumper/pull/230
+* refactor: use PHP_OS_FAMILY for Windows detection by @Ayoub-Mabrouk in https://github.com/spatie/db-dumper/pull/231
+* Added Symfony 8 support to all symfony/* packages. by @thecaliskan in https://github.com/spatie/db-dumper/pull/232
+* Bump actions/checkout from 4 to 6 by @dependabot[bot] in https://github.com/spatie/db-dumper/pull/233
+* Bump stefanzweifel/git-auto-commit-action from 5 to 7 by @dependabot[bot] in https://github.com/spatie/db-dumper/pull/225
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.8.0...3.8.1
+
 ## 3.8.0 - 2025-02-14
 
 ### What's Changed
