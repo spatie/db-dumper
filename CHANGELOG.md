@@ -2,6 +2,18 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.8.2 - 2025-12-10
+
+### What's Changed
+
+* added ssl flag override to allow for custom server flags by @aschkenasy in https://github.com/spatie/db-dumper/pull/236
+
+### New Contributors
+
+* @aschkenasy made their first contribution in https://github.com/spatie/db-dumper/pull/236
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.8.1...3.8.2
+
 ## 3.8.1 - 2025-11-26
 
 ### What's Changed
