@@ -2,6 +2,7 @@
 
 namespace Spatie\DbDumper\Databases;
 
+use Illuminate\Support\Facades\DB;
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
@@ -10,6 +11,8 @@ use Symfony\Component\Process\Process;
 class MySql extends DbDumper
 {
     protected bool $skipSsl = false;
+
+    protected string $sslFlag = '';
 
     protected bool $skipComments = true;
 
@@ -48,6 +51,21 @@ class MySql extends DbDumper
     public function setSkipSsl(bool $skipSsl = true): self
     {
         $this->skipSsl = $skipSsl;
+
+        return $this;
+    }
+
+    public function setSslFlag(string $sslFlag = ''): self
+    {
+        $allowedValues = [
+            'skip-ssl',
+            'ssl-mode=DISABLED',
+            'ssl-mode=PREFERRED',
+        ];
+
+        if (in_array($sslFlag, $allowedValues)) {
+            $this->sslFlag = $sslFlag;
+        }
 
         return $this;
     }
@@ -313,7 +331,7 @@ class MySql extends DbDumper
         }
 
         if ($this->skipSsl) {
-            $contents[] = "skip-ssl";
+            $contents[] = $this->getSSLFlag();
         }
 
         return implode(PHP_EOL, $contents);
@@ -360,5 +378,29 @@ class MySql extends DbDumper
     public function setTempFileHandle($tempFileHandle)
     {
         $this->tempFileHandle = $tempFileHandle;
+    }
+
+    /**
+     * Since MySQL 8.0.26, --skip-ssl has been deprecated and replaced with ssl-mode=DISABLED.
+     * Since MySQL 8.4.0, --skip-ssl has been removed.
+     *
+     * https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html
+     *
+     * @return string
+     */
+    protected function getSSLFlag(): string
+    {
+        if ($this->sslFlag !== '') {
+            return $this->sslFlag;
+        }
+
+        $sslFlag = 'skip-ssl';
+        $mysqlVersion = DB::selectOne('SELECT VERSION() AS version');
+
+        if (version_compare($mysqlVersion->version, '8.4.0', '>=')) {
+            $sslFlag = 'ssl-mode=DISABLED';
+        }
+
+        return $sslFlag;
     }
 }
