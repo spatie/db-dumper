@@ -4,6 +4,8 @@ namespace Spatie\DbDumper\Databases;
 
 class MariaDb extends MySql
 {
+    protected string $sslFlag = 'skip-ssl';
+
     protected bool $withSandboxMode = true;
 
     public function getDumpCommand(string $dumpFile, string $temporaryCredentialsFile): string
