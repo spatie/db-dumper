@@ -2,6 +2,18 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 3.8.3 - 2026-01-05
+
+### What's Changed
+
+* Fix MariaDb ssl flag by @sgilberg in https://github.com/spatie/db-dumper/pull/237
+
+### New Contributors
+
+* @sgilberg made their first contribution in https://github.com/spatie/db-dumper/pull/237
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/3.8.2...3.8.3
+
 ## 3.8.2 - 2025-12-10
 
 ### What's Changed
