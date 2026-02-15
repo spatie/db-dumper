@@ -2,7 +2,6 @@
 
 namespace Spatie\DbDumper\Databases;
 
-use Illuminate\Support\Facades\DB;
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
@@ -35,6 +34,8 @@ class MySql extends DbDumper
     protected string $setGtidPurged = 'AUTO';
 
     protected bool $skipAutoIncrement = false;
+
+    protected bool $includeRoutines = false;
 
     public function __construct()
     {
@@ -168,6 +169,13 @@ class MySql extends DbDumper
         return $this;
     }
 
+    public function includeRoutines(): static
+    {
+        $this->includeRoutines = true;
+
+        return $this;
+    }
+
     public function dumpToFile(string $dumpFile): void
     {
         $this->guardAgainstIncompleteCredentials();
@@ -251,6 +259,10 @@ class MySql extends DbDumper
 
         if ($this->useQuick) {
             $command[] = '--quick';
+        }
+
+        if ($this->includeRoutines) {
+            $command[] = '--routines';
         }
 
         if ($this->socket !== '') {
@@ -343,6 +355,8 @@ class MySql extends DbDumper
      * Since MySQL 8.0.26, --skip-ssl has been deprecated and replaced with ssl-mode=DISABLED.
      * Since MySQL 8.4.0, --skip-ssl has been removed.
      *
+     * Use setSslFlag() to override the default when needed (e.g. 'skip-ssl' for older MySQL).
+     *
      * https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html
      */
     protected function getSSLFlag(): string
@@ -351,13 +365,6 @@ class MySql extends DbDumper
             return $this->sslFlag;
         }
 
-        $sslFlag = 'skip-ssl';
-        $mysqlVersion = DB::selectOne('SELECT VERSION() AS version');
-
-        if (version_compare($mysqlVersion->version, '8.4.0', '>=')) {
-            $sslFlag = 'ssl-mode=DISABLED';
-        }
-
-        return $sslFlag;
+        return 'ssl-mode=DISABLED';
     }
 }

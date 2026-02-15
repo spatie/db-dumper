@@ -475,3 +475,16 @@ it('can generate a dump command with no data', function () {
         '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --no-data --skip-comments --extended-insert dbname > "dump.sql"'
     );
 });
+
+it('can generate a dump command with routines included', function () {
+    $dumpCommand = MariaDb::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->includeRoutines()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --routines dbname > "dump.sql"'
+    );
+});
