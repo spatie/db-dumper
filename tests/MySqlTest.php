@@ -10,9 +10,9 @@ it('provides a factory method')
     ->expect(MySql::create())
     ->toBeInstanceOf(MySql::class);
 
-it('will throw an exception when no credentials are set')
-    ->tap(fn () => MySql::create()->dumpToFile('test.sql'))
-    ->throws(CannotStartDump::class);
+it('will throw an exception when no credentials are set', function () {
+    MySql::create()->dumpToFile('test.sql');
+})->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
     $dumpCommand = MySql::create()
@@ -92,7 +92,7 @@ it('can generate a dump command without using comments', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontSkipComments()
+        ->doNotSkipComments()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -105,7 +105,7 @@ it('can generate a dump command without using extended inserts', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontUseExtendedInserts()
+        ->doNotUseExtendedInserts()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -131,7 +131,7 @@ it('can generate a dump command without using extending inserts', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontUseExtendedInserts()
+        ->doNotUseExtendedInserts()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -220,7 +220,7 @@ it('can generate a dump command not skipping auto increment values', function ()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontSkipAutoIncrement()
+        ->doNotSkipAutoIncrement()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->not->toContain("sed 's/ AUTO_INCREMENT=[0-9]*\\b//'");
@@ -512,3 +512,71 @@ it('will throw an exception when using GzipCompressor while append-mode is alrea
         ->useAppendMode()
         ->useCompressor(new GzipCompressor());
 })->throws(CannotSetParameter::class);
+
+it('can generate a dump command with routines included', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->includeRoutines()
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --routines dbname > "dump.sql"'
+    );
+});
+
+it('defaults to ssl-mode=DISABLED when skipping ssl', function () {
+    $credentialsFileContent = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->setHost('hostname')
+        ->setSkipSsl()
+        ->getContentsOfCredentialsFile();
+
+    expect($credentialsFileContent)->toContain('ssl-mode=DISABLED');
+});
+
+it('can generate a dump command excluding data for specific tables as array', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTablesData(['tb1', 'tb2'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table-data=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});
+
+it('can generate a dump command excluding data for specific tables as string', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTablesData('tb1, tb2')
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table-data=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});
+
+it('can exclude tables and exclude table data at the same time', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTables(['tb1'])
+        ->excludeTablesData(['tb2'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});

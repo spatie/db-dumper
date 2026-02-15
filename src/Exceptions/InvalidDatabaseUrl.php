@@ -6,8 +6,8 @@ use Exception;
 
 class InvalidDatabaseUrl extends Exception
 {
-    public static function invalidUrl(string $databaseUrl): static
+    public static function invalidUrl(string $databaseUrl): self
     {
-        return new static("Database URL `{$databaseUrl}` is invalid and cannot be parsed.");
+        return new self("Database URL `{$databaseUrl}` is invalid and cannot be parsed.");
     }
 }

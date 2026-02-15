@@ -10,9 +10,9 @@ it('provides a factory method')
     ->expect(PostgreSql::create())
     ->toBeInstanceOf(PostgreSql::class);
 
-it('will throw an exception when no credentials are set')
-    ->tap(fn () => PostgreSql::create()->dumpToFile('test.sql'))
-    ->throws(CannotStartDump::class);
+it('will throw an exception when no credentials are set', function () {
+    PostgreSql::create()->dumpToFile('test.sql');
+})->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
     $dumpCommand = PostgreSql::create()

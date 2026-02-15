@@ -10,19 +10,7 @@ class PostgreSql extends DbDumper
 {
     protected bool $useInserts = false;
 
-    protected bool $createTables = true;
-
-    protected bool $includeData = true;
-
-    /** @var false|resource */
-    private $tempFileHandle;
-
-    public function __construct()
-    {
-        $this->port = 5432;
-    }
-
-    public function useInserts(): self
+    public function useInserts(): static
     {
         $this->useInserts = true;
 
@@ -40,7 +28,7 @@ class PostgreSql extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
     public function getDumpCommand(string $dumpFile): string
@@ -78,7 +66,7 @@ class PostgreSql extends DbDumper
             $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 
-        return $this->echoToFile(implode(' ', $command), $dumpFile);
+        return $this->redirectCommandOutput(implode(' ', $command), $dumpFile);
     }
 
     public function getContentsOfCredentialsFile(): string
@@ -94,67 +82,44 @@ class PostgreSql extends DbDumper
         return implode(':', $contents);
     }
 
-    protected function escapeCredentialEntry($entry): string
-    {
-        return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
-    }
-
-    public function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if (empty($this->$requiredProperty)) {
+            if ($this->$requiredProperty === '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
-    }
-
-    protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
-    {
-        return [
-            'PGPASSFILE' => $temporaryCredentialsFile,
-            'PGDATABASE' => $this->dbName,
-        ];
-    }
-
-    public function doNotCreateTables(): self
-    {
-        $this->createTables = false;
-
-        return $this;
-    }
-
-    public function doNotDumpData(): self
-    {
-        $this->includeData = false;
-
-        return $this;
     }
 
     public function getProcess(string $dumpFile): Process
     {
         $command = $this->getDumpCommand($dumpFile);
 
-        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
+        $tempFileHandle = $this->getTempFileHandle();
+
+        if (! is_resource($tempFileHandle)) {
+            throw CannotStartDump::emptyParameter('tempFileHandle');
+        }
+
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
         return Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
     }
 
-    /**
-     * @return false|resource
-     */
-    public function getTempFileHandle()
+    protected function escapeCredentialEntry(string $entry): string
     {
-        return $this->tempFileHandle;
+        return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
     }
 
-    /**
-     * @param false|resource $tempFileHandle
-     */
-    public function setTempFileHandle($tempFileHandle): void
+    /** @return array<string, string> */
+    protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
     {
-        $this->tempFileHandle = $tempFileHandle;
+        return [
+            'PGPASSFILE' => $temporaryCredentialsFile,
+            'PGDATABASE' => $this->dbName,
+        ];
     }
 }

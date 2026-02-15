@@ -5,7 +5,7 @@
 [![MIT Licensed](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/db-dumper.svg?style=flat-square)](https://packagist.org/packages/spatie/db-dumper)
 
-This repo contains an easy to use class to dump a database using PHP. Currently MySQL, PostgreSQL, SQLite and MongoDB are supported. Behind the scenes `mysqldump`, `pg_dump`, `sqlite3` and `mongodump` are used.
+This repo contains an easy to use class to dump a database using PHP. Currently MySQL, MariaDB, PostgreSQL, SQLite and MongoDB are supported. Behind the scenes `mysqldump`, `mariadb-dump`, `pg_dump`, `sqlite3` and `mongodump` are used.
 
 Here are simple examples of how to create a database dump with different drivers:
 
@@ -13,6 +13,16 @@ Here are simple examples of how to create a database dump with different drivers
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->dumpToFile('dump.sql');
+```
+
+**MariaDB**
+
+```php
+Spatie\DbDumper\Databases\MariaDb::create()
     ->setDbName($databaseName)
     ->setUserName($userName)
     ->setPassword($password)
@@ -37,8 +47,6 @@ Spatie\DbDumper\Databases\Sqlite::create()
     ->dumpToFile('dump.sql');
 ```
 
-⚠️ Sqlite version 3.32.0 is required when using the `includeTables` option.
-
 **MongoDB**
 
 ```php
@@ -60,6 +68,8 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 ## Requirements
 
 For dumping MySQL-db's `mysqldump` should be installed.
+
+For dumping MariaDB-db's `mariadb-dump` should be installed.
 
 For dumping PostgreSQL-db's `pg_dump` should be installed.
 
@@ -140,14 +150,14 @@ Spatie\DbDumper\Databases\MySql::create()
 
 ### Including AUTO_INCREMENT values in the dump
 
-By default, the AUTO_INCREMENT values are included in the dump. However, if you previously used the skipAutoIncrement method and wish to ensure that the AUTO_INCREMENT values are included in a subsequent dump, use the dontSkipAutoIncrement method to explicitly include them.
+By default, the AUTO_INCREMENT values are included in the dump. However, if you previously used the `skipAutoIncrement` method and wish to ensure that the AUTO_INCREMENT values are included in a subsequent dump, use the `doNotSkipAutoIncrement` method to explicitly include them.
 
 ```php
 Spatie\DbDumper\Databases\MySql::create()
     ->setDbName('dbname')
     ->setUserName('username')
     ->setPassword('password')
-    ->dontSkipAutoIncrement()
+    ->doNotSkipAutoIncrement()
     ->dumpToFile('dump.sql');
 ```
 
@@ -226,6 +236,46 @@ Spatie\DbDumper\Databases\MySql::create()
     ->setUserName($userName)
     ->setPassword($password)
     ->excludeTables('table1, table2, table3')
+    ->dumpToFile('dump.sql');
+```
+
+### Excluding table data from the dump
+
+If you want to dump the structure of certain tables but not their data (e.g. log tables), you can use `excludeTablesData`. This works with both MySQL and MariaDB.
+
+Using an array:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->excludeTablesData(['logs', 'sessions'])
+    ->dumpToFile('dump.sql');
+```
+
+You can combine this with `excludeTables` to fully exclude some tables and only skip data for others:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->excludeTables(['cache'])
+    ->excludeTablesData(['logs', 'sessions'])
+    ->dumpToFile('dump.sql');
+```
+
+### Including routines in the dump
+
+To include stored procedures and functions in your MySQL or MariaDB dump, use the `includeRoutines` method:
+
+```php
+Spatie\DbDumper\Databases\MySql::create()
+    ->setDbName($databaseName)
+    ->setUserName($userName)
+    ->setPassword($password)
+    ->includeRoutines()
     ->dumpToFile('dump.sql');
 ```
 

@@ -2,7 +2,6 @@
 
 namespace Spatie\DbDumper\Databases;
 
-use Illuminate\Support\Facades\DB;
 use Spatie\DbDumper\DbDumper;
 use Spatie\DbDumper\Exceptions\CannotSetParameter;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
@@ -36,26 +35,24 @@ class MySql extends DbDumper
 
     protected bool $skipAutoIncrement = false;
 
-    protected bool $createTables = true;
+    protected bool $includeRoutines = false;
 
-    protected bool $includeData = true;
-
-    /** @var false|resource */
-    private $tempFileHandle;
+    /** @var array<int, string> */
+    protected array $excludeTablesData = [];
 
     public function __construct()
     {
         $this->port = 3306;
     }
 
-    public function setSkipSsl(bool $skipSsl = true): self
+    public function setSkipSsl(bool $skipSsl = true): static
     {
         $this->skipSsl = $skipSsl;
 
         return $this;
     }
 
-    public function setSslFlag(string $sslFlag = ''): self
+    public function setSslFlag(string $sslFlag = ''): static
     {
         $allowedValues = [
             'skip-ssl',
@@ -70,107 +67,126 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function skipComments(): self
+    public function skipComments(): static
     {
         $this->skipComments = true;
 
         return $this;
     }
 
-    public function dontSkipComments(): self
+    public function doNotSkipComments(): static
     {
         $this->skipComments = false;
 
         return $this;
     }
 
-    public function useExtendedInserts(): self
+    public function useExtendedInserts(): static
     {
         $this->useExtendedInserts = true;
 
         return $this;
     }
 
-    public function dontUseExtendedInserts(): self
+    public function doNotUseExtendedInserts(): static
     {
         $this->useExtendedInserts = false;
 
         return $this;
     }
 
-    public function useSingleTransaction(): self
+    public function useSingleTransaction(): static
     {
         $this->useSingleTransaction = true;
 
         return $this;
     }
 
-    public function dontUseSingleTransaction(): self
+    public function doNotUseSingleTransaction(): static
     {
         $this->useSingleTransaction = false;
 
         return $this;
     }
 
-    public function skipLockTables(): self
+    public function skipLockTables(): static
     {
         $this->skipLockTables = true;
 
         return $this;
     }
 
-    public function doNotUseColumnStatistics(): self
+    public function doNotUseColumnStatistics(): static
     {
         $this->doNotUseColumnStatistics = true;
 
         return $this;
     }
 
-    public function dontSkipLockTables(): self
+    public function doNotSkipLockTables(): static
     {
         $this->skipLockTables = false;
 
         return $this;
     }
 
-    public function useQuick(): self
+    public function useQuick(): static
     {
         $this->useQuick = true;
 
         return $this;
     }
 
-    public function dontUseQuick(): self
+    public function doNotUseQuick(): static
     {
         $this->useQuick = false;
 
         return $this;
     }
 
-    public function setDefaultCharacterSet(string $characterSet): self
+    public function setDefaultCharacterSet(string $characterSet): static
     {
         $this->defaultCharacterSet = $characterSet;
 
         return $this;
     }
 
-    public function setGtidPurged(string $setGtidPurged): self
+    public function setGtidPurged(string $setGtidPurged): static
     {
         $this->setGtidPurged = $setGtidPurged;
 
         return $this;
     }
 
-    public function skipAutoIncrement(): self
+    public function skipAutoIncrement(): static
     {
         $this->skipAutoIncrement = true;
 
         return $this;
     }
 
-    public function dontSkipAutoIncrement(): self
+    public function doNotSkipAutoIncrement(): static
     {
         $this->skipAutoIncrement = false;
+
+        return $this;
+    }
+
+    public function includeRoutines(): static
+    {
+        $this->includeRoutines = true;
+
+        return $this;
+    }
+
+    /** @param string|array<int, string> $excludeTablesData */
+    public function excludeTablesData(string|array $excludeTablesData): static
+    {
+        if (! is_array($excludeTablesData)) {
+            $excludeTablesData = explode(', ', $excludeTablesData);
+        }
+
+        $this->excludeTablesData = $excludeTablesData;
 
         return $this;
     }
@@ -186,10 +202,10 @@ class MySql extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
-    public function addExtraOption(string $extraOption): self
+    public function addExtraOption(string $extraOption): static
     {
         if (str_contains($extraOption, '--all-databases')) {
             $this->dbNameWasSetAsExtraOption = true;
@@ -204,21 +220,7 @@ class MySql extends DbDumper
         return parent::addExtraOption($extraOption);
     }
 
-    public function doNotCreateTables(): self
-    {
-        $this->createTables = false;
-
-        return $this;
-    }
-
-    public function doNotDumpData(): self
-    {
-        $this->includeData = false;
-
-        return $this;
-    }
-
-    public function useAppendMode(): self
+    public function useAppendMode(): static
     {
         if ($this->compressor) {
             throw CannotSetParameter::conflictingParameters('append mode', 'compress');
@@ -239,10 +241,11 @@ class MySql extends DbDumper
         ];
         $finalDumpCommand = $this->getCommonDumpCommand($command);
 
-        return $this->echoToFile($finalDumpCommand, $dumpFile);
+        return $this->redirectCommandOutput($finalDumpCommand, $dumpFile);
     }
 
-    public function getCommonDumpCommand(array $command): string
+    /** @param array<int, string> $command */
+    protected function getCommonDumpCommand(array $command): string
     {
         if (! $this->createTables) {
             $command[] = '--no-create-info';
@@ -274,12 +277,20 @@ class MySql extends DbDumper
             $command[] = '--quick';
         }
 
+        if ($this->includeRoutines) {
+            $command[] = '--routines';
+        }
+
         if ($this->socket !== '') {
             $command[] = "--socket={$this->socket}";
         }
 
         foreach ($this->excludeTables as $tableName) {
             $command[] = "--ignore-table={$this->dbName}.{$tableName}";
+        }
+
+        foreach ($this->excludeTablesData as $tableName) {
+            $command[] = "--ignore-table-data={$this->dbName}.{$tableName}";
         }
 
         if (! empty($this->defaultCharacterSet)) {
@@ -340,24 +351,26 @@ class MySql extends DbDumper
     public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['userName', 'host'] as $requiredProperty) {
-            if (strlen($this->$requiredProperty) === 0) {
+            if ($this->$requiredProperty === '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
 
-        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
+        if ($this->dbName === '' && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
     }
 
-    /**
-     * @param string $dumpFile
-     * @return Process
-     */
     public function getProcess(string $dumpFile): Process
     {
-        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
+        $tempFileHandle = $this->getTempFileHandle();
+
+        if (! is_resource($tempFileHandle)) {
+            throw CannotStartDump::emptyParameter('tempFileHandle');
+        }
+
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
@@ -365,28 +378,12 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return false|resource
-     */
-    public function getTempFileHandle(): mixed
-    {
-        return $this->tempFileHandle;
-    }
-
-    /**
-     * @param false|resource $tempFileHandle
-     */
-    public function setTempFileHandle($tempFileHandle)
-    {
-        $this->tempFileHandle = $tempFileHandle;
-    }
-
-    /**
      * Since MySQL 8.0.26, --skip-ssl has been deprecated and replaced with ssl-mode=DISABLED.
      * Since MySQL 8.4.0, --skip-ssl has been removed.
      *
-     * https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html
+     * Use setSslFlag() to override the default when needed (e.g. 'skip-ssl' for older MySQL).
      *
-     * @return string
+     * https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html
      */
     protected function getSSLFlag(): string
     {
@@ -394,13 +391,6 @@ class MySql extends DbDumper
             return $this->sslFlag;
         }
 
-        $sslFlag = 'skip-ssl';
-        $mysqlVersion = DB::selectOne('SELECT VERSION() AS version');
-
-        if (version_compare($mysqlVersion->version, '8.4.0', '>=')) {
-            $sslFlag = 'ssl-mode=DISABLED';
-        }
-
-        return $sslFlag;
+        return 'ssl-mode=DISABLED';
     }
 }

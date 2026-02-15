@@ -6,19 +6,20 @@ use Spatie\DbDumper\Exceptions\InvalidDatabaseUrl;
 
 class DsnParser
 {
-    protected string $dsn;
-
-    public function __construct(string $dsn)
+    public function __construct(protected string $dsn)
     {
-        $this->dsn = $dsn;
     }
 
+    /** @return array<string, mixed> */
     public function parse(): array
     {
         $rawComponents = $this->parseUrl($this->dsn);
 
+        $stringComponents = array_map(strval(...), $rawComponents);
+
+        /** @var array<string, string|int> $decodedComponents */
         $decodedComponents = $this->parseNativeTypes(
-            array_map('rawurldecode', $rawComponents)
+            array_map(rawurldecode(...), $stringComponents)
         );
 
         return array_merge(
@@ -27,7 +28,11 @@ class DsnParser
         );
     }
 
-    protected function getPrimaryOptions($url): array
+    /**
+     * @param array<string, string|int> $url
+     * @return array<string, mixed>
+     */
+    protected function getPrimaryOptions(array $url): array
     {
         return array_filter([
             'database' => $this->getDatabase($url),
@@ -38,30 +43,33 @@ class DsnParser
         ], static fn ($value) => ! is_null($value));
     }
 
-    protected function getDatabase($url): ?string
+    /** @param array<string, string|int> $url */
+    protected function getDatabase(array $url): ?string
     {
-        $path = $url['path'] ?? null;
+        $path = (string) ($url['path'] ?? '');
 
-        if (! $path) {
+        if ($path === '' || $path === '/') {
             return null;
         }
 
-        if ($path === '/') {
-            return null;
-        }
+        $scheme = (string) ($url['scheme'] ?? '');
 
-        if (isset($url['scheme']) && str_contains($url['scheme'], 'sqlite')) {
+        if (str_contains($scheme, 'sqlite')) {
             return $path;
         }
 
         return trim($path, '/');
     }
 
-    protected function getQueryOptions($url)
+    /**
+     * @param array<string, string|int> $url
+     * @return array<string, mixed>
+     */
+    protected function getQueryOptions(array $url): array
     {
-        $queryString = $url['query'] ?? null;
+        $queryString = (string) ($url['query'] ?? '');
 
-        if (! $queryString) {
+        if ($queryString === '') {
             return [];
         }
 
@@ -69,12 +77,14 @@ class DsnParser
 
         parse_str($queryString, $query);
 
+        /** @var array<string, mixed> */
         return $this->parseNativeTypes($query);
     }
 
-    protected function parseUrl($url): array
+    /** @return array<string, string|int> */
+    protected function parseUrl(string $url): array
     {
-        $url = preg_replace('#^(sqlite3?):///#', '$1://null/', $url);
+        $url = preg_replace('#^(sqlite3?):///#', '$1://null/', $url) ?? $url;
 
         $parsedUrl = parse_url($url);
 
@@ -85,7 +95,7 @@ class DsnParser
         return $parsedUrl;
     }
 
-    protected function parseNativeTypes($value)
+    protected function parseNativeTypes(mixed $value): mixed
     {
         if (is_array($value)) {
             return array_map([$this, 'parseNativeTypes'], $value);

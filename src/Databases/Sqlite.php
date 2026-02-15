@@ -14,16 +14,22 @@ class Sqlite extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
+    /** @return array<int, string> */
     public function getDbTables(): array
     {
         $db = new SQLite3($this->dbName);
         $query = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';");
         $tables = [];
-        while ($table = $query->fetchArray(SQLITE3_ASSOC)) {
-            $tables[] = $table['name'];
+        if ($query !== false) {
+            while ($table = $query->fetchArray(SQLITE3_ASSOC)) {
+                $name = $table['name'];
+                if (is_string($name)) {
+                    $tables[] = $name;
+                }
+            }
         }
         $db->close();
 
@@ -49,7 +55,7 @@ class Sqlite extends DbDumper
             $this->dbName
         );
 
-        return $this->echoToFile($command, $dumpFile);
+        return $this->redirectCommandOutput($command, $dumpFile);
     }
 
     public function getProcess(string $dumpFile): Process

@@ -9,9 +9,9 @@ it('provides a factory method')
     ->expect(MongoDb::create())
     ->toBeInstanceOf(MongoDb::class);
 
-it('will_throw_an_exception_when_no_credentials_are_set')
-    ->tap(fn () => MongoDb::create()->dumpToFile('test.gz'))
-    ->throws(CannotStartDump::class);
+it('will_throw_an_exception_when_no_credentials_are_set', function () {
+    MongoDb::create()->dumpToFile('test.gz');
+})->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
     $dumpCommand = MongoDb::create()

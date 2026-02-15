@@ -19,17 +19,17 @@ class MariaDb extends MySql
 
         $finalDumpCommand = $this->getCommonDumpCommand($command) . $this->determineSandboxMode();
 
-        return $this->echoToFile($finalDumpCommand, $dumpFile);
+        return $this->redirectCommandOutput($finalDumpCommand, $dumpFile);
     }
 
-    public function withoutSandboxMode(): self
+    public function withoutSandboxMode(): static
     {
         $this->withSandboxMode = false;
 
         return $this;
     }
 
-    public function determineSandboxMode(): string
+    protected function determineSandboxMode(): string
     {
         // allow mariadb/MySQL compatability: https://mariadb.org/mariadb-dump-file-compatibility-change/
         return $this->withSandboxMode ? '' : '|tail +2';
