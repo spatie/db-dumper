@@ -10,9 +10,9 @@ it('provides a factory method')
     ->expect(MariaDb::create())
     ->toBeInstanceOf(MariaDb::class);
 
-it('will throw an exception when no credentials are set')
-    ->tap(fn () => MariaDb::create()->dumpToFile('test.sql'))
-    ->throws(CannotStartDump::class);
+it('will throw an exception when no credentials are set', function () {
+    MariaDb::create()->dumpToFile('test.sql');
+})->throws(CannotStartDump::class);
 
 it('can generate a dump command', function () {
     $dumpCommand = MariaDb::create()
