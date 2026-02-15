@@ -6,7 +6,9 @@ use Spatie\DbDumper\Exceptions\InvalidDatabaseUrl;
 
 class DsnParser
 {
-    public function __construct(protected string $dsn) {}
+    public function __construct(protected string $dsn)
+    {
+    }
 
     public function parse(): array
     {
