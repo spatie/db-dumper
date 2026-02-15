@@ -25,30 +25,23 @@ class MongoDb extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
-    /**
-     * Verifies if the dbname and host options are set.
-     *
-     * @throws \Spatie\DbDumper\Exceptions\CannotStartDump
-     *
-     * @return void
-     */
     public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['dbName', 'host'] as $requiredProperty) {
-            if (strlen($this->$requiredProperty) === 0) {
+            if ($this->$requiredProperty === '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
     }
 
-    public function setCollection(string $collection): self
+    public function setCollection(string $collection): static
     {
         $this->collection = $collection;
 
         return $this;
     }
 
-    public function setAuthenticationDatabase(string $authenticationDatabase): self
+    public function setAuthenticationDatabase(string $authenticationDatabase): static
     {
         $this->authenticationDatabase = $authenticationDatabase;
 
@@ -73,15 +66,10 @@ class MongoDb extends DbDumper
             $command[] = "--password {$quote}{$this->password}{$quote}";
         }
 
-        if (isset($this->host)) {
-            $command[] = "--host {$this->host}";
-        }
+        $command[] = "--host {$this->host}";
+        $command[] = "--port {$this->port}";
 
-        if (isset($this->port)) {
-            $command[] = "--port {$this->port}";
-        }
-
-        if (isset($this->collection)) {
+        if ($this->collection !== null) {
             $command[] = "--collection {$this->collection}";
         }
 

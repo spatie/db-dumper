@@ -14,15 +14,12 @@ class PostgreSql extends DbDumper
 
     protected bool $includeData = true;
 
-    /** @var false|resource */
-    private $tempFileHandle;
-
     public function __construct()
     {
         $this->port = 5432;
     }
 
-    public function useInserts(): self
+    public function useInserts(): static
     {
         $this->useInserts = true;
 
@@ -94,15 +91,15 @@ class PostgreSql extends DbDumper
         return implode(':', $contents);
     }
 
-    protected function escapeCredentialEntry($entry): string
+    protected function escapeCredentialEntry(string $entry): string
     {
         return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
     }
 
-    public function guardAgainstIncompleteCredentials()
+    public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
-            if (empty($this->$requiredProperty)) {
+            if ($this->$requiredProperty === '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
@@ -116,14 +113,14 @@ class PostgreSql extends DbDumper
         ];
     }
 
-    public function doNotCreateTables(): self
+    public function doNotCreateTables(): static
     {
         $this->createTables = false;
 
         return $this;
     }
 
-    public function doNotDumpData(): self
+    public function doNotDumpData(): static
     {
         $this->includeData = false;
 
@@ -140,21 +137,5 @@ class PostgreSql extends DbDumper
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
         return Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
-    }
-
-    /**
-     * @return false|resource
-     */
-    public function getTempFileHandle()
-    {
-        return $this->tempFileHandle;
-    }
-
-    /**
-     * @param false|resource $tempFileHandle
-     */
-    public function setTempFileHandle($tempFileHandle): void
-    {
-        $this->tempFileHandle = $tempFileHandle;
     }
 }

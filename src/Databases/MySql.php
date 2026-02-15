@@ -40,22 +40,19 @@ class MySql extends DbDumper
 
     protected bool $includeData = true;
 
-    /** @var false|resource */
-    private $tempFileHandle;
-
     public function __construct()
     {
         $this->port = 3306;
     }
 
-    public function setSkipSsl(bool $skipSsl = true): self
+    public function setSkipSsl(bool $skipSsl = true): static
     {
         $this->skipSsl = $skipSsl;
 
         return $this;
     }
 
-    public function setSslFlag(string $sslFlag = ''): self
+    public function setSslFlag(string $sslFlag = ''): static
     {
         $allowedValues = [
             'skip-ssl',
@@ -70,105 +67,105 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function skipComments(): self
+    public function skipComments(): static
     {
         $this->skipComments = true;
 
         return $this;
     }
 
-    public function dontSkipComments(): self
+    public function dontSkipComments(): static
     {
         $this->skipComments = false;
 
         return $this;
     }
 
-    public function useExtendedInserts(): self
+    public function useExtendedInserts(): static
     {
         $this->useExtendedInserts = true;
 
         return $this;
     }
 
-    public function dontUseExtendedInserts(): self
+    public function dontUseExtendedInserts(): static
     {
         $this->useExtendedInserts = false;
 
         return $this;
     }
 
-    public function useSingleTransaction(): self
+    public function useSingleTransaction(): static
     {
         $this->useSingleTransaction = true;
 
         return $this;
     }
 
-    public function dontUseSingleTransaction(): self
+    public function dontUseSingleTransaction(): static
     {
         $this->useSingleTransaction = false;
 
         return $this;
     }
 
-    public function skipLockTables(): self
+    public function skipLockTables(): static
     {
         $this->skipLockTables = true;
 
         return $this;
     }
 
-    public function doNotUseColumnStatistics(): self
+    public function doNotUseColumnStatistics(): static
     {
         $this->doNotUseColumnStatistics = true;
 
         return $this;
     }
 
-    public function dontSkipLockTables(): self
+    public function dontSkipLockTables(): static
     {
         $this->skipLockTables = false;
 
         return $this;
     }
 
-    public function useQuick(): self
+    public function useQuick(): static
     {
         $this->useQuick = true;
 
         return $this;
     }
 
-    public function dontUseQuick(): self
+    public function dontUseQuick(): static
     {
         $this->useQuick = false;
 
         return $this;
     }
 
-    public function setDefaultCharacterSet(string $characterSet): self
+    public function setDefaultCharacterSet(string $characterSet): static
     {
         $this->defaultCharacterSet = $characterSet;
 
         return $this;
     }
 
-    public function setGtidPurged(string $setGtidPurged): self
+    public function setGtidPurged(string $setGtidPurged): static
     {
         $this->setGtidPurged = $setGtidPurged;
 
         return $this;
     }
 
-    public function skipAutoIncrement(): self
+    public function skipAutoIncrement(): static
     {
         $this->skipAutoIncrement = true;
 
         return $this;
     }
 
-    public function dontSkipAutoIncrement(): self
+    public function dontSkipAutoIncrement(): static
     {
         $this->skipAutoIncrement = false;
 
@@ -189,7 +186,7 @@ class MySql extends DbDumper
         $this->checkIfDumpWasSuccessFul($process, $dumpFile);
     }
 
-    public function addExtraOption(string $extraOption): self
+    public function addExtraOption(string $extraOption): static
     {
         if (str_contains($extraOption, '--all-databases')) {
             $this->dbNameWasSetAsExtraOption = true;
@@ -204,21 +201,21 @@ class MySql extends DbDumper
         return parent::addExtraOption($extraOption);
     }
 
-    public function doNotCreateTables(): self
+    public function doNotCreateTables(): static
     {
         $this->createTables = false;
 
         return $this;
     }
 
-    public function doNotDumpData(): self
+    public function doNotDumpData(): static
     {
         $this->includeData = false;
 
         return $this;
     }
 
-    public function useAppendMode(): self
+    public function useAppendMode(): static
     {
         if ($this->compressor) {
             throw CannotSetParameter::conflictingParameters('append mode', 'compress');
@@ -340,20 +337,16 @@ class MySql extends DbDumper
     public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['userName', 'host'] as $requiredProperty) {
-            if (strlen($this->$requiredProperty) === 0) {
+            if ($this->$requiredProperty === '') {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
 
-        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
+        if ($this->dbName === '' && ! $this->allDatabasesWasSetAsExtraOption) {
             throw CannotStartDump::emptyParameter('dbName');
         }
     }
 
-    /**
-     * @param string $dumpFile
-     * @return Process
-     */
     public function getProcess(string $dumpFile): Process
     {
         fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
@@ -365,28 +358,10 @@ class MySql extends DbDumper
     }
 
     /**
-     * @return false|resource
-     */
-    public function getTempFileHandle(): mixed
-    {
-        return $this->tempFileHandle;
-    }
-
-    /**
-     * @param false|resource $tempFileHandle
-     */
-    public function setTempFileHandle($tempFileHandle)
-    {
-        $this->tempFileHandle = $tempFileHandle;
-    }
-
-    /**
      * Since MySQL 8.0.26, --skip-ssl has been deprecated and replaced with ssl-mode=DISABLED.
      * Since MySQL 8.4.0, --skip-ssl has been removed.
      *
      * https://dev.mysql.com/doc/relnotes/mysql/8.4/en/news-8-4-0.html
-     *
-     * @return string
      */
     protected function getSSLFlag(): string
     {

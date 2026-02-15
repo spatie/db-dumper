@@ -23,7 +23,8 @@
         "symfony/process": "^7.0|^8.0"
     },
     "require-dev": {
-        "pestphp/pest": "^4.0"
+        "pestphp/pest": "^4.0",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {

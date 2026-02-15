@@ -22,7 +22,7 @@ class MariaDb extends MySql
         return $this->echoToFile($finalDumpCommand, $dumpFile);
     }
 
-    public function withoutSandboxMode(): self
+    public function withoutSandboxMode(): static
     {
         $this->withSandboxMode = false;
 

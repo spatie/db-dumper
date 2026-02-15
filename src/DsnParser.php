@@ -6,12 +6,7 @@ use Spatie\DbDumper\Exceptions\InvalidDatabaseUrl;
 
 class DsnParser
 {
-    protected string $dsn;
-
-    public function __construct(string $dsn)
-    {
-        $this->dsn = $dsn;
-    }
+    public function __construct(protected string $dsn) {}
 
     public function parse(): array
     {
@@ -27,7 +22,7 @@ class DsnParser
         );
     }
 
-    protected function getPrimaryOptions($url): array
+    protected function getPrimaryOptions(array $url): array
     {
         return array_filter([
             'database' => $this->getDatabase($url),
@@ -38,7 +33,7 @@ class DsnParser
         ], static fn ($value) => ! is_null($value));
     }
 
-    protected function getDatabase($url): ?string
+    protected function getDatabase(array $url): ?string
     {
         $path = $url['path'] ?? null;
 
@@ -57,7 +52,7 @@ class DsnParser
         return trim($path, '/');
     }
 
-    protected function getQueryOptions($url)
+    protected function getQueryOptions(array $url): array
     {
         $queryString = $url['query'] ?? null;
 
@@ -72,7 +67,7 @@ class DsnParser
         return $this->parseNativeTypes($query);
     }
 
-    protected function parseUrl($url): array
+    protected function parseUrl(string $url): array
     {
         $url = preg_replace('#^(sqlite3?):///#', '$1://null/', $url);
 
@@ -85,7 +80,7 @@ class DsnParser
         return $parsedUrl;
     }
 
-    protected function parseNativeTypes($value)
+    protected function parseNativeTypes(mixed $value): mixed
     {
         if (is_array($value)) {
             return array_map([$this, 'parseNativeTypes'], $value);

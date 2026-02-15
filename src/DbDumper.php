@@ -37,7 +37,10 @@ abstract class DbDumper
 
     protected bool $appendMode = false;
 
-    protected ?object $compressor = null;
+    protected ?Compressor $compressor = null;
+
+    /** @var false|resource */
+    protected mixed $tempFileHandle = false;
 
     public static function create(): static
     {
@@ -49,7 +52,7 @@ abstract class DbDumper
         return $this->dbName;
     }
 
-    public function setDbName(string $dbName): self
+    public function setDbName(string $dbName): static
     {
         $this->dbName = $dbName;
 
@@ -61,7 +64,7 @@ abstract class DbDumper
         return $this->databaseUrl;
     }
 
-    public function setDatabaseUrl(string $databaseUrl): self
+    public function setDatabaseUrl(string $databaseUrl): static
     {
         $this->databaseUrl = $databaseUrl;
 
@@ -70,21 +73,21 @@ abstract class DbDumper
         return $this;
     }
 
-    public function setUserName(string $userName): self
+    public function setUserName(string $userName): static
     {
         $this->userName = $userName;
 
         return $this;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): static
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function setHost(string $host): self
+    public function setHost(string $host): static
     {
         $this->host = $host;
 
@@ -96,28 +99,28 @@ abstract class DbDumper
         return $this->host;
     }
 
-    public function setPort(int $port): self
+    public function setPort(int $port): static
     {
         $this->port = $port;
 
         return $this;
     }
 
-    public function setSocket(string $socket): self
+    public function setSocket(string $socket): static
     {
         $this->socket = $socket;
 
         return $this;
     }
 
-    public function setTimeout(int $timeout): self
+    public function setTimeout(int $timeout): static
     {
         $this->timeout = $timeout;
 
         return $this;
     }
 
-    public function setDumpBinaryPath(string $dumpBinaryPath = ''): self
+    public function setDumpBinaryPath(string $dumpBinaryPath = ''): static
     {
         if ($dumpBinaryPath !== '' && ! str_ends_with($dumpBinaryPath, '/')) {
             $dumpBinaryPath .= '/';
@@ -133,7 +136,7 @@ abstract class DbDumper
         return $this->compressor->useExtension();
     }
 
-    public function useCompressor(Compressor $compressor): self
+    public function useCompressor(Compressor $compressor): static
     {
         if ($this->appendMode) {
             throw CannotSetParameter::conflictingParameters('compressor', 'append mode');
@@ -144,7 +147,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function includeTables(string | array $includeTables): self
+    public function includeTables(string|array $includeTables): static
     {
         if (! empty($this->excludeTables)) {
             throw CannotSetParameter::conflictingParameters('includeTables', 'excludeTables');
@@ -159,7 +162,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function excludeTables(string | array $excludeTables): self
+    public function excludeTables(string|array $excludeTables): static
     {
         if (! empty($this->includeTables)) {
             throw CannotSetParameter::conflictingParameters('excludeTables', 'includeTables');
@@ -174,7 +177,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOption(string $extraOption): self
+    public function addExtraOption(string $extraOption): static
     {
         if (! empty($extraOption)) {
             $this->extraOptions[] = $extraOption;
@@ -183,7 +186,7 @@ abstract class DbDumper
         return $this;
     }
 
-    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): self
+    public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): static
     {
         if (! empty($extraOptionAfterDbName)) {
             $this->extraOptionsAfterDbName[] = $extraOptionAfterDbName;
@@ -258,6 +261,18 @@ abstract class DbDumper
         }
 
         return $command . ' > ' . $dumpFile;
+    }
+
+    /** @return false|resource */
+    public function getTempFileHandle(): mixed
+    {
+        return $this->tempFileHandle;
+    }
+
+    /** @param false|resource $tempFileHandle */
+    public function setTempFileHandle(mixed $tempFileHandle): void
+    {
+        $this->tempFileHandle = $tempFileHandle;
     }
 
     protected function determineQuote(): string

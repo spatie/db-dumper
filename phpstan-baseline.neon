@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to static method selectOne\(\) on an unknown class Illuminate\\Support\\Facades\\DB\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Databases/MySql.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/DbDumper.php
