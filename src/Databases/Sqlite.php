@@ -14,7 +14,7 @@ class Sqlite extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
     public function getDbTables(): array
@@ -49,7 +49,7 @@ class Sqlite extends DbDumper
             $this->dbName
         );
 
-        return $this->echoToFile($command, $dumpFile);
+        return $this->redirectCommandOutput($command, $dumpFile);
     }
 
     public function getProcess(string $dumpFile): Process

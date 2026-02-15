@@ -22,7 +22,7 @@ class MongoDb extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
     public function guardAgainstIncompleteCredentials(): void
@@ -77,7 +77,7 @@ class MongoDb extends DbDumper
             $command[] = "--authenticationDatabase {$this->authenticationDatabase}";
         }
 
-        return $this->echoToFile(implode(' ', $command), $filename);
+        return $this->redirectCommandOutput(implode(' ', $command), $filename);
     }
 
     public function getProcess(string $dumpFile): Process

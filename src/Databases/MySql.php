@@ -36,10 +36,6 @@ class MySql extends DbDumper
 
     protected bool $skipAutoIncrement = false;
 
-    protected bool $createTables = true;
-
-    protected bool $includeData = true;
-
     public function __construct()
     {
         $this->port = 3306;
@@ -74,7 +70,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontSkipComments(): static
+    public function doNotSkipComments(): static
     {
         $this->skipComments = false;
 
@@ -88,7 +84,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontUseExtendedInserts(): static
+    public function doNotUseExtendedInserts(): static
     {
         $this->useExtendedInserts = false;
 
@@ -102,7 +98,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontUseSingleTransaction(): static
+    public function doNotUseSingleTransaction(): static
     {
         $this->useSingleTransaction = false;
 
@@ -123,7 +119,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontSkipLockTables(): static
+    public function doNotSkipLockTables(): static
     {
         $this->skipLockTables = false;
 
@@ -137,7 +133,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontUseQuick(): static
+    public function doNotUseQuick(): static
     {
         $this->useQuick = false;
 
@@ -165,7 +161,7 @@ class MySql extends DbDumper
         return $this;
     }
 
-    public function dontSkipAutoIncrement(): static
+    public function doNotSkipAutoIncrement(): static
     {
         $this->skipAutoIncrement = false;
 
@@ -183,7 +179,7 @@ class MySql extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
     public function addExtraOption(string $extraOption): static
@@ -199,20 +195,6 @@ class MySql extends DbDumper
         }
 
         return parent::addExtraOption($extraOption);
-    }
-
-    public function doNotCreateTables(): static
-    {
-        $this->createTables = false;
-
-        return $this;
-    }
-
-    public function doNotDumpData(): static
-    {
-        $this->includeData = false;
-
-        return $this;
     }
 
     public function useAppendMode(): static
@@ -236,10 +218,10 @@ class MySql extends DbDumper
         ];
         $finalDumpCommand = $this->getCommonDumpCommand($command);
 
-        return $this->echoToFile($finalDumpCommand, $dumpFile);
+        return $this->redirectCommandOutput($finalDumpCommand, $dumpFile);
     }
 
-    public function getCommonDumpCommand(array $command): string
+    protected function getCommonDumpCommand(array $command): string
     {
         if (! $this->createTables) {
             $command[] = '--no-create-info';

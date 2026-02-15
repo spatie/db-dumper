@@ -105,7 +105,7 @@ it('can generate a dump command without using comments', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontSkipComments()
+        ->doNotSkipComments()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -118,7 +118,7 @@ it('can generate a dump command without using extended inserts', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontUseExtendedInserts()
+        ->doNotUseExtendedInserts()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -144,7 +144,7 @@ it('can generate a dump command without using extending inserts', function () {
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontUseExtendedInserts()
+        ->doNotUseExtendedInserts()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->toEqual(
@@ -233,7 +233,7 @@ it('can generate a dump command not skipping auto increment values', function ()
         ->setDbName('dbname')
         ->setUserName('username')
         ->setPassword('password')
-        ->dontSkipAutoIncrement()
+        ->doNotSkipAutoIncrement()
         ->getDumpCommand('dump.sql', 'credentials.txt');
 
     expect($dumpCommand)->not->toContain("sed 's/ AUTO_INCREMENT=[0-9]*\\b//'");

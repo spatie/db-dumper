@@ -37,6 +37,10 @@ abstract class DbDumper
 
     protected bool $appendMode = false;
 
+    protected bool $createTables = true;
+
+    protected bool $includeData = true;
+
     protected ?Compressor $compressor = null;
 
     /** @var false|resource */
@@ -179,7 +183,7 @@ abstract class DbDumper
 
     public function addExtraOption(string $extraOption): static
     {
-        if (! empty($extraOption)) {
+        if ($extraOption !== '') {
             $this->extraOptions[] = $extraOption;
         }
 
@@ -188,16 +192,30 @@ abstract class DbDumper
 
     public function addExtraOptionAfterDbName(string $extraOptionAfterDbName): static
     {
-        if (! empty($extraOptionAfterDbName)) {
+        if ($extraOptionAfterDbName !== '') {
             $this->extraOptionsAfterDbName[] = $extraOptionAfterDbName;
         }
 
         return $this;
     }
 
+    public function doNotCreateTables(): static
+    {
+        $this->createTables = false;
+
+        return $this;
+    }
+
+    public function doNotDumpData(): static
+    {
+        $this->includeData = false;
+
+        return $this;
+    }
+
     abstract public function dumpToFile(string $dumpFile): void;
 
-    public function checkIfDumpWasSuccessFul(Process $process, string $outputFile): void
+    public function checkIfDumpWasSuccessful(Process $process, string $outputFile): void
     {
         if (! $process->isSuccessful()) {
             throw DumpFailed::processDidNotEndSuccessfully($process);
@@ -210,6 +228,18 @@ abstract class DbDumper
         if (filesize($outputFile) === 0) {
             throw DumpFailed::dumpfileWasEmpty($process);
         }
+    }
+
+    /** @return false|resource */
+    public function getTempFileHandle(): mixed
+    {
+        return $this->tempFileHandle;
+    }
+
+    /** @param false|resource $tempFileHandle */
+    public function setTempFileHandle(mixed $tempFileHandle): void
+    {
+        $this->tempFileHandle = $tempFileHandle;
     }
 
     protected function configureFromDatabaseUrl(): void
@@ -248,7 +278,7 @@ abstract class DbDumper
         return "(((({$command}; echo \$? >&3) | {$compressCommand} > {$dumpFile}) 3>&1) | (read x; exit \$x))";
     }
 
-    protected function echoToFile(string $command, string $dumpFile): string
+    protected function redirectCommandOutput(string $command, string $dumpFile): string
     {
         $dumpFile = '"' . addcslashes($dumpFile, '\\"') . '"';
 
@@ -261,18 +291,6 @@ abstract class DbDumper
         }
 
         return $command . ' > ' . $dumpFile;
-    }
-
-    /** @return false|resource */
-    public function getTempFileHandle(): mixed
-    {
-        return $this->tempFileHandle;
-    }
-
-    /** @param false|resource $tempFileHandle */
-    public function setTempFileHandle(mixed $tempFileHandle): void
-    {
-        $this->tempFileHandle = $tempFileHandle;
     }
 
     protected function determineQuote(): string

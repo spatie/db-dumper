@@ -10,15 +10,6 @@ class PostgreSql extends DbDumper
 {
     protected bool $useInserts = false;
 
-    protected bool $createTables = true;
-
-    protected bool $includeData = true;
-
-    public function __construct()
-    {
-        $this->port = 5432;
-    }
-
     public function useInserts(): static
     {
         $this->useInserts = true;
@@ -37,7 +28,7 @@ class PostgreSql extends DbDumper
 
         $process->run();
 
-        $this->checkIfDumpWasSuccessFul($process, $dumpFile);
+        $this->checkIfDumpWasSuccessful($process, $dumpFile);
     }
 
     public function getDumpCommand(string $dumpFile): string
@@ -75,7 +66,7 @@ class PostgreSql extends DbDumper
             $command[] = '-T '.implode(' -T ', $this->excludeTables);
         }
 
-        return $this->echoToFile(implode(' ', $command), $dumpFile);
+        return $this->redirectCommandOutput(implode(' ', $command), $dumpFile);
     }
 
     public function getContentsOfCredentialsFile(): string
@@ -91,11 +82,6 @@ class PostgreSql extends DbDumper
         return implode(':', $contents);
     }
 
-    protected function escapeCredentialEntry(string $entry): string
-    {
-        return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
-    }
-
     public function guardAgainstIncompleteCredentials(): void
     {
         foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
@@ -103,28 +89,6 @@ class PostgreSql extends DbDumper
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
-    }
-
-    protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
-    {
-        return [
-            'PGPASSFILE' => $temporaryCredentialsFile,
-            'PGDATABASE' => $this->dbName,
-        ];
-    }
-
-    public function doNotCreateTables(): static
-    {
-        $this->createTables = false;
-
-        return $this;
-    }
-
-    public function doNotDumpData(): static
-    {
-        $this->includeData = false;
-
-        return $this;
     }
 
     public function getProcess(string $dumpFile): Process
@@ -137,5 +101,18 @@ class PostgreSql extends DbDumper
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
         return Process::fromShellCommandline($command, null, $envVars, null, $this->timeout);
+    }
+
+    protected function escapeCredentialEntry(string $entry): string
+    {
+        return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
+    }
+
+    protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
+    {
+        return [
+            'PGPASSFILE' => $temporaryCredentialsFile,
+            'PGDATABASE' => $this->dbName,
+        ];
     }
 }
