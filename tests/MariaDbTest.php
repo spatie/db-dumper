@@ -488,3 +488,17 @@ it('can generate a dump command with routines included', function () {
         '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert --routines dbname > "dump.sql"'
     );
 });
+
+it('can generate a dump command excluding data for specific tables', function () {
+    $dumpCommand = MariaDb::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTablesData(['tb1', 'tb2'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mariadb-dump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+        '--ignore-table-data=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});

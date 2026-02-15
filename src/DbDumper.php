@@ -27,12 +27,16 @@ abstract class DbDumper
 
     protected string $dumpBinaryPath = '';
 
+    /** @var array<int, string> */
     protected array $includeTables = [];
 
+    /** @var array<int, string> */
     protected array $excludeTables = [];
 
+    /** @var array<int, string> */
     protected array $extraOptions = [];
 
+    /** @var array<int, string> */
     protected array $extraOptionsAfterDbName = [];
 
     protected bool $appendMode = false;
@@ -137,7 +141,7 @@ abstract class DbDumper
 
     public function getCompressorExtension(): string
     {
-        return $this->compressor->useExtension();
+        return $this->compressor?->useExtension() ?? '';
     }
 
     public function useCompressor(Compressor $compressor): static
@@ -151,6 +155,7 @@ abstract class DbDumper
         return $this;
     }
 
+    /** @param string|array<int, string> $includeTables */
     public function includeTables(string|array $includeTables): static
     {
         if (! empty($this->excludeTables)) {
@@ -166,6 +171,7 @@ abstract class DbDumper
         return $this;
     }
 
+    /** @param string|array<int, string> $excludeTables */
     public function excludeTables(string|array $excludeTables): static
     {
         if (! empty($this->includeTables)) {
@@ -262,14 +268,19 @@ abstract class DbDumper
                     continue;
                 }
 
-                $this->$setterMethod($value);
+                if ($setterMethod === 'setPort') {
+                    $this->setPort(is_numeric($value) ? (int) $value : 0);
+                } else {
+                    $stringValue = is_scalar($value) ? (string) $value : '';
+                    $this->$setterMethod($stringValue);
+                }
             }
         }
     }
 
     protected function getCompressCommand(string $command, string $dumpFile): string
     {
-        $compressCommand = $this->compressor->useCommand();
+        $compressCommand = $this->compressor?->useCommand() ?? '';
 
         if ($this->isWindows()) {
             return "{$command} | {$compressCommand} > {$dumpFile}";

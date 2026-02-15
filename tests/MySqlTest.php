@@ -537,3 +537,46 @@ it('defaults to ssl-mode=DISABLED when skipping ssl', function () {
 
     expect($credentialsFileContent)->toContain('ssl-mode=DISABLED');
 });
+
+it('can generate a dump command excluding data for specific tables as array', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTablesData(['tb1', 'tb2'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table-data=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});
+
+it('can generate a dump command excluding data for specific tables as string', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTablesData('tb1, tb2')
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table-data=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});
+
+it('can exclude tables and exclude table data at the same time', function () {
+    $dumpCommand = MySql::create()
+        ->setDbName('dbname')
+        ->setUserName('username')
+        ->setPassword('password')
+        ->excludeTables(['tb1'])
+        ->excludeTablesData(['tb2'])
+        ->getDumpCommand('dump.sql', 'credentials.txt');
+
+    expect($dumpCommand)->toEqual(
+        '\'mysqldump\' --defaults-extra-file="credentials.txt" --skip-comments --extended-insert ' .
+            '--ignore-table=dbname.tb1 --ignore-table-data=dbname.tb2 dbname > "dump.sql"'
+    );
+});

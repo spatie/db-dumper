@@ -95,8 +95,14 @@ class PostgreSql extends DbDumper
     {
         $command = $this->getDumpCommand($dumpFile);
 
-        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
+        $tempFileHandle = $this->getTempFileHandle();
+
+        if (! is_resource($tempFileHandle)) {
+            throw CannotStartDump::emptyParameter('tempFileHandle');
+        }
+
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $envVars = $this->getEnvironmentVariablesForDumpCommand($temporaryCredentialsFile);
 
@@ -108,6 +114,7 @@ class PostgreSql extends DbDumper
         return str_replace(['\\', ':'], ['\\\\', '\\:'], $entry);
     }
 
+    /** @return array<string, string> */
     protected function getEnvironmentVariablesForDumpCommand(string $temporaryCredentialsFile): array
     {
         return [

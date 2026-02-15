@@ -37,6 +37,9 @@ class MySql extends DbDumper
 
     protected bool $includeRoutines = false;
 
+    /** @var array<int, string> */
+    protected array $excludeTablesData = [];
+
     public function __construct()
     {
         $this->port = 3306;
@@ -176,6 +179,18 @@ class MySql extends DbDumper
         return $this;
     }
 
+    /** @param string|array<int, string> $excludeTablesData */
+    public function excludeTablesData(string|array $excludeTablesData): static
+    {
+        if (! is_array($excludeTablesData)) {
+            $excludeTablesData = explode(', ', $excludeTablesData);
+        }
+
+        $this->excludeTablesData = $excludeTablesData;
+
+        return $this;
+    }
+
     public function dumpToFile(string $dumpFile): void
     {
         $this->guardAgainstIncompleteCredentials();
@@ -229,6 +244,7 @@ class MySql extends DbDumper
         return $this->redirectCommandOutput($finalDumpCommand, $dumpFile);
     }
 
+    /** @param array<int, string> $command */
     protected function getCommonDumpCommand(array $command): string
     {
         if (! $this->createTables) {
@@ -271,6 +287,10 @@ class MySql extends DbDumper
 
         foreach ($this->excludeTables as $tableName) {
             $command[] = "--ignore-table={$this->dbName}.{$tableName}";
+        }
+
+        foreach ($this->excludeTablesData as $tableName) {
+            $command[] = "--ignore-table-data={$this->dbName}.{$tableName}";
         }
 
         if (! empty($this->defaultCharacterSet)) {
@@ -343,8 +363,14 @@ class MySql extends DbDumper
 
     public function getProcess(string $dumpFile): Process
     {
-        fwrite($this->getTempFileHandle(), $this->getContentsOfCredentialsFile());
-        $temporaryCredentialsFile = stream_get_meta_data($this->getTempFileHandle())['uri'];
+        $tempFileHandle = $this->getTempFileHandle();
+
+        if (! is_resource($tempFileHandle)) {
+            throw CannotStartDump::emptyParameter('tempFileHandle');
+        }
+
+        fwrite($tempFileHandle, $this->getContentsOfCredentialsFile());
+        $temporaryCredentialsFile = stream_get_meta_data($tempFileHandle)['uri'];
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
