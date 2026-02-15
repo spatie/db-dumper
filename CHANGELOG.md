@@ -2,6 +2,25 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 4.0.0 - 2026-02-15
+
+### Breaking Changes
+
+- Require PHP 8.4+
+- Removed hidden `illuminate/support` dependency — `getSSLFlag()` no longer uses `DB::selectOne()` to auto-detect MySQL version. It now defaults to `ssl-mode=DISABLED` (works on MySQL 5.7.11+ and required for 8.4+). Use `setSslFlag('skip-ssl')` if you need the old flag for older MySQL versions.
+
+### Added
+
+- `includeRoutines()` method for MySQL and MariaDB to include stored procedures and functions in dumps
+- `excludeTablesData()` method for MySQL and MariaDB to exclude data for specific tables while keeping their structure
+- PHPStan static analysis at max level
+
+### Changed
+
+- Upgraded to Pest 4
+- Refactored codebase to use promoted constructor properties and standardized naming
+- Added array type annotations throughout the codebase
+
 ## 3.8.3 - 2026-01-05
 
 ### What's Changed
