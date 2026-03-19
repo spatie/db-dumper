@@ -2,6 +2,12 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 4.1.0 - 2026-03-19
+
+### What's Changed
+
+* Downgrade PHP requirement from ^8.4 to ^8.3 by @erikn69 in https://github.com/spatie/db-dumper/pull/243
+
 ## 4.0.0 - 2026-02-15
 
 ### Breaking Changes
