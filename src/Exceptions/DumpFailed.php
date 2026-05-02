@@ -11,7 +11,7 @@ class DumpFailed extends Exception
     {
         $processOutput = static::formatProcessOutput($process);
 
-        return new self("The dump process failed with a none successful exitcode.{$processOutput}");
+        return new self("The dump process failed with a non-successful exit code.{$processOutput}");
     }
 
     public static function dumpfileWasNotCreated(Process $process): self
