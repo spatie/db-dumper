@@ -19,11 +19,11 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "symfony/process": "^7.0|^8.0"
     },
     "require-dev": {
-        "pestphp/pest": "^4.0",
+        "pestphp/pest": "^5.3.5",
         "phpstan/phpstan": "^2.1"
     },
     "autoload": {

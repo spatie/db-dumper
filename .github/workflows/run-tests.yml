@@ -6,13 +6,13 @@ jobs:
     test:
         runs-on: ${{ matrix.os }}
         strategy:
-            fail-fast: true
+            fail-fast: false
             matrix:
-                php: [8.3, 8.4, 8.5]
+                php: ['8.4', '8.5', '8.6']
                 dependency-version: [prefer-lowest, prefer-stable]
                 os: [ubuntu-latest]
 
-        name: P${{ matrix.php }} - ${{ matrix.os }}
+        name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
         steps:
             - name: Checkout code
@@ -27,6 +27,13 @@ jobs:
                   php-version: ${{ matrix.php }}
                   extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, mysql, mysqli, pdo_mysql, bcmath, soap, intl, gd, exif, iconv, imagick
                   coverage: none
+
+            - name: Verify PHP version
+              env:
+                  EXPECTED_PHP_VERSION: ${{ matrix.php }}
+              run: |
+                  php --version
+                  php -r 'exit(PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION === getenv("EXPECTED_PHP_VERSION") ? 0 : 1);'
 
             - name: Install dependencies
               run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
