@@ -134,7 +134,7 @@ it('successfully creates a backup', function () {
     assertNotEquals(0, filesize($dbBackupPath), 'Sqlite dump cannot be empty');
 });
 
-it('does not block writers while dumping', function () {
+it('allows concurrent writers while keeping a consistent WAL snapshot', function () {
     $dbPath = __DIR__ . '/temp/live.sqlite';
     $fifo = __DIR__ . '/temp/dump.fifo';
     $cleanUp = fn () => array_map('unlink', array_filter([$fifo, $dbPath, "{$dbPath}-wal", "{$dbPath}-shm"], 'file_exists'));
@@ -146,24 +146,18 @@ it('does not block writers while dumping', function () {
     $pdo->exec('WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n WHERE i < 5000) INSERT INTO items SELECT hex(randomblob(64)) FROM n');
     $pdo->exec('PRAGMA busy_timeout = 0');
 
-    // Nobody drains the pipe yet, so sqlite3 stalls mid-dump with its
-    // transaction open once the pipe buffer is full.
     posix_mkfifo($fifo, 0600);
     $process = Sqlite::create()->setDbName($dbPath)->getProcess($fifo);
     $process->start();
     $reader = fopen($fifo, 'r');
 
     try {
-        fread($reader, 1);
+        $dump = fread($reader, 1);
 
         $pdo->exec("INSERT INTO items (payload) VALUES ('written during the dump')");
 
-        stream_set_blocking($reader, false);
-        $dump = '';
-        while ($process->isRunning()) {
-            $dump .= fread($reader, 65536);
-        }
         $dump .= stream_get_contents($reader);
+        $process->wait();
     } finally {
         fclose($reader);
         $process->stop();
