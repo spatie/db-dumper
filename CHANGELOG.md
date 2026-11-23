@@ -2,6 +2,24 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 4.2.0 - 2026-11-23
+
+SQLite dumps no longer take the writer lock for the duration of the backup. In WAL mode, applications can keep writing while the dump retains a consistent snapshot. Thanks @grafst for the fix and regression test.
+
+This release requires PHP 8.4 or newer. PHP 8.3 is no longer supported.
+
+### What's Changed
+
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/spatie/db-dumper/pull/248
+* Test PHP 8.5 and 8.6 with Pest 5 by @freekmurze in https://github.com/spatie/db-dumper/pull/249
+* Don't hold the SQLite write lock during a dump by @grafst in https://github.com/spatie/db-dumper/pull/250
+
+### New Contributors
+
+* @grafst made their first contribution in https://github.com/spatie/db-dumper/pull/250
+
+**Full Changelog**: https://github.com/spatie/db-dumper/compare/4.1.1...4.2.0
+
 ## 4.1.1 - 2026-05-04
 
 ### What's Changed
