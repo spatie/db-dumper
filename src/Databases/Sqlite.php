@@ -43,9 +43,9 @@ class Sqlite extends DbDumper
             $tables = $this->getDbTables();
             $includeTables = rtrim(' ' . implode(' ', array_diff($tables, $this->excludeTables)));
         }
-        $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump{$includeTables}'";
+        $dumpInSqlite = "echo 'BEGIN;\n.dump{$includeTables}'";
         if ($this->isWindows()) {
-            $dumpInSqlite = "(echo BEGIN IMMEDIATE; & echo .dump{$includeTables})";
+            $dumpInSqlite = "(echo BEGIN; & echo .dump{$includeTables})";
         }
         $quote = $this->determineQuote();
 
